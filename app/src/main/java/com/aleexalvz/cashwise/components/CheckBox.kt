@@ -2,6 +2,7 @@ package com.aleexalvz.cashwise.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -19,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
+import com.aleexalvz.cashwise.ui.theme.GrayLight
+import com.aleexalvz.cashwise.ui.theme.GraySuperLight
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
@@ -30,7 +33,6 @@ fun checkBox(
 
     Row(
         modifier = modifier
-            .padding(4.dp)
             .toggleable(
                 value = selected.value,
                 onValueChange = { selected.value = !selected.value },
@@ -39,9 +41,9 @@ fun checkBox(
         verticalAlignment = Alignment.CenterVertically
     ) {
         val checkBoxColors = CheckboxDefaults.colors(
-            checkedColor = GrayDefault,
+            checkedColor = GraySuperLight,
+            uncheckedColor = GraySuperLight,
             checkmarkColor = Green,
-            uncheckedColor = Green
         )
 
         Checkbox(

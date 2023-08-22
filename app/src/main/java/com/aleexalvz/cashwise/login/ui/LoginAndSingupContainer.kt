@@ -97,7 +97,7 @@ fun loginAndSignupScreen(
                     .fillMaxSize(),
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
             ) {
-                if (indexSelectedState.value == FirstIndex){
+                if (indexSelectedState.value == FirstIndex) {
                     loginContent(
                         modifier = Modifier.padding(26.dp)
                     )
@@ -113,8 +113,16 @@ fun loginAndSignupScreen(
 
 @Composable
 @Preview
-fun loginAndSignupScreenPreview() {
+fun loginScreenPreview() {
     loginAndSignupScreen(
         route = LoginRoutes.LOGIN
+    )
+}
+
+@Composable
+@Preview
+fun signupScreenPreview() {
+    loginAndSignupScreen(
+        route = LoginRoutes.SIGNUP
     )
 }
