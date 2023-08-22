@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.login.ui
+package com.aleexalvz.cashwise.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,10 +18,10 @@ import com.aleexalvz.cashwise.ui.theme.GrayLight
 import com.aleexalvz.cashwise.ui.theme.Green
 import java.util.*
 
+typealias Size = Pair<Dp, Dp>
+
 const val FirstIndex = 0
 const val SecondIndex = 1
-
-typealias Size = Pair<Dp, Dp>
 
 @Composable
 fun switchLoginButton(

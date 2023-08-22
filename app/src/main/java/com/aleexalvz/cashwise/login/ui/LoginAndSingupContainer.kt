@@ -20,6 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.R
+import com.aleexalvz.cashwise.components.FirstIndex
+import com.aleexalvz.cashwise.components.SecondIndex
+import com.aleexalvz.cashwise.components.switchLoginButton
 import com.aleexalvz.cashwise.login.LoginRoutes
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
@@ -31,7 +34,7 @@ fun loginAndSignupScreen(
 ) {
 
     val routeState = remember { mutableStateOf(route) }
-    val indexSelected = remember {
+    val indexSelectedState = remember {
         val index =
             if (routeState.value == LoginRoutes.LOGIN) FirstIndex
             else SecondIndex
@@ -50,7 +53,7 @@ fun loginAndSignupScreen(
             size = (320.dp to 44.dp),
             modifier = Modifier
                 .padding(top = 93.dp),
-            indexSelected = indexSelected,
+            indexSelected = indexSelectedState,
             onClickListener = {
                 if (routeState.value != it) routeState.value = it
             }
@@ -94,7 +97,15 @@ fun loginAndSignupScreen(
                     .fillMaxSize(),
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
             ) {
-
+                if (indexSelectedState.value == FirstIndex){
+                    loginContent(
+                        modifier = Modifier.padding(26.dp)
+                    )
+                } else {
+                    signupContent(
+                        modifier = Modifier.padding(26.dp)
+                    )
+                }
             }
         }
     }
