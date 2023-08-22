@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Cash Wise</string>
+    <string name="login_screen_title">Welcome back!</string>
+    <string name="login_screen_message">Enter your details to login</string>
+    <string name="singup_screen_title">New here?</string>
+    <string name="signup_screen_message">Create your account to enjoy more</string>
 </resources>

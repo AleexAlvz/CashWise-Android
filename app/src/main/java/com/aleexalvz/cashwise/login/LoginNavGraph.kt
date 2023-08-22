@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.aleexalvz.cashwise.login.ui.loginAndSignupScreen
 
 @Composable
 fun LoginNavGraph() {
@@ -16,9 +17,10 @@ fun LoginNavGraph() {
     ) {
 
         composable(route = LoginRoutes.LOGIN) {
-//            loginModalDrawer(
-//                LoginRoutes.LOGIN,
-//            )
+            loginAndSignupScreen(route = LoginRoutes.LOGIN)
+        }
+        composable(route = LoginRoutes.SIGNUP) {
+            loginAndSignupScreen(route = LoginRoutes.SIGNUP)
         }
     }
 }
