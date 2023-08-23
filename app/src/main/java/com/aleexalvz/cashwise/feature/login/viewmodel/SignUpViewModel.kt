@@ -22,9 +22,9 @@ data class SignUpUIState(
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    val emailError: Boolean = false,
-    val passwordError: Boolean = false,
-    val confirmPasswordError: Boolean = false,
+    val emailError: String? = null,
+    val passwordError: String? = null,
+    val confirmPasswordError: String? = null,
     val signUpState: Boolean = false
 )
 
@@ -41,32 +41,44 @@ class SignUpViewModel(
 
     fun updateEmail(email: String) {
         _uiState.value = _uiState.value.copy(email = email)
-        val hasError = AuthHelper.validateEmail(email).not()
-        updateEmailError(hasError)
+        updateEmailError()
     }
 
     fun updatePassword(password: String) {
         _uiState.value = _uiState.value.copy(password = password)
-        val hasError = AuthHelper.validatePassword(password).not()
-        updatePasswordError(hasError)
+        updatePasswordError()
     }
 
     fun updateConfirmPassword(confirmPassword: String) {
         _uiState.value = _uiState.value.copy(confirmPassword = confirmPassword)
-        val hasError = confirmPassword != uiState.value.password
-        updateConfirmPasswordError(hasError)
+        updateConfirmPasswordError()
     }
 
-    private fun updateEmailError(boolean: Boolean) {
-        _uiState.value = _uiState.value.copy(emailError = boolean)
+    private fun updateEmailError(error: String? = null) {
+        val message: String? = if (error.isNullOrBlank().not()) {
+            error
+        } else if (uiState.value.email.isNotBlank() && AuthHelper.validateEmail(uiState.value.email).not())
+            "Invalid email"
+        else null
+        _uiState.value = _uiState.value.copy(emailError = message)
     }
 
-    private fun updatePasswordError(boolean: Boolean) {
-        _uiState.value = _uiState.value.copy(passwordError = boolean)
+    private fun updatePasswordError(error: String? = null) {
+        val message: String? = if (error.isNullOrBlank().not()) {
+            error
+        } else if (uiState.value.password.isNotBlank() && AuthHelper.validatePassword(uiState.value.password).not())
+            "Invalid password"
+        else null
+        _uiState.value = _uiState.value.copy(passwordError = message)
     }
 
-    private fun updateConfirmPasswordError(boolean: Boolean) {
-        _uiState.value = _uiState.value.copy(confirmPasswordError = boolean)
+    private fun updateConfirmPasswordError(error: String? = null) {
+        val message: String? = if (error.isNullOrBlank().not()) {
+            error
+        } else if (uiState.value.confirmPassword.isNotBlank() && uiState.value.password != uiState.value.confirmPassword)
+            "Should be equals your inserted password"
+        else null
+        _uiState.value = _uiState.value.copy(confirmPasswordError = message)
     }
 
     private fun updateSignUpStateToSuccess() {
@@ -74,16 +86,7 @@ class SignUpViewModel(
     }
 
     fun signupUser() {
-        val isValidUser = with(uiState.value) {
-            this.email.isNotBlank() &&
-                    this.password.isNotBlank() &&
-                    this.confirmPassword.isNotBlank() &&
-                    this.emailError.not() &&
-                    this.passwordError.not() &&
-                    this.confirmPasswordError.not()
-        }
-
-        if (isValidUser) {
+        if (isValidFields()) {
             try {
                 val result = authRepository.signupUser(uiState.value.email, uiState.value.password)
                 UserManager.loggedUser = result
@@ -94,6 +97,29 @@ class SignUpViewModel(
                     .show()
             }
         }
+    }
+
+    private fun isValidFields(): Boolean = with(uiState.value) {
+        var hasNoError = this.emailError.isNullOrBlank() &&
+                this.passwordError.isNullOrBlank() &&
+                this.confirmPasswordError.isNullOrBlank()
+
+        if (this.email.isBlank()) {
+            hasNoError = false
+            updateEmailError("Required field, insert your email")
+        }
+
+        if (this.password.isBlank()) {
+            hasNoError = false
+            updatePasswordError("Required field, insert your password")
+        }
+
+        if (this.confirmPassword.isBlank()) {
+            hasNoError = false
+            updateConfirmPasswordError("Required field, confirm your password")
+        }
+
+        return hasNoError
     }
 
     companion object {

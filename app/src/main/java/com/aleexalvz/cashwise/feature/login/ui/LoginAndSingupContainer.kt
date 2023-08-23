@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
@@ -35,7 +37,7 @@ fun loginAndSignupScreen(
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel,
     signUpViewModel: SignUpViewModel,
-    onLoginSuccessful: ()->Unit
+    onLoginSuccessful: () -> Unit
 ) {
 
     val screenState = remember { mutableStateOf(LOGIN_SCREEN_NAME) }
@@ -48,13 +50,14 @@ fun loginAndSignupScreen(
     Column(
         modifier = modifier
             .background(DarkBackground)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         switchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,
             secondButtonText = SIGNUP_SCREEN_NAME,
             size = (320.dp to 44.dp),
-            modifier = Modifier.padding(top = 93.dp),
+            modifier = Modifier.padding(top = 64.dp),
             indexSelected = indexSelectedState,
             onClickListener = {
                 if (screenState.value != it) screenState.value = it

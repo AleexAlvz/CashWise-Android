@@ -46,7 +46,8 @@ fun loginContent(
             onValueChange = { loginViewModel.updateEmail(it) },
             labelText = "Email",
             leadingIconImageVector = Icons.Default.Email,
-            contentDescription = "Email field"
+            contentDescription = "Email field",
+            errorMessage = uiState.value.emailError,
         )
 
         outlinedTextFieldWithValidation(
@@ -58,7 +59,8 @@ fun loginContent(
             labelText = "Password",
             leadingIconImageVector = Icons.Default.Lock,
             contentDescription = "Password field",
-            isPassword = true
+            isPassword = true,
+            errorMessage = uiState.value.passwordError,
         )
         Row(
             Modifier
@@ -91,7 +93,7 @@ fun loginContent(
         Row(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(bottom = 32.dp, top = 80.dp),
+                .padding(top = 32.dp, bottom = 20.dp),
             verticalAlignment = Alignment.Bottom
         ) {
             Text(
@@ -100,7 +102,7 @@ fun loginContent(
                         //Click to recovery password
                     },
                 text = "Forgot your password?",
-                fontSize = 22.sp,
+                fontSize = 20.sp,
                 color = Green
             )
         }

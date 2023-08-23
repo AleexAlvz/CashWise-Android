@@ -39,7 +39,8 @@ fun signupContent(
             onValueChange = signUpViewModel::updateEmail,
             labelText = "Email",
             leadingIconImageVector = Icons.Default.Email,
-            contentDescription = "Email field"
+            contentDescription = "Email field",
+            errorMessage = uiState.value.emailError,
         )
 
         outlinedTextFieldWithValidation(
@@ -51,7 +52,8 @@ fun signupContent(
             labelText = "Password",
             leadingIconImageVector = Icons.Default.Lock,
             contentDescription = "Password field",
-            isPassword = true
+            isPassword = true,
+            errorMessage = uiState.value.passwordError,
         )
 
         outlinedTextFieldWithValidation(
@@ -63,7 +65,8 @@ fun signupContent(
             labelText = "Confirm your password",
             leadingIconImageVector = Icons.Default.Lock,
             contentDescription = "Password confirmation field",
-            isPassword = true
+            isPassword = true,
+            errorMessage = uiState.value.confirmPasswordError,
         )
 
         //TODO Add disabled state
