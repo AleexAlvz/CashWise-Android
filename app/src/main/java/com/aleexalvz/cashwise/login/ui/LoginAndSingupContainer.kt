@@ -19,17 +19,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
 import com.aleexalvz.cashwise.components.switchLoginButton
 import com.aleexalvz.cashwise.login.LoginRoutes
+import com.aleexalvz.cashwise.login.viewmodel.LoginViewModel
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
 
 @Composable
 fun loginAndSignupScreen(
     modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel,
     route: String,
 ) {
 
@@ -99,7 +102,8 @@ fun loginAndSignupScreen(
             ) {
                 if (indexSelectedState.value == FirstIndex) {
                     loginContent(
-                        modifier = Modifier.padding(26.dp)
+                        modifier = Modifier.padding(26.dp),
+                        loginViewModel = loginViewModel
                     )
                 } else {
                     signupContent(
@@ -109,20 +113,4 @@ fun loginAndSignupScreen(
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun loginScreenPreview() {
-    loginAndSignupScreen(
-        route = LoginRoutes.LOGIN
-    )
-}
-
-@Composable
-@Preview
-fun signupScreenPreview() {
-    loginAndSignupScreen(
-        route = LoginRoutes.SIGNUP
-    )
 }

@@ -28,53 +28,54 @@ fun signupContent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+    // TODO prepare viewModel to this Content, like loginViewModel
 
-        val emailState = rememberSaveable { mutableStateOf("") }
-        outlinedTextFieldWithValidation(
-            modifier = Modifier.fillMaxWidth(),
-            field = emailState,
-            labelText = "Email",
-            leadingIconImageVector = Icons.Default.Email,
-            contentDescription = "Email field"
-        )
-
-        val passwordState = rememberSaveable { mutableStateOf("") }
-        outlinedTextFieldWithValidation(
-            modifier = Modifier
-                .padding(top = 12.dp)
-                .fillMaxWidth(),
-            field = passwordState,
-            labelText = "Password",
-            leadingIconImageVector = Icons.Default.Lock,
-            contentDescription = "Password field",
-            isPassword = true
-        )
-
-        val confirmPasswordState = rememberSaveable { mutableStateOf("") }
-        outlinedTextFieldWithValidation(
-            modifier = Modifier
-                .padding(top = 12.dp)
-                .fillMaxWidth(),
-            field = confirmPasswordState,
-            labelText = "Confirm your password",
-            leadingIconImageVector = Icons.Default.Lock,
-            contentDescription = "Password confirmation field",
-            isPassword = true
-        )
-
-        gradientButton(
-            modifier = Modifier
-                .padding(top = 40.dp)
-                .width(310.dp)
-                .height(50.dp),
-            onClickListener = {/*TODO*/ },
-            text = "Sign Up",
-            brush = Brush.verticalGradient(
-                listOf(
-                    GradGreenButton1, GradGreenButton2, GradGreenButton3
-                )
-            )
-        )
+//        val emailState = rememberSaveable { mutableStateOf("") }
+//        outlinedTextFieldWithValidation(
+//            modifier = Modifier.fillMaxWidth(),
+//            text = emailState,
+//            labelText = "Email",
+//            leadingIconImageVector = Icons.Default.Email,
+//            contentDescription = "Email field"
+//        )
+//
+//        val passwordState = rememberSaveable { mutableStateOf("") }
+//        outlinedTextFieldWithValidation(
+//            modifier = Modifier
+//                .padding(top = 12.dp)
+//                .fillMaxWidth(),
+//            text = passwordState,
+//            labelText = "Password",
+//            leadingIconImageVector = Icons.Default.Lock,
+//            contentDescription = "Password field",
+//            isPassword = true
+//        )
+//
+//        val confirmPasswordState = rememberSaveable { mutableStateOf("") }
+//        outlinedTextFieldWithValidation(
+//            modifier = Modifier
+//                .padding(top = 12.dp)
+//                .fillMaxWidth(),
+//            text = confirmPasswordState,
+//            labelText = "Confirm your password",
+//            leadingIconImageVector = Icons.Default.Lock,
+//            contentDescription = "Password confirmation field",
+//            isPassword = true
+//        )
+//
+//        gradientButton(
+//            modifier = Modifier
+//                .padding(top = 40.dp)
+//                .width(310.dp)
+//                .height(50.dp),
+//            onClickListener = {/*TODO*/ },
+//            text = "Sign Up",
+//            brush = Brush.verticalGradient(
+//                listOf(
+//                    GradGreenButton1, GradGreenButton2, GradGreenButton3
+//                )
+//            )
+//        )
     }
 }
 

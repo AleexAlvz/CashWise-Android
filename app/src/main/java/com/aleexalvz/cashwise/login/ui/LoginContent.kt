@@ -1,6 +1,5 @@
 package com.aleexalvz.cashwise.login.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,43 +7,51 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.components.checkBox
 import com.aleexalvz.cashwise.components.gradientButton
 import com.aleexalvz.cashwise.components.outlinedTextFieldWithValidation
-import com.aleexalvz.cashwise.ui.theme.*
+import com.aleexalvz.cashwise.login.viewmodel.LoginViewModel
+import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
+import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
+import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
+import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
 fun loginContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val emailState = rememberSaveable { mutableStateOf("") }
+        val uiState = loginViewModel.uiState.collectAsState()
+
+
         outlinedTextFieldWithValidation(
             modifier = Modifier.fillMaxWidth(),
-            field = emailState,
+            text = uiState.value.email,
+            onValueChange = { loginViewModel.updateEmail(it) },
             labelText = "Email",
             leadingIconImageVector = Icons.Default.Email,
             contentDescription = "Email field"
         )
 
-        val passwordState = rememberSaveable { mutableStateOf("") }
         outlinedTextFieldWithValidation(
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth(),
-            field = passwordState,
+            text = uiState.value.password,
+            onValueChange = { loginViewModel.updatePassword(it) },
             labelText = "Password",
             leadingIconImageVector = Icons.Default.Lock,
             contentDescription = "Password field",
@@ -67,7 +74,7 @@ fun loginContent(
                 .padding(top = 20.dp)
                 .width(310.dp)
                 .height(50.dp),
-            onClickListener = {/*TODO*/ },
+            onClickListener = loginViewModel::doLogin,
             text = "Login",
             brush = Brush.verticalGradient(
                 listOf(
@@ -93,14 +100,4 @@ fun loginContent(
             )
         }
     }
-}
-
-@Composable
-@Preview
-fun loginContentPreview() {
-    loginContent(
-        modifier = Modifier
-            .wrapContentSize()
-            .background(GrayDefault)
-    )
 }

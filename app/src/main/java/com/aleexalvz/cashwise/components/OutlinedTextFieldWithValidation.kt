@@ -5,7 +5,6 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -18,13 +17,14 @@ import com.aleexalvz.cashwise.ui.theme.Green
 @Composable
 fun outlinedTextFieldWithValidation(
     modifier: Modifier = Modifier,
-    field: MutableState<String>,
+    text: String,
+    onValueChange: (String) -> Unit,
     labelText: String,
     leadingIconImageVector: ImageVector,
     contentDescription: String,
     isPassword: Boolean = false
 ) {
-
+    //TODO validation and field error
     val outlinedTextFieldColors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Green,
         unfocusedBorderColor = Green,
@@ -39,12 +39,12 @@ fun outlinedTextFieldWithValidation(
         unfocusedTrailingIconColor = Color.White
     )
 
-    val passwordHidden = rememberSaveable { mutableStateOf(true) }
+    val passwordHidden = rememberSaveable { mutableStateOf(isPassword) }
     val visualTransformation =
         if (passwordHidden.value) PasswordVisualTransformation() else VisualTransformation.None
     OutlinedTextField(
         modifier = modifier,
-        value = field.value,
+        value = text,
         visualTransformation = visualTransformation,
         trailingIcon = {
             if (isPassword) {
@@ -60,7 +60,7 @@ fun outlinedTextFieldWithValidation(
                 }
             }
         },
-        onValueChange = { field.value = it },
+        onValueChange = onValueChange,
         singleLine = true,
         label = {
             Text(
