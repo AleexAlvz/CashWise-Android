@@ -4,6 +4,7 @@ import android.app.Application
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.aleexalvz.cashwise.data.mocked.login.getMockedAuthRepository
@@ -14,6 +15,7 @@ import com.aleexalvz.cashwise.model.SignUpInvalidException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 /**
  * Data that represents UI State from SignUp Screen
@@ -57,7 +59,9 @@ class SignUpViewModel(
     private fun updateEmailError(error: String? = null) {
         val message: String? = if (error.isNullOrBlank().not()) {
             error
-        } else if (uiState.value.email.isNotBlank() && AuthHelper.validateEmail(uiState.value.email).not())
+        } else if (uiState.value.email.isNotBlank() && AuthHelper.validateEmail(uiState.value.email)
+                .not()
+        )
             "Invalid email"
         else null
         _uiState.value = _uiState.value.copy(emailError = message)
@@ -66,7 +70,9 @@ class SignUpViewModel(
     private fun updatePasswordError(error: String? = null) {
         val message: String? = if (error.isNullOrBlank().not()) {
             error
-        } else if (uiState.value.password.isNotBlank() && AuthHelper.validatePassword(uiState.value.password).not())
+        } else if (uiState.value.password.isNotBlank() && AuthHelper.validatePassword(uiState.value.password)
+                .not()
+        )
             "Invalid password"
         else null
         _uiState.value = _uiState.value.copy(passwordError = message)
@@ -87,14 +93,21 @@ class SignUpViewModel(
 
     fun signupUser() {
         if (isValidFields()) {
-            try {
-                val result = authRepository.signupUser(uiState.value.email, uiState.value.password)
-                UserManager.loggedUser = result
-                updateSignUpStateToSuccess()
-            } catch (signUpInvalidException: SignUpInvalidException) {
-                Toast
-                    .makeText(getApplication(), signUpInvalidException.message, Toast.LENGTH_LONG)
-                    .show()
+            viewModelScope.launch {
+                try {
+                    val result =
+                        authRepository.signupUser(uiState.value.email, uiState.value.password)
+                    UserManager.loggedUser = result
+                    updateSignUpStateToSuccess()
+                } catch (signUpInvalidException: SignUpInvalidException) {
+                    Toast
+                        .makeText(
+                            getApplication(),
+                            signUpInvalidException.message,
+                            Toast.LENGTH_LONG
+                        )
+                        .show()
+                }
             }
         }
     }

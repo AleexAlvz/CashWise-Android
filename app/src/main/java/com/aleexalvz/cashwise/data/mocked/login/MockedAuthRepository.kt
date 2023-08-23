@@ -7,6 +7,7 @@ import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.helper.JsonHelper
 import com.aleexalvz.cashwise.model.SignUpInvalidException
 import com.aleexalvz.cashwise.model.UserNotFoundException
+import com.google.gson.reflect.TypeToken
 
 class MockedAuthRepository(private val application: Application) : AuthRepository {
 
@@ -15,7 +16,12 @@ class MockedAuthRepository(private val application: Application) : AuthRepositor
     }
 
     private fun getAllUsers(application: Application): List<User> {
-        JsonHelper.getListDataFromAsset<User>(application, "usersmocked.json").apply {
+        val typeToken = object : TypeToken<List<User>>() {}.type
+        JsonHelper.getListDataFromAsset<List<User>>(
+            application,
+            "usersmocked.json",
+            typeToken
+        ).apply {
             Log.i("Json request", this.toString())
             return this
         }

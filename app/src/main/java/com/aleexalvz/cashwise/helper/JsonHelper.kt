@@ -3,6 +3,7 @@ package com.aleexalvz.cashwise.helper
 import android.app.Application
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 object JsonHelper {
 
@@ -15,9 +16,8 @@ object JsonHelper {
         }
     }
 
-    fun <T> getListDataFromAsset(application: Application, fileName: String): List<T> {
+    fun <T> getListDataFromAsset(application: Application, fileName: String, typeToken: Type): T {
         val jsonData = getJsonDataFromAsset(fileName, application)
-        val usersDataType = object : TypeToken<List<T>>() {}.type
-        return Gson().fromJson(jsonData, usersDataType)
+        return Gson().fromJson(jsonData, typeToken)
     }
 }
