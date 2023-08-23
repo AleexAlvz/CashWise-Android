@@ -3,17 +3,15 @@ package com.aleexalvz.cashwise.data.mocked.login
 import android.app.Application
 import android.util.Log
 import com.aleexalvz.cashwise.data.model.User
-import com.aleexalvz.cashwise.helper.JsonHelper
 import com.aleexalvz.cashwise.data.repository.AuthRepository
+import com.aleexalvz.cashwise.helper.JsonHelper
+import com.aleexalvz.cashwise.model.SignUpInvalidException
+import com.aleexalvz.cashwise.model.UserNotFoundException
 
 class MockedAuthRepository(private val application: Application) : AuthRepository {
 
-    companion object {
-        private var loggedUser: User? = null
-    }
-
-    private fun getUserByEmail(application: Application, email: String): User? {
-        return getAllUsers(application).firstOrNull { it.email == email }
+    private fun getUserByEmail(application: Application, email: String): User {
+        return getAllUsers(application).firstOrNull { it.email == email }!!
     }
 
     private fun getAllUsers(application: Application): List<User> {
@@ -23,18 +21,20 @@ class MockedAuthRepository(private val application: Application) : AuthRepositor
         }
     }
 
-    override fun signupUser(email: String, password: String): Boolean {
-        loggedUser = User(email = email)
-        return true
+    override fun signupUser(email: String, password: String): User {
+        try {
+            return User(email = email)
+        } catch (e: Exception) {
+            throw SignUpInvalidException("This user data is invalid to sign up")
+        }
     }
 
-    override fun doLogin(email: String, password: String): Boolean {
-        val user = getUserByEmail(application, email)
-        user?.let {
-            loggedUser = it
-            return true
+    override fun doLogin(email: String, password: String): User {
+        try {
+            return getUserByEmail(application, email)
+        } catch (e: Exception) {
+            throw UserNotFoundException("User not found")
         }
-        return false
     }
 }
 

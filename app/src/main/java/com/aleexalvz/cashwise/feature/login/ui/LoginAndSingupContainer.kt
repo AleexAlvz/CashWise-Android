@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.login.ui
+package com.aleexalvz.cashwise.feature.login.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,31 +16,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
 import com.aleexalvz.cashwise.components.switchLoginButton
-import com.aleexalvz.cashwise.login.LoginRoutes
-import com.aleexalvz.cashwise.login.viewmodel.LoginViewModel
+import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
+import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
+
+const val LOGIN_SCREEN_NAME = "login"
+const val SIGNUP_SCREEN_NAME = "signup"
 
 @Composable
 fun loginAndSignupScreen(
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel,
-    route: String,
+    signUpViewModel: SignUpViewModel,
+    onLoginSuccessful: ()->Unit
 ) {
 
-    val routeState = remember { mutableStateOf(route) }
+    val screenState = remember { mutableStateOf(LOGIN_SCREEN_NAME) }
     val indexSelectedState = remember {
-        val index =
-            if (routeState.value == LoginRoutes.LOGIN) FirstIndex
-            else SecondIndex
+        val index = if (screenState.value == LOGIN_SCREEN_NAME) FirstIndex
+        else SecondIndex
         mutableStateOf(index)
     }
 
@@ -50,24 +51,19 @@ fun loginAndSignupScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        switchLoginButton(
-            firstButtonText = LoginRoutes.LOGIN,
-            secondButtonText = LoginRoutes.SIGNUP,
+        switchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,
+            secondButtonText = SIGNUP_SCREEN_NAME,
             size = (320.dp to 44.dp),
-            modifier = Modifier
-                .padding(top = 93.dp),
+            modifier = Modifier.padding(top = 93.dp),
             indexSelected = indexSelectedState,
             onClickListener = {
-                if (routeState.value != it) routeState.value = it
-            }
-        )
+                if (screenState.value != it) screenState.value = it
+            })
 
-        val (text, message) = if (routeState.value == LoginRoutes.LOGIN) {
-            stringResource(R.string.login_screen_title) to
-                    stringResource(R.string.login_screen_message)
+        val (text, message) = if (screenState.value == LOGIN_SCREEN_NAME) {
+            stringResource(R.string.login_screen_title) to stringResource(R.string.login_screen_message)
         } else {
-            stringResource(R.string.singup_screen_title) to
-                    stringResource(R.string.signup_screen_message)
+            stringResource(R.string.singup_screen_title) to stringResource(R.string.signup_screen_message)
         }
 
         Text(
@@ -96,18 +92,20 @@ fun loginAndSignupScreen(
                     disabledContainerColor = GrayDefault,
                     disabledContentColor = Color.White
                 ),
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
             ) {
                 if (indexSelectedState.value == FirstIndex) {
                     loginContent(
                         modifier = Modifier.padding(26.dp),
-                        loginViewModel = loginViewModel
+                        loginViewModel = loginViewModel,
+                        onLoginSuccessful = onLoginSuccessful
                     )
                 } else {
                     signupContent(
-                        modifier = Modifier.padding(26.dp)
+                        modifier = Modifier.padding(26.dp),
+                        signUpViewModel = signUpViewModel,
+                        onLoginSuccessful = onLoginSuccessful
                     )
                 }
             }

@@ -1,7 +1,6 @@
-package com.aleexalvz.cashwise.login
+package com.aleexalvz.cashwise.feature.login
 
 object LoginRoutes {
     const val LOGIN = "login"
-    const val SIGNUP = "signup"
     const val RECOVERY_PASSWORD = "recoveryPassword"
 }

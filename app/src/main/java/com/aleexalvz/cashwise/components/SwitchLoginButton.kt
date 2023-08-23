@@ -12,7 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.aleexalvz.cashwise.login.LoginRoutes
+import com.aleexalvz.cashwise.feature.login.LoginRoutes
+import com.aleexalvz.cashwise.feature.login.ui.LOGIN_SCREEN_NAME
+import com.aleexalvz.cashwise.feature.login.ui.SIGNUP_SCREEN_NAME
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
 import com.aleexalvz.cashwise.ui.theme.GrayLight
 import com.aleexalvz.cashwise.ui.theme.Green
@@ -120,8 +122,8 @@ fun switchLoginButtonPreview() {
         mutableStateOf(FirstIndex)
     }
     switchLoginButton(
-        firstButtonText = LoginRoutes.LOGIN,
-        secondButtonText = LoginRoutes.SIGNUP,
+        firstButtonText = LOGIN_SCREEN_NAME,
+        secondButtonText = SIGNUP_SCREEN_NAME,
         size = 360.dp to 44.dp,
         indexSelected = indexSelected,
         onClickListener = {}
