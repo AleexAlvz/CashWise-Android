@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - '*'
+  pull-request:
+    branches:
+      - "*"
 
 jobs:
   build:
