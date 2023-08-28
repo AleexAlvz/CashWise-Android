@@ -42,7 +42,7 @@ class LoginViewModel(
         application.getMockedAuthRepository()
     }
 
-    private lateinit var sharedPreferences: SharedPreferences
+    private var sharedPreferences: SharedPreferences
 
     private val _uiState = MutableStateFlow(LoginUIState())
     val uiState: StateFlow<LoginUIState> = _uiState.asStateFlow()
@@ -52,6 +52,7 @@ class LoginViewModel(
             application.getSharedPreferences(SharedPreferences_LOGIN_KEY, Context.MODE_PRIVATE)
         sharedPreferences.getString(REMEMBER_ME_EMAIL_KEY, null)?.let {
             updateEmail(it)
+            _uiState.value = _uiState.value.copy(rememberMe = true)
         }
     }
 

@@ -71,7 +71,7 @@ fun loginContent(
             val rememberMeState = rememberSaveable { mutableStateOf(true) }
             checkBox(
                 selected = rememberMeState,
-                text = "Remember me"
+                text = "Remember me",
             )
         }
 

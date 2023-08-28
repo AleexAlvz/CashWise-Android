@@ -26,9 +26,9 @@ import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
 fun checkBox(
-    selected: MutableState<Boolean>,
-    text: String? = null,
     modifier: Modifier = Modifier,
+    selected: MutableState<Boolean>,
+    text: String? = null
 ) {
 
     Row(
