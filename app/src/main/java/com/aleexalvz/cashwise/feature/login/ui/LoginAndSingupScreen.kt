@@ -1,13 +1,8 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
@@ -50,14 +45,13 @@ fun loginAndSignupScreen(
     Column(
         modifier = modifier
             .background(DarkBackground)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         switchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,
             secondButtonText = SIGNUP_SCREEN_NAME,
             size = (320.dp to 44.dp),
-            modifier = Modifier.padding(top = 64.dp),
+            modifier = Modifier.padding(top = 32.dp),
             indexSelected = indexSelectedState,
             onClickListener = {
                 if (screenState.value != it) screenState.value = it
@@ -72,44 +66,49 @@ fun loginAndSignupScreen(
         Text(
             modifier = Modifier.padding(top = 64.dp),
             text = text,
-            fontSize = 42.sp,
+            fontSize = 36.sp,
             color = Color.White
         )
         Text(
             modifier = Modifier.padding(top = 16.dp),
             text = message,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             color = Color.White
         )
 
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 56.dp)
+        Box(
+            Modifier.fillMaxSize()
         ) {
-            Card(
-                colors = CardColors(
-                    containerColor = GrayDefault,
-                    contentColor = Color.White,
-                    disabledContainerColor = GrayDefault,
-                    disabledContentColor = Color.White
-                ),
-                modifier = Modifier.fillMaxSize(),
-                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+            Row(
+                modifier = Modifier
+                    .padding(top = 56.dp)
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
             ) {
-                if (indexSelectedState.value == FirstIndex) {
-                    loginContent(
-                        modifier = Modifier.padding(26.dp),
-                        loginViewModel = loginViewModel,
-                        onLoginSuccessful = onLoginSuccessful
-                    )
-                } else {
-                    signupContent(
-                        modifier = Modifier.padding(26.dp),
-                        signUpViewModel = signUpViewModel,
-                        onLoginSuccessful = onLoginSuccessful
-                    )
+                Card(
+                    colors = CardColors(
+                        containerColor = GrayDefault,
+                        contentColor = Color.White,
+                        disabledContainerColor = GrayDefault,
+                        disabledContentColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                ) {
+                    if (indexSelectedState.value == FirstIndex) {
+                        loginContent(
+                            modifier = Modifier.padding(26.dp),
+                            loginViewModel = loginViewModel,
+                            onLoginSuccessful = onLoginSuccessful
+                        )
+                    } else {
+                        signupContent(
+                            modifier = Modifier.padding(26.dp),
+                            signUpViewModel = signUpViewModel,
+                            onLoginSuccessful = onLoginSuccessful
+                        )
+                    }
                 }
             }
         }

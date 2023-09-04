@@ -45,7 +45,7 @@ fun signupContent(
 
         outlinedTextFieldWithValidation(
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth(),
             text = uiState.value.password,
             onValueChange = signUpViewModel::updatePassword,
@@ -58,7 +58,7 @@ fun signupContent(
 
         outlinedTextFieldWithValidation(
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth(),
             text = uiState.value.confirmPassword,
             onValueChange = signUpViewModel::updateConfirmPassword,
@@ -72,7 +72,7 @@ fun signupContent(
         //TODO Add disabled state
         gradientButton(
             modifier = Modifier
-                .padding(top = 40.dp)
+                .padding(top = 20.dp)
                 .width(310.dp)
                 .height(50.dp),
             onClickListener = signUpViewModel::signupUser,

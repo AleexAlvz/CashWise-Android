@@ -52,7 +52,7 @@ fun loginContent(
 
         outlinedTextFieldWithValidation(
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth(),
             text = uiState.value.password,
             onValueChange = { loginViewModel.updatePassword(it) },
@@ -65,7 +65,7 @@ fun loginContent(
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(start = 4.dp, top = 6.dp),
+                .padding(start = 4.dp, top = 4.dp),
             horizontalArrangement = Arrangement.Start
         ) {
             val rememberMeState = rememberSaveable { mutableStateOf(true) }
@@ -93,7 +93,7 @@ fun loginContent(
         Row(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(top = 32.dp, bottom = 20.dp),
+                .padding(top = 32.dp, bottom = 16.dp),
             verticalAlignment = Alignment.Bottom
         ) {
             Text(
@@ -102,7 +102,7 @@ fun loginContent(
                         //Click to recovery password
                     },
                 text = "Forgot your password?",
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 color = Green
             )
         }
