@@ -8,8 +8,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -68,9 +66,11 @@ fun loginContent(
                 .padding(start = 4.dp, top = 4.dp),
             horizontalArrangement = Arrangement.Start
         ) {
-            val rememberMeState = rememberSaveable { mutableStateOf(true) }
             checkBox(
-                selected = rememberMeState,
+                selected = uiState.value.rememberMe,
+                onStateChanged = {
+                    loginViewModel.updateRememberMeCheckBox(it)
+                },
                 text = "Remember me",
             )
         }

@@ -66,6 +66,10 @@ class LoginViewModel(
         updatePasswordError()
     }
 
+    fun updateRememberMeCheckBox(value: Boolean){
+        _uiState.value = _uiState.value.copy(rememberMe = value)
+    }
+
     private fun updateEmailError(error: String? = null) {
         val message: String? = if (error.isNullOrBlank().not()) {
             error
