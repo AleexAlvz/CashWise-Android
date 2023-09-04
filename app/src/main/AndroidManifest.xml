@@ -11,17 +11,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CashWise"
         tools:targetApi="34">
+
         <activity
             android:name=".feature.login.LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.CashWise">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.aleexalvz.cashwise.feature.home.HomeActivity" />
-    </application>
 
+        <activity
+            android:name=".feature.home.HomeActivity"
+            android:exported="true" />
+
+    </application>
 </manifest>

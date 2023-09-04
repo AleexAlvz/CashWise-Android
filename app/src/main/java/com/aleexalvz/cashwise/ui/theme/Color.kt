@@ -22,3 +22,6 @@ val GradGreenButton3 = Color(0xFF278136)
 
 
 val DarkBackground = Color(0xFF1D1B20)
+
+val BottomAppBarDarkColor = Color(0xFF211F26)
+val IndicatorItemColor = Color(0xFF119327)
