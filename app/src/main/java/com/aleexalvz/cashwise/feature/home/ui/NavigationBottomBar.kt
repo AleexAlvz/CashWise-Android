@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home
+package com.aleexalvz.cashwise.feature.home.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.aleexalvz.cashwise.feature.home.HomeRoutes
+import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.ui.theme.BottomAppBarDarkColor
 import com.aleexalvz.cashwise.ui.theme.IndicatorItemColor
 
@@ -41,7 +43,15 @@ fun navigationBottomBar(navController: NavController) {
                     unselectedTextColor = Color.White
                 ),
                 selected = item.route == backStackEntry.value?.destination?.route,
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.navigate(route = item.route) {
+                        popUpTo(HomeRoutes.HOME){
+                            if (backStackEntry.value?.destination?.route == HomeRoutes.HOME){
+                                UserManager.loggedUser = null
+                            }
+                        }
+                    }
+                },
                 icon = { Icon(imageVector = item.icon, contentDescription = "${item.name} Icon") },
                 label = { Text(text = item.name) }
             )

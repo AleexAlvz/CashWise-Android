@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
-import com.aleexalvz.cashwise.components.switchLoginButton
+import com.aleexalvz.cashwise.components.SwitchLoginButton
 import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
 import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
@@ -48,7 +48,7 @@ fun loginAndSignupScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        switchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,
+        SwitchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,
             secondButtonText = SIGNUP_SCREEN_NAME,
             size = (320.dp to 44.dp),
             modifier = Modifier.padding(top = 32.dp),
@@ -103,7 +103,7 @@ fun loginAndSignupScreen(
                             onLoginSuccessful = onLoginSuccessful
                         )
                     } else {
-                        signupContent(
+                        SignupContent(
                             modifier = Modifier.padding(26.dp),
                             signUpViewModel = signUpViewModel,
                             onLoginSuccessful = onLoginSuccessful

@@ -10,15 +10,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
-import com.aleexalvz.cashwise.components.gradientButton
-import com.aleexalvz.cashwise.components.outlinedTextFieldWithValidation
+import com.aleexalvz.cashwise.components.GradientButton
+import com.aleexalvz.cashwise.components.OutlinedTextFieldWithValidation
 import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 
 @Composable
-fun signupContent(
+fun SignupContent(
     modifier: Modifier,
     signUpViewModel: SignUpViewModel,
     onLoginSuccessful: () -> Unit
@@ -33,7 +33,7 @@ fun signupContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        outlinedTextFieldWithValidation(
+        OutlinedTextFieldWithValidation(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.value.email,
             onValueChange = signUpViewModel::updateEmail,
@@ -43,7 +43,7 @@ fun signupContent(
             errorMessage = uiState.value.emailError,
         )
 
-        outlinedTextFieldWithValidation(
+        OutlinedTextFieldWithValidation(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
@@ -56,7 +56,7 @@ fun signupContent(
             errorMessage = uiState.value.passwordError,
         )
 
-        outlinedTextFieldWithValidation(
+        OutlinedTextFieldWithValidation(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
@@ -70,7 +70,7 @@ fun signupContent(
         )
 
         //TODO Add disabled state
-        gradientButton(
+        GradientButton(
             modifier = Modifier
                 .padding(top = 20.dp)
                 .width(310.dp)

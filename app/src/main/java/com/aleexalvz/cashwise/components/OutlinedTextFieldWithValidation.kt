@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
-fun outlinedTextFieldWithValidation(
+fun OutlinedTextFieldWithValidation(
     modifier: Modifier = Modifier,
     text: String,
     onValueChange: (String) -> Unit,

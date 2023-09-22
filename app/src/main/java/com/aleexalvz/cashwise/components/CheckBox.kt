@@ -19,7 +19,7 @@ import com.aleexalvz.cashwise.ui.theme.GraySuperLight
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
-fun checkBox(
+fun CheckBox(
     modifier: Modifier = Modifier,
     selected: Boolean,
     onStateChanged: (Boolean) -> Unit,

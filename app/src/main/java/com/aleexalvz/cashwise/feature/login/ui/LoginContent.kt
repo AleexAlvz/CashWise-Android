@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aleexalvz.cashwise.components.checkBox
-import com.aleexalvz.cashwise.components.gradientButton
-import com.aleexalvz.cashwise.components.outlinedTextFieldWithValidation
+import com.aleexalvz.cashwise.components.CheckBox
+import com.aleexalvz.cashwise.components.GradientButton
+import com.aleexalvz.cashwise.components.OutlinedTextFieldWithValidation
 import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
@@ -38,7 +38,7 @@ fun loginContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        outlinedTextFieldWithValidation(
+        OutlinedTextFieldWithValidation(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.value.email,
             onValueChange = { loginViewModel.updateEmail(it) },
@@ -48,7 +48,7 @@ fun loginContent(
             errorMessage = uiState.value.emailError,
         )
 
-        outlinedTextFieldWithValidation(
+        OutlinedTextFieldWithValidation(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
@@ -66,7 +66,7 @@ fun loginContent(
                 .padding(start = 4.dp, top = 4.dp),
             horizontalArrangement = Arrangement.Start
         ) {
-            checkBox(
+            CheckBox(
                 selected = uiState.value.rememberMe,
                 onStateChanged = {
                     loginViewModel.updateRememberMeCheckBox(it)
@@ -76,7 +76,7 @@ fun loginContent(
         }
 
         //TODO Add disabled state
-        gradientButton(
+        GradientButton(
             modifier = Modifier
                 .padding(top = 20.dp)
                 .width(310.dp)

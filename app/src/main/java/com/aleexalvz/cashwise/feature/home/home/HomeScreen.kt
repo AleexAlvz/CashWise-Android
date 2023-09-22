@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.ui
+package com.aleexalvz.cashwise.feature.home.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,23 +13,19 @@ import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 
 @Composable
-fun homeScreen() {
+fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(DarkBackground),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Home",
-            color = Color.White,
-            fontSize = 32.sp
-        )
+
     }
 }
 
 @Composable
 @Preview
-fun homeScreenPreview() {
-    homeScreen()
+fun HomeScreenPreview() {
+    HomeScreen()
 }

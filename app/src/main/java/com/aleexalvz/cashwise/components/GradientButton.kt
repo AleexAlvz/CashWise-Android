@@ -20,7 +20,7 @@ import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 
 @Composable
-fun gradientButton(
+fun GradientButton(
     modifier: Modifier = Modifier,
     onClickListener: () -> Unit,
     text: String,
@@ -54,8 +54,8 @@ fun gradientButton(
 
 @Composable
 @Preview
-fun gradientButtonPreview() {
-    gradientButton(
+fun GradientButtonPreview() {
+    GradientButton(
         text = "Click me",
         onClickListener = {},
         modifier = Modifier
