@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -22,7 +23,7 @@ import com.aleexalvz.cashwise.ui.theme.DarkBackground
 fun HomeNavGraph() {
 
     val navController: NavHostController = rememberNavController()
-    val topBarTitle = mutableStateOf("Cash Wise")
+    val topBarTitle = remember { mutableStateOf("Cash Wise")}
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
         topBarTitle.value = when (destination.route) {
