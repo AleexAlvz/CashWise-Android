@@ -2,7 +2,7 @@ package com.aleexalvz.cashwise.data.mocked.login
 
 import android.app.Application
 import android.util.Log
-import com.aleexalvz.cashwise.data.model.User
+import com.aleexalvz.cashwise.data.model.user.User
 import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.helper.JsonHelper
 import com.aleexalvz.cashwise.model.SignUpInvalidException

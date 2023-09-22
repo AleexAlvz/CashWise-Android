@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.data.model
+package com.aleexalvz.cashwise.data.model.user
 
 data class User(
     val email: String,

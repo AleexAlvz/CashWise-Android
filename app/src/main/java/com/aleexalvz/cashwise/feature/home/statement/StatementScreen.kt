@@ -3,6 +3,7 @@ package com.aleexalvz.cashwise.feature.home.statement
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -31,10 +32,11 @@ fun StatementScreen() {
             }
         },
         floatingActionButtonPosition = FabPosition.End
-    ) {
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .background(DarkBackground),
             contentAlignment = Alignment.TopCenter
         ) {
