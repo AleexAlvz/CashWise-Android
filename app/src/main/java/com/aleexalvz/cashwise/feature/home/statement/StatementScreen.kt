@@ -16,7 +16,9 @@ import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
-fun StatementScreen() {
+fun StatementScreen(
+    onClickAddButton: (Long?) -> Unit
+) {
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -48,5 +50,7 @@ fun StatementScreen() {
 @Composable
 @Preview
 fun StatementScreenPreview() {
-    StatementScreen()
+    StatementScreen(
+        onClickAddButton = {}
+    )
 }
