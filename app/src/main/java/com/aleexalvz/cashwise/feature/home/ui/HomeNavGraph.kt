@@ -9,8 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.os.bundleOf
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -27,28 +28,15 @@ import com.aleexalvz.cashwise.ui.theme.DarkBackground
 fun HomeNavGraph() {
 
     val navController: NavHostController = rememberNavController()
-    val topBarTitle = remember { mutableStateOf("Cash Wise") }
 
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        topBarTitle.value = when (destination.route) {
-            HomeRoutes.STATEMENT -> "Statement"
-            HomeRoutes.CALENDAR -> "Calendar"
-            HomeRoutes.ADD_EDIT_TRANSACTION -> {
-                if (navController.currentBackStackEntry?.arguments?.getString(AddEditTransactionArgs.transactionID)
-                        ?.isBlank() == true
-                ) {
-                    "Add transaction"
-                } else {
-                    "Edit transaction"
-                }
-            }
-
-            else -> "Cash Wise"
-        }
+    val topBarTitleState =
+        remember { mutableStateOf(getTitleByDestination(navController = navController)) }
+    navController.addOnDestinationChangedListener { _, _, _ ->
+        topBarTitleState.value = getTitleByDestination(navController)
     }
 
     Scaffold(
-        topBar = { topAppBar(topBarTitle) },
+        topBar = { TopAppBar(topBarTitleState) },
         bottomBar = { navigationBottomBar(navController) }
     ) { paddingValues ->
         Box(
@@ -65,26 +53,55 @@ fun HomeNavGraph() {
                 }
                 composable(route = HomeRoutes.STATEMENT) {
                     StatementScreen(
-                        onClickAddButton = { id ->
-                            val bundle = bundleOf(AddEditTransactionArgs.transactionID to id)
+                        onAddTransaction = {
+                            navController.navigate(HomeRoutes.ADD_EDIT_TRANSACTION)
+                        },
+                        onEditTransaction = { transactionId ->
                             navController.navigate(
-                                route = HomeRoutes.ADD_EDIT_TRANSACTION
+                                route = "${HomeRoutes.ADD_EDIT_TRANSACTION}/$transactionId"
                             )
                         }
                     )
                 }
-                composable(route = HomeRoutes.CALENDAR) {
-                    CalendarScreen()
-                }
-                composable(route = HomeRoutes.ADD_EDIT_TRANSACTION) { entry ->
-                    val id =
-                        entry.arguments?.getString(AddEditTransactionArgs.transactionID)?.toLong()
+                composable(
+                    route = "${HomeRoutes.ADD_EDIT_TRANSACTION}/${AddEditTransactionArgs.transactionIDArg}",
+                    arguments = listOf(navArgument(AddEditTransactionArgs.transactionIDArg) {
+                        type = NavType.LongType
+                    })
+                ) { entry ->
+                    val id = entry.arguments
+                        ?.getLong(AddEditTransactionArgs.transactionIDArg)
                     AddEditTransactionScreen(transactionId = id)
+                }
+                composable(route = HomeRoutes.ADD_EDIT_TRANSACTION) {
+                    AddEditTransactionScreen()
+                }
+                composable(
+                    route = HomeRoutes.CALENDAR
+                ) {
+                    CalendarScreen()
                 }
             }
         }
     }
 }
+
+private fun getTitleByDestination(navController: NavController): String =
+    when (navController.currentDestination?.route) {
+        HomeRoutes.STATEMENT -> "Statement"
+        HomeRoutes.CALENDAR -> "Calendar"
+        HomeRoutes.ADD_EDIT_TRANSACTION -> {
+            if (navController.currentBackStackEntry?.arguments?.getString(AddEditTransactionArgs.transactionIDArg)
+                    ?.isBlank() == true
+            ) {
+                "Add transaction"
+            } else {
+                "Edit transaction"
+            }
+        }
+
+        else -> "Cash Wise"
+    }
 
 @Preview
 @Composable
