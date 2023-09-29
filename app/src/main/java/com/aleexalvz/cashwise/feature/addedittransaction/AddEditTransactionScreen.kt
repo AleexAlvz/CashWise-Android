@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aleexalvz.cashwise.components.OutlinedTextFieldWithValidation
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 
@@ -20,13 +20,13 @@ fun AddEditTransactionScreen(
             .fillMaxSize()
             .background(DarkBackground)
     ) {
-//        OutlinedTextFieldWithValidation(
-//            text = "",
-//            onValueChange = {},
-//            labelText = "",
-//            leadingIconImageVector = ,
-//            contentDescription =
-//        )
+        OutlinedTextFieldWithValidation(
+            text = "",
+            onValueChange = {},
+            labelText = "Title",
+            leadingIconImageVector = ,
+            contentDescription =
+        )
     }
 }
 

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
+import com.aleexalvz.cashwise.data.repository.TransactionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.Date
@@ -17,8 +18,9 @@ data class AddEditTransactionUIState(
     val unitValue: Double = 0.0
 )
 
-class AddEditTransactionViewModel(
-    application: Application
+class TransactionViewModel(
+    application: Application,
+    transactionRepository: TransactionRepository
 ) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(AddEditTransactionUIState())

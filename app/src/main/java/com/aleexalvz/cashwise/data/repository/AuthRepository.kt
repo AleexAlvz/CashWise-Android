@@ -1,6 +1,6 @@
 package com.aleexalvz.cashwise.data.repository
 
-import com.aleexalvz.cashwise.data.model.user.User
+import com.aleexalvz.cashwise.data.model.auth.User
 
 interface AuthRepository {
     fun doLogin(email: String, password: String): User

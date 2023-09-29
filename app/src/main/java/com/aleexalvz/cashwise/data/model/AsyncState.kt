@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.model
+package com.aleexalvz.cashwise.data.model
 
 sealed class AsyncState<out T> {
     object Loading : AsyncState<Nothing>()

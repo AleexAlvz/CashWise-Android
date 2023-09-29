@@ -1,12 +1,12 @@
-package com.aleexalvz.cashwise.data.mocked.login
+package com.aleexalvz.cashwise.data.mocked.auth
 
 import android.app.Application
 import android.util.Log
-import com.aleexalvz.cashwise.data.model.user.User
+import com.aleexalvz.cashwise.data.model.auth.User
 import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.helper.JsonHelper
-import com.aleexalvz.cashwise.model.SignUpInvalidException
-import com.aleexalvz.cashwise.model.UserNotFoundException
+import com.aleexalvz.cashwise.data.model.auth.SignUpInvalidException
+import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
 import com.google.gson.reflect.TypeToken
 
 class MockedAuthRepository(private val application: Application) : AuthRepository {

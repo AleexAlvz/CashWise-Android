@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.aleexalvz.cashwise.data.mocked.login.getMockedAuthRepository
+import com.aleexalvz.cashwise.data.mocked.auth.getMockedAuthRepository
 import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.helper.AuthHelper
-import com.aleexalvz.cashwise.model.SignUpInvalidException
+import com.aleexalvz.cashwise.data.model.auth.SignUpInvalidException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
