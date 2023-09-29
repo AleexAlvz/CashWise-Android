@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.data.database
+package com.aleexalvz.cashwise.data.source.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,19 +6,15 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 
 @Dao
 interface TransactionDao {
 
-    @Query("SELECT * FROM `TRANSACTION`")
-    fun getAll()
+    @Query("SELECT * FROM `LOCALTRANSACTION`")
+    fun getAll(): List<Transaction>
 
-    @Query("SELECT * FROM `TRANSACTION` WHERE id == (:id)")
-    fun getByID(id: Long)
-
-    @Query("SELECT * FROM `TRANSACTION` WHERE category == (:category)")
-    fun getByCategory(category: TransactionCategory)
+    @Query("SELECT * FROM `LOCALTRANSACTION` WHERE id == (:id)")
+    fun getByID(id: Long): Transaction
 
     @Insert
     fun insert(transaction: Transaction)
