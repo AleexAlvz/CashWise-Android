@@ -24,7 +24,7 @@ fun OutlinedTextFieldWithValidation(
     text: String,
     onValueChange: (String) -> Unit,
     labelText: String,
-    leadingIconImageVector: ImageVector,
+    leadingIconImageVector: ImageVector? = null,
     contentDescription: String,
     isPassword: Boolean = false,
     errorMessage: String? = null
@@ -94,10 +94,12 @@ fun OutlinedTextFieldWithValidation(
             )
         },
         leadingIcon = {
-            Icon(
-                leadingIconImageVector,
-                contentDescription = contentDescription
-            )
+            leadingIconImageVector?.let {
+                Icon(
+                    it,
+                    contentDescription = contentDescription
+                )
+            }
         },
         colors = outlinedTextFieldColors
     )

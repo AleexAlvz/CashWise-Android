@@ -1,28 +1,16 @@
 package com.aleexalvz.cashwise.data.repository
 
-import com.aleexalvz.cashwise.data.model.transaction.Transaction
-import com.aleexalvz.cashwise.data.source.local.dao.TransactionDao
+import com.aleexalvz.cashwise.data.source.local.model.LocalTransaction
 
-class LocalTransactionRepository(
-    private val transactionDao: TransactionDao
-) : TransactionRepository {
-    override suspend fun getAll(): List<Transaction> {
-        return transactionDao.getAll()
-    }
+interface LocalTransactionRepository {
 
-    override suspend fun getByID(id: Long): Transaction {
-        return transactionDao.getByID(id)
-    }
+    suspend fun getAll(): List<LocalTransaction>
 
-    override suspend fun insert(transaction: Transaction) {
-        transactionDao.insert(transaction)
-    }
+    suspend fun getByID(id: Long): LocalTransaction
 
-    override suspend fun delete(transaction: Transaction) {
-        transactionDao.delete(transaction)
-    }
+    suspend fun insert(transaction: LocalTransaction)
 
-    override suspend fun update(transaction: Transaction) {
-        transactionDao.update(transaction)
-    }
+    suspend fun delete(transaction: LocalTransaction)
+
+    suspend fun update(transaction: LocalTransaction)
 }

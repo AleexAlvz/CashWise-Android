@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.OutlinedTextFieldWithValidation
 import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
@@ -20,7 +21,7 @@ import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 @Composable
 fun SignupContent(
     modifier: Modifier,
-    signUpViewModel: SignUpViewModel,
+    signUpViewModel: SignUpViewModel = hiltViewModel(),
     onLoginSuccessful: () -> Unit
 ) {
 

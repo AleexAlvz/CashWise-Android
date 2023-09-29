@@ -8,23 +8,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.aleexalvz.cashwise.feature.home.HomeActivity
 import com.aleexalvz.cashwise.feature.login.ui.LoginNavGraph
-import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
 import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
 
-    private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
-    private val signUpViewModel: SignUpViewModel by viewModels { SignUpViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             CashWiseTheme {
                 LoginNavGraph(
-                    loginViewModel,
-                    signUpViewModel,
                     onLoginSuccessful = ::onLoginSuccessful
                 )
             }

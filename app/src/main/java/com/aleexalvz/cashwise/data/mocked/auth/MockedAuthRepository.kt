@@ -1,24 +1,30 @@
 package com.aleexalvz.cashwise.data.mocked.auth
 
-import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
-import com.aleexalvz.cashwise.data.model.auth.User
-import com.aleexalvz.cashwise.data.repository.AuthRepository
-import com.aleexalvz.cashwise.helper.JsonHelper
 import com.aleexalvz.cashwise.data.model.auth.SignUpInvalidException
+import com.aleexalvz.cashwise.data.model.auth.User
 import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
+import com.aleexalvz.cashwise.data.repository.AuthRepository
+import com.aleexalvz.cashwise.feature.login.viewmodel.REMEMBER_ME_EMAIL_KEY
+import com.aleexalvz.cashwise.helper.JsonHelper
 import com.google.gson.reflect.TypeToken
+import javax.inject.Inject
 
-class MockedAuthRepository(private val application: Application) : AuthRepository {
+class MockedAuthRepository @Inject constructor(
+    private val context: Context,
+    private val sharedPreferences: SharedPreferences
+) : AuthRepository {
 
-    private fun getUserByEmail(application: Application, email: String): User {
-        return getAllUsers(application).firstOrNull { it.email == email }!!
+    private fun getUserByEmail(context: Context, email: String): User {
+        return getAllUsers(context = context).firstOrNull { it.email == email }!!
     }
 
-    private fun getAllUsers(application: Application): List<User> {
+    private fun getAllUsers(context: Context): List<User> {
         val typeToken = object : TypeToken<List<User>>() {}.type
         JsonHelper.getListDataFromAsset<List<User>>(
-            application,
+            context,
             "usersmocked.json",
             typeToken
         ).apply {
@@ -35,13 +41,22 @@ class MockedAuthRepository(private val application: Application) : AuthRepositor
         }
     }
 
+    override fun verifyRememberUser(): String? =
+        sharedPreferences.getString(REMEMBER_ME_EMAIL_KEY, null)
+
+    override fun rememberUser(email: String) {
+        sharedPreferences.edit().putString(REMEMBER_ME_EMAIL_KEY, email).apply()
+    }
+
+    override fun forgetUser() {
+        sharedPreferences.edit().putString(REMEMBER_ME_EMAIL_KEY, null).apply()
+    }
+
     override fun doLogin(email: String, password: String): User {
         try {
-            return getUserByEmail(application, email)
+            return getUserByEmail(context, email)
         } catch (e: Exception) {
             throw UserNotFoundException("User not found")
         }
     }
 }
-
-fun Application.getMockedAuthRepository() = MockedAuthRepository(this)

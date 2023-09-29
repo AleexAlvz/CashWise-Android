@@ -5,24 +5,24 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.aleexalvz.cashwise.data.model.transaction.Transaction
+import com.aleexalvz.cashwise.data.source.local.model.LocalTransaction
 
 @Dao
 interface TransactionDao {
 
     @Query("SELECT * FROM `LOCALTRANSACTION`")
-    fun getAll(): List<Transaction>
+    fun getAll(): List<LocalTransaction>
 
     @Query("SELECT * FROM `LOCALTRANSACTION` WHERE id == (:id)")
-    fun getByID(id: Long): Transaction
+    fun getByID(id: Long): LocalTransaction
 
     @Insert
-    fun insert(transaction: Transaction)
+    fun insert(transaction: LocalTransaction)
 
     @Delete
-    fun delete(transaction: Transaction)
+    fun delete(transaction: LocalTransaction)
 
     @Update
-    fun update(transaction: Transaction)
+    fun update(transaction: LocalTransaction)
 
 }

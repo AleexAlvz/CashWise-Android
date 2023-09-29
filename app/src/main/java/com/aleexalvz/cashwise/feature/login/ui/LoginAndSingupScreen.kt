@@ -20,7 +20,6 @@ import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
 import com.aleexalvz.cashwise.components.SwitchLoginButton
-import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
 import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
@@ -31,8 +30,6 @@ const val SIGNUP_SCREEN_NAME = "signup"
 @Composable
 fun loginAndSignupScreen(
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel,
-    signUpViewModel: SignUpViewModel,
     onLoginSuccessful: () -> Unit
 ) {
 
@@ -98,15 +95,13 @@ fun loginAndSignupScreen(
                     shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                 ) {
                     if (indexSelectedState.value == FirstIndex) {
-                        loginContent(
+                        LoginContent(
                             modifier = Modifier.padding(26.dp),
-                            loginViewModel = loginViewModel,
                             onLoginSuccessful = onLoginSuccessful
                         )
                     } else {
                         SignupContent(
                             modifier = Modifier.padding(26.dp),
-                            signUpViewModel = signUpViewModel,
                             onLoginSuccessful = onLoginSuccessful
                         )
                     }

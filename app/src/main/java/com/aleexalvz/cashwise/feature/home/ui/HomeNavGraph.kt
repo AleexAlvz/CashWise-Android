@@ -92,7 +92,7 @@ private fun getTitleByDestination(navController: NavController): String =
         HomeRoutes.CALENDAR -> "Calendar"
         HomeRoutes.ADD_EDIT_TRANSACTION -> {
             if (navController.currentBackStackEntry?.arguments?.getString(AddEditTransactionArgs.transactionIDArg)
-                    ?.isBlank() == true
+                    .isNullOrBlank()
             ) {
                 "Add transaction"
             } else {

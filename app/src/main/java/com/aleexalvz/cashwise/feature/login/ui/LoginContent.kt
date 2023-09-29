@@ -1,7 +1,14 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -13,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.aleexalvz.cashwise.components.CheckBox
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.OutlinedTextFieldWithValidation
@@ -23,9 +31,9 @@ import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
-fun loginContent(
+fun LoginContent(
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel,
+    loginViewModel: LoginViewModel = hiltViewModel(),
     onLoginSuccessful: () -> Unit
 ) {
 
@@ -41,7 +49,7 @@ fun loginContent(
         OutlinedTextFieldWithValidation(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.value.email,
-            onValueChange = { loginViewModel.updateEmail(it) },
+            onValueChange = loginViewModel::updateEmail,
             labelText = "Email",
             leadingIconImageVector = Icons.Default.Email,
             contentDescription = "Email field",

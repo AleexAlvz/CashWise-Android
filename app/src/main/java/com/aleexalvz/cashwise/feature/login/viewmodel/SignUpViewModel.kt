@@ -1,21 +1,17 @@
 package com.aleexalvz.cashwise.feature.login.viewmodel
 
-import android.app.Application
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.aleexalvz.cashwise.data.mocked.auth.getMockedAuthRepository
+import com.aleexalvz.cashwise.data.model.auth.SignUpInvalidException
 import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.helper.AuthHelper
-import com.aleexalvz.cashwise.data.model.auth.SignUpInvalidException
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Data that represents UI State from SignUp Screen
@@ -30,13 +26,10 @@ data class SignUpUIState(
     val signUpState: Boolean = false
 )
 
-class SignUpViewModel(
-    application: Application
-) : AndroidViewModel(application) {
-
-    private val authRepository: AuthRepository by lazy {
-        application.getMockedAuthRepository()
-    }
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpUIState())
     val uiState: StateFlow<SignUpUIState> = _uiState.asStateFlow()
@@ -100,13 +93,7 @@ class SignUpViewModel(
                     UserManager.loggedUser = result
                     updateSignUpStateToSuccess()
                 } catch (signUpInvalidException: SignUpInvalidException) {
-                    Toast
-                        .makeText(
-                            getApplication(),
-                            signUpInvalidException.message,
-                            Toast.LENGTH_LONG
-                        )
-                        .show()
+                    //TODO return error
                 }
             }
         }
@@ -133,15 +120,5 @@ class SignUpViewModel(
         }
 
         return hasNoError
-    }
-
-    companion object {
-        val Factory = viewModelFactory {
-            initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-                SignUpViewModel(application)
-            }
-        }
     }
 }

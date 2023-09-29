@@ -1,23 +1,22 @@
 package com.aleexalvz.cashwise.helper
 
-import android.app.Application
+import android.content.Context
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 object JsonHelper {
 
-    private fun getJsonDataFromAsset(fileName: String, application: Application): String? {
+    private fun getJsonDataFromAsset(fileName: String, context: Context): String? {
         return try {
-            application.assets.open(fileName).bufferedReader().use { it.readText() }
+            context.assets.open(fileName).bufferedReader().use { it.readText() }
         } catch (ex: Exception) {
             ex.printStackTrace()
             null
         }
     }
 
-    fun <T> getListDataFromAsset(application: Application, fileName: String, typeToken: Type): T {
-        val jsonData = getJsonDataFromAsset(fileName, application)
+    fun <T> getListDataFromAsset(context: Context, fileName: String, typeToken: Type): T {
+        val jsonData = getJsonDataFromAsset(fileName, context)
         return Gson().fromJson(jsonData, typeToken)
     }
 }
