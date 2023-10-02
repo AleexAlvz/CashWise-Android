@@ -1,6 +1,7 @@
 package com.aleexalvz.cashwise.feature.addedittransaction
 
 import androidx.lifecycle.ViewModel
+import com.aleexalvz.cashwise.data.model.transaction.Transaction
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
@@ -29,5 +30,14 @@ class TransactionViewModel @Inject constructor(
 
     fun updateTitle(title: String) {
         _uiState.value.title = title
+    }
+
+    fun updateCategory(categoryString: String) {
+        TransactionCategory.values().forEach { transactionCategoryItem ->
+            if (transactionCategoryItem.name == categoryString) {
+                _uiState.value.category = transactionCategoryItem
+                return;
+            }
+        }
     }
 }

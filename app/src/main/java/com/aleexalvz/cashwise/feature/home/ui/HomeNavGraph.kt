@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -71,10 +72,14 @@ fun HomeNavGraph() {
                 ) { entry ->
                     val id = entry.arguments
                         ?.getLong(AddEditTransactionArgs.transactionIDArg)
-                    AddEditTransactionScreen(transactionId = id)
+                    AddEditTransactionScreen(
+                        Modifier.padding(26.dp), transactionId = id
+                    )
                 }
                 composable(route = HomeRoutes.ADD_EDIT_TRANSACTION) {
-                    AddEditTransactionScreen()
+                    AddEditTransactionScreen(
+                        Modifier.padding(26.dp)
+                    )
                 }
                 composable(
                     route = HomeRoutes.CALENDAR
