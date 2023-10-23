@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -23,15 +24,12 @@ import androidx.compose.ui.unit.dp
 fun TextFieldWithDropDown(
     modifier: Modifier,
     dropDownValues: List<String>,
-    labelText: String? = "",
+    text: String = "",
+    labelText: String = "",
     onSelectedItem: ((String) -> Unit)? = null
 ) {
     val expanded = remember {
         mutableStateOf(false)
-    }
-
-    val currentText = remember {
-        mutableStateOf("")
     }
 
     ExposedDropdownMenuBox(
@@ -40,10 +38,10 @@ fun TextFieldWithDropDown(
         onExpandedChange = { expanded.value = !expanded.value }
     ) {
         DefaultOutlinedTextField(
-            modifier = Modifier.menuAnchor(),
-            text = currentText.value,
+            modifier = Modifier.menuAnchor().fillMaxWidth(),
+            text = text,
             onValueChange = {},
-            labelText = labelText.orEmpty(),
+            labelText = labelText,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded.value
@@ -61,7 +59,6 @@ fun TextFieldWithDropDown(
                     text = { Text(text = value) },
                     onClick = {
                         expanded.value = false
-                        currentText.value = value
                         onSelectedItem?.invoke(value)
                     }
                 )

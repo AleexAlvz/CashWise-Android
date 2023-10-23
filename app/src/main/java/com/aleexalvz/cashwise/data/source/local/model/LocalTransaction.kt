@@ -6,7 +6,7 @@ import java.util.Date
 
 @Entity
 data class LocalTransaction(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val title: String,
     val category: LocalTransactionCategory,

@@ -1,7 +1,5 @@
 package com.aleexalvz.cashwise.data.model.transaction
 
-import java.util.Date
-
 data class Transaction(
     val id: Long,
     val title: String,
@@ -9,5 +7,5 @@ data class Transaction(
     val unitValue: Double,
     val amount: Int,
     val type: TransactionType,
-    val date: Date
+    val dateMillis: Long
 )
