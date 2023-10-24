@@ -19,7 +19,8 @@ data class AddEditTransactionUIState(
     var type: TransactionType? = null,
     var date: Long = Date().time,
     var amount: Long = 0,
-    var unitValue: Double = 0.0
+    var unitValue: Double = 0.0,
+    var totalValue: Double = 0.0
 )
 
 @HiltViewModel
@@ -50,6 +51,29 @@ class TransactionViewModel @Inject constructor(
     fun updateDate(dateMillis: Long) {
         _uiState.update {
             it.copy(date = dateMillis)
+        }
+    }
+
+    fun updateAmount(amount: Long) {
+        _uiState.update {
+            it.copy(amount = amount)
+        }
+        updateTotalValue()
+    }
+
+    fun updateUnitValue(unitValue: Double) {
+        _uiState.update {
+            it.copy(unitValue = unitValue)
+        }
+        updateTotalValue()
+    }
+
+    private fun updateTotalValue() {
+        _uiState.run {
+            val totalValue = (value.amount * value.unitValue)
+            update {
+                it.copy(totalValue = totalValue)
+            }
         }
     }
 }

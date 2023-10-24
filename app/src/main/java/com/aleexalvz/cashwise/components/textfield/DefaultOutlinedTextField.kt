@@ -2,6 +2,7 @@ package com.aleexalvz.cashwise.components.textfield
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.components.defaultTextFieldColor
 
@@ -24,7 +26,8 @@ fun DefaultOutlinedTextField(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     errorMessage: String? = null,
-    readOnly: Boolean? = false
+    readOnly: Boolean? = false,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
 
     OutlinedTextField(
@@ -58,6 +61,7 @@ fun DefaultOutlinedTextField(
         },
         leadingIcon = leadingIcon,
         readOnly = readOnly ?: false,
-        colors = defaultTextFieldColor()
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        colors = defaultTextFieldColor(),
     )
 }

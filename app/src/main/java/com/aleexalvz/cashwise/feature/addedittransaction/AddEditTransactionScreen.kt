@@ -7,11 +7,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
@@ -38,7 +43,9 @@ fun AddEditTransactionScreen(
         updateTitle = viewModel::updateTitle,
         updateCategory = viewModel::updateCategory,
         updateType = viewModel::updateType,
-        updateDate = viewModel::updateDate
+        updateDate = viewModel::updateDate,
+        updateAmount = viewModel::updateAmount,
+        updateUnitValue = viewModel::updateUnitValue
     )
 }
 
@@ -50,13 +57,16 @@ fun AddEditTransactionScreen(
     updateCategory: (String) -> Unit,
     updateType: (String) -> Unit,
     updateDate: (Long) -> Unit,
+    updateAmount: (Long) -> Unit,
+    updateUnitValue: (Double) -> Unit,
     transactionId: Long? = null
 ) {
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(DarkBackground)
+            .background(DarkBackground),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DefaultOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -91,6 +101,49 @@ fun AddEditTransactionScreen(
                 onSelectedDateMillis = updateDate
             )
         }
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            DefaultOutlinedTextField(
+                modifier = Modifier.weight(1f),
+                text = uiState.amount.toString(),
+                onValueChange = {
+                    it.runCatching {
+                        val amount = this.toLong()
+                        updateAmount(amount)
+                    }
+                },
+                labelText = "Amount",
+                keyboardType = KeyboardType.Number
+            )
+
+            Spacer(modifier = Modifier.padding(6.dp))
+
+            DefaultOutlinedTextField(
+                modifier = Modifier.weight(2f),
+                text = uiState.unitValue.toString(),
+                onValueChange = { it.runCatching {
+                    val unitValue = this.toDouble()
+                    updateUnitValue(unitValue) }
+                },
+                labelText = "Unit value",
+                keyboardType = KeyboardType.Decimal
+            )
+        }
+
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            text = "total",
+            color = Color.White,
+            fontSize = 20.sp
+        )
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            text = uiState.totalValue.toString(),
+            color = Color.White,
+            fontSize = 32.sp
+        )
     }
 }
 
@@ -104,12 +157,15 @@ fun AddEditTransactionScreenPreview() {
             category = TransactionCategory.SAVINGS,
             type = TransactionType.PROFIT,
             date = Date().time,
-            amount = 150L,
-            unitValue = 15.2
+            amount = 10L,
+            unitValue = 15.2,
+            totalValue = 152.2
         ),
         updateTitle = {},
         updateType = {},
         updateCategory = {},
-        updateDate = {}
+        updateDate = {},
+        updateAmount = {},
+        updateUnitValue = {}
     )
 }
