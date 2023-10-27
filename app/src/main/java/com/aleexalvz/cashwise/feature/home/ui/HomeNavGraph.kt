@@ -73,12 +73,19 @@ fun HomeNavGraph() {
                     val id = entry.arguments
                         ?.getLong(AddEditTransactionArgs.transactionIDArg)
                     AddEditTransactionScreen(
-                        Modifier.padding(26.dp), transactionId = id
+                        Modifier.padding(26.dp),
+                        transactionId = id,
+                        onFinish = {
+                            navController.navigate(HomeRoutes.STATEMENT)
+                        }
                     )
                 }
                 composable(route = HomeRoutes.ADD_EDIT_TRANSACTION) {
                     AddEditTransactionScreen(
-                        Modifier.padding(26.dp)
+                        Modifier.padding(26.dp),
+                        onFinish = {
+                            navController.navigate(HomeRoutes.STATEMENT)
+                        }
                     )
                 }
                 composable(
