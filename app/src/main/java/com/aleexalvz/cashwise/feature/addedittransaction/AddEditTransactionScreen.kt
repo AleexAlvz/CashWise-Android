@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -20,13 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
 import com.aleexalvz.cashwise.components.textfield.TextFieldWithDatePicker
@@ -40,9 +40,8 @@ import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
-import com.aleexalvz.cashwise.ui.theme.Green
 import com.aleexalvz.cashwise.ui.theme.OutlinedGreen
-import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Date
 
 @Composable
@@ -79,10 +78,12 @@ fun AddEditTransactionScreen(
     updateDate: (Long) -> Unit,
     updateAmount: (Long) -> Unit,
     updateUnitValue: (Double) -> Unit,
-    addOrEditTransaction: () -> Unit,
+    addOrEditTransaction: (Long?) -> Unit,
     onFinish: () -> Unit,
     transactionId: Long? = null
 ) {
+
+    if (uiState.isSuccessful) onFinish()
 
     Column(
         modifier = modifier
@@ -94,14 +95,14 @@ fun AddEditTransactionScreen(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.title,
             onValueChange = updateTitle,
-            labelText = "Title"
+            labelText = stringResource(R.string.title)
         )
 
         TextFieldWithDropDown(
             modifier = Modifier.fillMaxWidth(),
             dropDownValues = TransactionCategory.values().map { it.name },
             text = uiState.category?.name.orEmpty(),
-            labelText = "Category",
+            labelText = stringResource(R.string.category),
             onSelectedItem = updateCategory
         )
 
@@ -112,7 +113,7 @@ fun AddEditTransactionScreen(
                 modifier = Modifier.weight(1f),
                 dropDownValues = TransactionType.values().map { it.name },
                 text = uiState.type?.name.orEmpty(),
-                labelText = "Type",
+                labelText = stringResource(R.string.type),
                 onSelectedItem = updateType
             )
             Spacer(modifier = Modifier.padding(6.dp))
@@ -136,7 +137,7 @@ fun AddEditTransactionScreen(
                         updateAmount(amount)
                     }
                 },
-                labelText = "Amount",
+                labelText = stringResource(R.string.amount),
                 keyboardType = KeyboardType.Number
             )
 
@@ -147,25 +148,25 @@ fun AddEditTransactionScreen(
                 text = uiState.unitValue.toString(),
                 onValueChange = {
                     it.runCatching {
-                        val unitValue = this.toDouble()
-                        val formattedUnitValue = String.format("%.2f",unitValue).toDouble()
-                        updateUnitValue(formattedUnitValue)
+                        val unitValue =
+                            this.toBigDecimal().setScale(2, RoundingMode.DOWN).toDouble()
+                        updateUnitValue(unitValue)
                     }
                 },
-                labelText = "Unit value",
+                labelText = stringResource(R.string.unit_value),
                 keyboardType = KeyboardType.Decimal
             )
         }
 
         Text(
             modifier = Modifier.padding(top = 16.dp),
-            text = "total",
+            text = stringResource(R.string.total),
             color = Color.White,
             fontSize = 20.sp
         )
         Text(
             modifier = Modifier.padding(top = 16.dp),
-            text = uiState.totalValue.toCurrencyString("pt-br"),
+            text = uiState.totalValue.toCurrencyString(),
             color = Color.White,
             fontSize = 32.sp
         )
@@ -175,8 +176,8 @@ fun AddEditTransactionScreen(
                 .padding(top = 30.dp, start = 40.dp, end = 40.dp)
                 .width(260.dp)
                 .height(40.dp),
-            onClickListener = addOrEditTransaction,
-            text = if (transactionId == null) "Add" else "Edit",
+            onClickListener = { addOrEditTransaction(transactionId) },
+            text = if (transactionId == null) stringResource(R.string.add) else stringResource(R.string.edit),
             brush = Brush.verticalGradient(
                 listOf(
                     GradGreenButton1, GradGreenButton2, GradGreenButton3
@@ -194,7 +195,7 @@ fun AddEditTransactionScreen(
             colors = ButtonDefaults.outlinedButtonColors(contentColor = OutlinedGreen)
         ) {
             Text(
-                text = "Cancel",
+                text = stringResource(R.string.cancel),
                 fontSize = 16.sp,
                 color = Color.White
             )
@@ -209,7 +210,7 @@ fun AddEditTransactionScreenPreview() {
         AddEditTransactionScreen(
             modifier = Modifier.padding(26.dp),
             uiState = AddEditTransactionUIState(
-                title = "Sample",
+                title = stringResource(R.string.sample),
                 category = TransactionCategory.SAVINGS,
                 type = TransactionType.PROFIT,
                 date = Date().time,

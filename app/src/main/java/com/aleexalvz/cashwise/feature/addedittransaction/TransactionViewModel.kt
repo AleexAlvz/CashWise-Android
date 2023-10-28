@@ -1,15 +1,19 @@
 package com.aleexalvz.cashwise.feature.addedittransaction
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByName
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByName
 import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
+import com.aleexalvz.cashwise.data.source.local.model.LocalTransaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
@@ -20,12 +24,15 @@ data class AddEditTransactionUIState(
     var date: Long = Date().time,
     var amount: Long = 0,
     var unitValue: Double = 0.0,
-    var totalValue: Double = 0.0
+    var totalValue: Double = 0.0,
+    var isSuccessful: Boolean = false,
+    var isError: Boolean = false,
+    var isLoading: Boolean = false
 )
 
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
-    transactionRepository: LocalTransactionRepositoryImpl
+    private val transactionRepository: LocalTransactionRepositoryImpl
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddEditTransactionUIState())
@@ -77,7 +84,29 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun addOrEditTransaction() {
-
+    fun addOrEditTransaction(transactionId: Long? = null) = viewModelScope.launch {
+        runCatching {
+            val transaction = with(uiState.value) {
+                LocalTransaction(
+                    id = transactionId ?: 0,
+                    title = title,
+                    category = category!!,
+                    unitValue = unitValue,
+                    amount = amount,
+                    type = type!!,
+                    dateMillis = date
+                )
+            }
+            transactionRepository.insert(transaction)
+        }.onFailure { error ->
+            _uiState.update {
+                Log.e("TransactionViewModel", error.message.toString())
+                it.copy(isError = true)
+            }
+        }.onSuccess {
+            _uiState.update {
+                it.copy(isSuccessful = true)
+            }
+        }
     }
 }
