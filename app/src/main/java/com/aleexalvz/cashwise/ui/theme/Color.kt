@@ -11,6 +11,10 @@ val GrayLight = Color(0xFF484848)
 val GraySuperLight = Color(0xFF6D6D6D)
 val Green = Color(0xFF05C023)
 val OutlinedGreen = Color(0xFF20CF3C)
+val Red = Color(0xFFFF0000)
+val DarkBlueBackground = Color(0xFF444678)
+
+val GraySecondaryText = Color(0xFFB7B4B4)
 
 //Gradient Green Button
 val GradGreenButton1 = Color(0xFF19CE36)

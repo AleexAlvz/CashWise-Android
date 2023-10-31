@@ -27,7 +27,8 @@ data class AddEditTransactionUIState(
     var totalValue: Double = 0.0,
     var isSuccessful: Boolean = false,
     var isError: Boolean = false,
-    var isLoading: Boolean = false
+    var isLoading: Boolean = false,
+    var isTransactionFetched: Boolean = false
 )
 
 @HiltViewModel
@@ -81,6 +82,22 @@ class TransactionViewModel @Inject constructor(
             update {
                 it.copy(totalValue = totalValue)
             }
+        }
+    }
+
+    fun fetchTransactionByID(id: Long) = viewModelScope.launch {
+        val transaction = transactionRepository.getByID(id)
+        _uiState.update {
+            it.copy(
+                title = transaction.title,
+                category = transaction.category,
+                type = transaction.type,
+                date = transaction.dateMillis,
+                amount = transaction.amount,
+                unitValue = transaction.unitValue,
+                totalValue = transaction.amount*transaction.unitValue,
+                isTransactionFetched = true
+            )
         }
     }
 

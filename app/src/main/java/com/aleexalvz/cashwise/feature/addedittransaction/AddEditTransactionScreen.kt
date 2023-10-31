@@ -57,6 +57,7 @@ fun AddEditTransactionScreen(
         modifier = modifier,
         transactionId = transactionId,
         uiState = uiState,
+        fetchTransactionByID = viewModel::fetchTransactionByID,
         updateTitle = viewModel::updateTitle,
         updateCategory = viewModel::updateCategory,
         updateType = viewModel::updateType,
@@ -72,6 +73,7 @@ fun AddEditTransactionScreen(
 fun AddEditTransactionScreen(
     modifier: Modifier,
     uiState: AddEditTransactionUIState,
+    fetchTransactionByID: (Long) -> Unit,
     updateTitle: (String) -> Unit,
     updateCategory: (String) -> Unit,
     updateType: (String) -> Unit,
@@ -83,122 +85,127 @@ fun AddEditTransactionScreen(
     transactionId: Long? = null
 ) {
 
-    if (uiState.isSuccessful) onFinish()
+    if (transactionId != null && uiState.isTransactionFetched.not()) {
+        fetchTransactionByID(transactionId)
+    } else {
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(DarkBackground),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        DefaultOutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            text = uiState.title,
-            onValueChange = updateTitle,
-            labelText = stringResource(R.string.title)
-        )
+        if (uiState.isSuccessful) onFinish()
 
-        TextFieldWithDropDown(
-            modifier = Modifier.fillMaxWidth(),
-            dropDownValues = TransactionCategory.values().map { it.name },
-            text = uiState.category?.name.orEmpty(),
-            labelText = stringResource(R.string.category),
-            onSelectedItem = updateCategory
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(DarkBackground),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            DefaultOutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                text = uiState.title,
+                onValueChange = updateTitle,
+                labelText = stringResource(R.string.title)
+            )
+
             TextFieldWithDropDown(
-                modifier = Modifier.weight(1f),
-                dropDownValues = TransactionType.values().map { it.name },
-                text = uiState.type?.name.orEmpty(),
-                labelText = stringResource(R.string.type),
-                onSelectedItem = updateType
-            )
-            Spacer(modifier = Modifier.padding(6.dp))
-
-            TextFieldWithDatePicker(
-                modifier = Modifier.weight(1f),
-                text = uiState.date.toBrazilianDateFormat(),
-                onSelectedDateMillis = updateDate
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            DefaultOutlinedTextField(
-                modifier = Modifier.weight(1f),
-                text = uiState.amount.toString(),
-                onValueChange = {
-                    it.runCatching {
-                        val amount = if (it.isBlank()) 0 else this.toLong()
-                        updateAmount(amount)
-                    }
-                },
-                labelText = stringResource(R.string.amount),
-                keyboardType = KeyboardType.Number
+                modifier = Modifier.fillMaxWidth(),
+                dropDownValues = TransactionCategory.values().map { it.name },
+                text = uiState.category?.name.orEmpty(),
+                labelText = stringResource(R.string.category),
+                onSelectedItem = updateCategory
             )
 
-            Spacer(modifier = Modifier.padding(6.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextFieldWithDropDown(
+                    modifier = Modifier.weight(1f),
+                    dropDownValues = TransactionType.values().map { it.name },
+                    text = uiState.type?.name.orEmpty(),
+                    labelText = stringResource(R.string.type),
+                    onSelectedItem = updateType
+                )
+                Spacer(modifier = Modifier.padding(6.dp))
 
-            DefaultOutlinedTextField(
-                modifier = Modifier.weight(2f),
-                text = uiState.unitValue.toString(),
-                onValueChange = {
-                    it.runCatching {
-                        val unitValue =
-                            this.toBigDecimal().setScale(2, RoundingMode.DOWN).toDouble()
-                        updateUnitValue(unitValue)
-                    }
-                },
-                labelText = stringResource(R.string.unit_value),
-                keyboardType = KeyboardType.Decimal
+                TextFieldWithDatePicker(
+                    modifier = Modifier.weight(1f),
+                    text = uiState.date.toBrazilianDateFormat(),
+                    onSelectedDateMillis = updateDate
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                DefaultOutlinedTextField(
+                    modifier = Modifier.weight(1f),
+                    text = uiState.amount.toString(),
+                    onValueChange = {
+                        it.runCatching {
+                            val amount = if (it.isBlank()) 0 else this.toLong()
+                            updateAmount(amount)
+                        }
+                    },
+                    labelText = stringResource(R.string.amount),
+                    keyboardType = KeyboardType.Number
+                )
+
+                Spacer(modifier = Modifier.padding(6.dp))
+
+                DefaultOutlinedTextField(
+                    modifier = Modifier.weight(2f),
+                    text = uiState.unitValue.toString(),
+                    onValueChange = {
+                        it.runCatching {
+                            val unitValue =
+                                this.toBigDecimal().setScale(2, RoundingMode.DOWN).toDouble()
+                            updateUnitValue(unitValue)
+                        }
+                    },
+                    labelText = stringResource(R.string.unit_value),
+                    keyboardType = KeyboardType.Decimal
+                )
+            }
+
+            Text(
+                modifier = Modifier.padding(top = 16.dp),
+                text = stringResource(R.string.total),
+                color = Color.White,
+                fontSize = 20.sp
             )
-        }
+            Text(
+                modifier = Modifier.padding(top = 16.dp),
+                text = uiState.totalValue.toCurrencyString(),
+                color = Color.White,
+                fontSize = 32.sp
+            )
 
-        Text(
-            modifier = Modifier.padding(top = 16.dp),
-            text = stringResource(R.string.total),
-            color = Color.White,
-            fontSize = 20.sp
-        )
-        Text(
-            modifier = Modifier.padding(top = 16.dp),
-            text = uiState.totalValue.toCurrencyString(),
-            color = Color.White,
-            fontSize = 32.sp
-        )
-
-        GradientButton(
-            modifier = Modifier
-                .padding(top = 30.dp, start = 40.dp, end = 40.dp)
-                .width(260.dp)
-                .height(40.dp),
-            onClickListener = { addOrEditTransaction(transactionId) },
-            text = if (transactionId == null) stringResource(R.string.add) else stringResource(R.string.edit),
-            brush = Brush.verticalGradient(
-                listOf(
-                    GradGreenButton1, GradGreenButton2, GradGreenButton3
+            GradientButton(
+                modifier = Modifier
+                    .padding(top = 30.dp, start = 40.dp, end = 40.dp)
+                    .width(260.dp)
+                    .height(40.dp),
+                onClickListener = { addOrEditTransaction(transactionId) },
+                text = if (transactionId == null) stringResource(R.string.add) else stringResource(R.string.edit),
+                brush = Brush.verticalGradient(
+                    listOf(
+                        GradGreenButton1, GradGreenButton2, GradGreenButton3
+                    )
                 )
             )
-        )
 
-        OutlinedButton(
-            modifier = Modifier
-                .padding(top = 10.dp, start = 40.dp, end = 40.dp)
-                .width(260.dp)
-                .height(40.dp),
-            onClick = onFinish,
-            border = BorderStroke(1.dp, OutlinedGreen),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = OutlinedGreen)
-        ) {
-            Text(
-                text = stringResource(R.string.cancel),
-                fontSize = 16.sp,
-                color = Color.White
-            )
+            OutlinedButton(
+                modifier = Modifier
+                    .padding(top = 10.dp, start = 40.dp, end = 40.dp)
+                    .width(260.dp)
+                    .height(40.dp),
+                onClick = onFinish,
+                border = BorderStroke(1.dp, OutlinedGreen),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = OutlinedGreen)
+            ) {
+                Text(
+                    text = stringResource(R.string.cancel),
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+            }
         }
     }
 }
@@ -225,6 +232,7 @@ fun AddEditTransactionScreenPreview() {
             updateAmount = {},
             updateUnitValue = {},
             addOrEditTransaction = {},
+            fetchTransactionByID = {},
             onFinish = {}
         )
     }

@@ -65,7 +65,7 @@ fun HomeNavGraph() {
                     )
                 }
                 composable(
-                    route = "${HomeRoutes.ADD_EDIT_TRANSACTION}/${AddEditTransactionArgs.transactionIDArg}",
+                    route = "${HomeRoutes.ADD_EDIT_TRANSACTION}/{${AddEditTransactionArgs.transactionIDArg}}",
                     arguments = listOf(navArgument(AddEditTransactionArgs.transactionIDArg) {
                         type = NavType.LongType
                     })
