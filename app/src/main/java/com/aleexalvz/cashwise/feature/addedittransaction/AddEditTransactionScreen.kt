@@ -1,7 +1,6 @@
 package com.aleexalvz.cashwise.feature.addedittransaction
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +35,6 @@ import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.helper.toBrazilianDateFormat
 import com.aleexalvz.cashwise.helper.toCurrencyString
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
-import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
@@ -93,8 +91,7 @@ fun AddEditTransactionScreen(
 
         Column(
             modifier = modifier
-                .fillMaxSize()
-                .background(DarkBackground),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             DefaultOutlinedTextField(

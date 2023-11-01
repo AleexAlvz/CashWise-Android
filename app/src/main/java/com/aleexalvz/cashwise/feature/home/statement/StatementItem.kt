@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.data.model.statement.Statement
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
-import com.aleexalvz.cashwise.ui.theme.DarkBackground
+import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 import com.aleexalvz.cashwise.ui.theme.DarkBlueBackground
 import com.aleexalvz.cashwise.ui.theme.GrayLight
 import com.aleexalvz.cashwise.ui.theme.GraySecondaryText
@@ -50,10 +50,7 @@ fun StatementItem(
             .height(70.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.outlinedCardColors(
-            contentColor = GrayLight,
-            containerColor = DarkBackground
-        ),
+        colors = CardDefaults.outlinedCardColors(contentColor = GrayLight),
         onClick = {
             onClickItem(statement.id)
         }
@@ -138,16 +135,18 @@ fun StatementItem(
 @Preview(showBackground = true)
 @Composable
 fun StatementItemPreview() {
-    Column(Modifier.background(Color.DarkGray)) {
-        StatementItem(
-            Statement(
-                id = 0,
-                title = "Title",
-                category = TransactionCategory.SAVINGS,
-                totalValue = "R$ 150,00",
-                type = TransactionType.PROFIT,
-                date = "19/10/2022"
-            )
-        ) {}
+    CashWiseTheme {
+        Column(Modifier.background(Color.DarkGray)) {
+            StatementItem(
+                Statement(
+                    id = 0,
+                    title = "Title",
+                    category = TransactionCategory.SAVINGS,
+                    totalValue = "R$ 150,00",
+                    type = TransactionType.PROFIT,
+                    date = "19/10/2022"
+                )
+            ) {}
+        }
     }
 }

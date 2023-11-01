@@ -20,6 +20,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            // TODO fix background theme color
             CashWiseTheme {
                 LoginNavGraph(
                     onLoginSuccessful = ::onLoginSuccessful

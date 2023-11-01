@@ -1,7 +1,13 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -20,7 +26,6 @@ import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
 import com.aleexalvz.cashwise.components.SwitchLoginButton
-import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
 
@@ -41,9 +46,7 @@ fun loginAndSignupScreen(
     }
 
     Column(
-        modifier = modifier
-            .background(DarkBackground)
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SwitchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,

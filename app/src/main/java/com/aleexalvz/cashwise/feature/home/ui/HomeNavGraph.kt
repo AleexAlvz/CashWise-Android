@@ -1,6 +1,5 @@
 package com.aleexalvz.cashwise.feature.home.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -23,7 +22,7 @@ import com.aleexalvz.cashwise.feature.home.HomeRoutes
 import com.aleexalvz.cashwise.feature.home.calendar.CalendarScreen
 import com.aleexalvz.cashwise.feature.home.home.HomeScreen
 import com.aleexalvz.cashwise.feature.home.statement.StatementScreen
-import com.aleexalvz.cashwise.ui.theme.DarkBackground
+import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 
 @Composable
 fun HomeNavGraph() {
@@ -41,9 +40,7 @@ fun HomeNavGraph() {
         bottomBar = { navigationBottomBar(navController) }
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .background(DarkBackground)
+            modifier = Modifier.padding(paddingValues)
         ) {
             NavHost(
                 navController = navController,
@@ -118,5 +115,7 @@ private fun getTitleByDestination(navController: NavController): String =
 @Preview
 @Composable
 fun HomeNavGraphPreview() {
-    HomeNavGraph()
+    CashWiseTheme {
+        HomeNavGraph()
+    }
 }

@@ -1,6 +1,5 @@
 package com.aleexalvz.cashwise.feature.home.statement
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aleexalvz.cashwise.data.model.statement.Statement
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
-import com.aleexalvz.cashwise.ui.theme.DarkBackground
+import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
@@ -72,8 +71,7 @@ fun StatementScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .background(DarkBackground),
+                .padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
             StatementContent(
@@ -85,28 +83,30 @@ fun StatementScreen(
     }
 }
 
+@Preview()
 @Composable
-@Preview
 fun StatementScreenPreview() {
-    val sampleData: List<Statement> = mutableListOf<Statement>().apply {
-        repeat(4) {
-            add(
-                Statement(
-                    id = 0,
-                    title = "Title",
-                    category = TransactionCategory.SAVINGS,
-                    totalValue = "R$ 100,00",
-                    type = TransactionType.PROFIT,
-                    date = "19/10/2022"
+    CashWiseTheme {
+        val sampleData: List<Statement> = mutableListOf<Statement>().apply {
+            repeat(4) {
+                add(
+                    Statement(
+                        id = 0,
+                        title = "Title",
+                        category = TransactionCategory.SAVINGS,
+                        totalValue = "R$ 100,00",
+                        type = TransactionType.PROFIT,
+                        date = "19/10/2022"
+                    )
                 )
-            )
+            }
         }
-    }
 
-    StatementScreen(
-        onAddTransaction = {},
-        onEditTransaction = {},
-        fetchContent = {},
-        uiState = StatementUIState(content = sampleData)
-    )
+        StatementScreen(
+            onAddTransaction = {},
+            onEditTransaction = {},
+            fetchContent = {},
+            uiState = StatementUIState(content = sampleData)
+        )
+    }
 }

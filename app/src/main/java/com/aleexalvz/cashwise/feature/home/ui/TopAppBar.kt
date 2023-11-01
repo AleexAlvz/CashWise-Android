@@ -8,11 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import com.aleexalvz.cashwise.feature.addedittransaction.AddEditTransactionArgs
-import com.aleexalvz.cashwise.feature.home.HomeRoutes
-import com.aleexalvz.cashwise.ui.theme.DarkBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,9 +22,7 @@ fun TopAppBar(
                 overflow = TextOverflow.Ellipsis,
                 color = Color.White
             )
-        }, colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = DarkBackground
-        )
+        }, colors = TopAppBarDefaults.mediumTopAppBarColors()
     )
 }
 
