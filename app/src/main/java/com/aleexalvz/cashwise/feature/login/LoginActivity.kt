@@ -30,14 +30,8 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun onLoginSuccessful() {
-        val message = UserManager.loggedUser?.email?.let {
+        UserManager.loggedUser?.email?.let {
             startActivity(Intent(this, HomeActivity::class.java))
-            "Loggin Successful: $it"
-        } ?: "Failed: Not found logged user"
-        Toast.makeText(
-            this,
-            message,
-            Toast.LENGTH_LONG
-        ).show()
+        }
     }
 }

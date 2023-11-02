@@ -1,11 +1,11 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
@@ -100,8 +100,8 @@ fun SignupContent(
 fun SignupContentPreview() {
     SignupContent(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 200.dp, start = 20.dp, end = 20.dp),
+            .wrapContentSize()
+            .padding(start = 20.dp, end = 20.dp),
         uiState = SignUpUIState(
             email = "sample@sample.com",
             password = "6516156",
