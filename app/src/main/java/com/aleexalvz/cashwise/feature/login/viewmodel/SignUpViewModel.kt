@@ -84,7 +84,7 @@ class SignUpViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(signUpState = true)
     }
 
-    fun signupUser() {
+    fun doSignup() {
         if (isValidFields()) {
             viewModelScope.launch {
                 try {

@@ -1,6 +1,5 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +12,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,23 +20,66 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
 import com.aleexalvz.cashwise.components.SwitchLoginButton
-import com.aleexalvz.cashwise.ui.theme.DarkBackground
+import com.aleexalvz.cashwise.feature.login.viewmodel.LoginUIState
+import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
+import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpUIState
+import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
 
 const val LOGIN_SCREEN_NAME = "login"
 const val SIGNUP_SCREEN_NAME = "signup"
 
 @Composable
-fun loginAndSignupScreen(
+fun LoginAndSignupScreen(
     modifier: Modifier = Modifier,
-    onLoginSuccessful: () -> Unit
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    signUpViewModel: SignUpViewModel = hiltViewModel(),
+    onLoginSuccessful: () -> Unit = {}
 ) {
+    val loginUIState by loginViewModel.uiState.collectAsStateWithLifecycle()
+    val signupUIState by signUpViewModel.uiState.collectAsStateWithLifecycle()
+
+    LoginAndSignupScreen(
+        modifier = modifier,
+        loginUIState = loginUIState,
+        signupUIState = signupUIState,
+        loginUpdateEmail = loginViewModel::updateEmail,
+        loginUpdatePassword = loginViewModel::updatePassword,
+        loginUpdateRememberMeCheckBox = loginViewModel::updateRememberMeCheckBox,
+        doLogin = loginViewModel::doLogin,
+        signupUpdateEmail = signUpViewModel::updateEmail,
+        signupUpdatePassword = signUpViewModel::updatePassword,
+        signupUpdateConfirmPassword = signUpViewModel::updateConfirmPassword,
+        doSignup = signUpViewModel::doSignup,
+        onLoginSuccessful = onLoginSuccessful
+    )
+}
+
+@Composable
+fun LoginAndSignupScreen(
+    modifier: Modifier = Modifier,
+    loginUIState: LoginUIState,
+    signupUIState: SignUpUIState,
+    loginUpdateEmail: (String) -> Unit = {},
+    loginUpdatePassword: (String) -> Unit = {},
+    loginUpdateRememberMeCheckBox: (Boolean) -> Unit = {},
+    doLogin: () -> Unit = {},
+    signupUpdateEmail: (String) -> Unit = {},
+    signupUpdatePassword: (String) -> Unit = {},
+    signupUpdateConfirmPassword: (String) -> Unit = {},
+    doSignup: () -> Unit = {},
+    onLoginSuccessful: () -> Unit = {}
+) {
+
 
     val screenState = remember { mutableStateOf(LOGIN_SCREEN_NAME) }
     val indexSelectedState = remember {
@@ -97,19 +140,54 @@ fun loginAndSignupScreen(
                     modifier = Modifier.fillMaxSize(),
                     shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                 ) {
-                    if (indexSelectedState.value == FirstIndex) {
+                    if (indexSelectedState.intValue == FirstIndex) {
                         LoginContent(
                             modifier = Modifier.padding(26.dp),
-                            onLoginSuccessful = onLoginSuccessful
+                            uiState = loginUIState,
+                            onLoginSuccessful = onLoginSuccessful,
+                            updateEmail = loginUpdateEmail,
+                            updatePassword = loginUpdatePassword,
+                            updateRememberMeCheckBox = loginUpdateRememberMeCheckBox,
+                            doLogin = doLogin
                         )
                     } else {
                         SignupContent(
                             modifier = Modifier.padding(26.dp),
-                            onLoginSuccessful = onLoginSuccessful
+                            uiState = signupUIState,
+                            onLoginSuccessful = onLoginSuccessful,
+                            updateEmail = signupUpdateEmail,
+                            updatePassword = signupUpdatePassword,
+                            updateConfirmPassword = signupUpdateConfirmPassword,
+                            doSignup = doSignup
                         )
                     }
                 }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun LoginAndSignupScreenPreview() {
+    LoginAndSignupScreen(
+        Modifier.fillMaxSize(),
+        loginUIState = LoginUIState(
+            email = "sample@sample.com",
+            password = "6516156",
+            rememberMe = true,
+            emailError = null,
+            passwordError = null,
+            loginState = false
+        ),
+        signupUIState = SignUpUIState(
+            email = "sample@sample.com",
+            password = "6516156",
+            confirmPassword = "6516156",
+            emailError = null,
+            passwordError = null,
+            confirmPasswordError = null,
+            signUpState = false
+        )
+    )
 }

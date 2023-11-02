@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,17 +15,20 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aleexalvz.cashwise.components.CheckBox
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
 import com.aleexalvz.cashwise.components.textfield.PasswordOutlinedTextField
+import com.aleexalvz.cashwise.feature.login.viewmodel.LoginUIState
 import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
@@ -34,13 +38,15 @@ import com.aleexalvz.cashwise.ui.theme.Green
 @Composable
 fun LoginContent(
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel = hiltViewModel(),
-    onLoginSuccessful: () -> Unit
+    uiState: LoginUIState,
+    onLoginSuccessful: () -> Unit = {},
+    updateEmail: (String) -> Unit = {},
+    updatePassword: (String) -> Unit = {},
+    updateRememberMeCheckBox: (Boolean) -> Unit = {},
+    doLogin: () -> Unit = {}
 ) {
 
-    val uiState = loginViewModel.uiState.collectAsState()
-
-    if (uiState.value.loginState) onLoginSuccessful()
+    if (uiState.loginState) onLoginSuccessful()
 
     Column(
         modifier = modifier,
@@ -49,22 +55,27 @@ fun LoginContent(
 
         DefaultOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = uiState.value.email,
-            onValueChange = loginViewModel::updateEmail,
+            text = uiState.email,
+            onValueChange = updateEmail,
             labelText = "Email",
-            leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email icon") },
-            errorMessage = uiState.value.emailError,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "Email icon"
+                )
+            },
+            errorMessage = uiState.emailError,
         )
 
         PasswordOutlinedTextField(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            text = uiState.value.password,
-            onValueChange = { loginViewModel.updatePassword(it) },
+            text = uiState.password,
+            onValueChange = updatePassword,
             labelText = "Password",
             contentDescription = "Password field",
-            errorMessage = uiState.value.passwordError,
+            errorMessage = uiState.passwordError,
         )
         Row(
             Modifier
@@ -73,10 +84,8 @@ fun LoginContent(
             horizontalArrangement = Arrangement.Start
         ) {
             CheckBox(
-                selected = uiState.value.rememberMe,
-                onStateChanged = {
-                    loginViewModel.updateRememberMeCheckBox(it)
-                },
+                selected = uiState.rememberMe,
+                onStateChanged = updateRememberMeCheckBox,
                 text = "Remember me",
             )
         }
@@ -87,7 +96,7 @@ fun LoginContent(
                 .padding(top = 20.dp)
                 .width(310.dp)
                 .height(50.dp),
-            onClickListener = loginViewModel::doLogin,
+            onClickListener = doLogin,
             text = "Login",
             brush = Brush.verticalGradient(
                 listOf(
@@ -113,4 +122,22 @@ fun LoginContent(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun LoginContentPreview() {
+    LoginContent(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 200.dp, start = 20.dp, end = 20.dp),
+        uiState = LoginUIState(
+            email = "sample@sample.com",
+            password = "6516156",
+            rememberMe = true,
+            emailError = null,
+            passwordError = null,
+            loginState = false
+        )
+    )
 }
