@@ -95,7 +95,7 @@ class TransactionViewModel @Inject constructor(
                 date = transaction.dateMillis,
                 amount = transaction.amount,
                 unitValue = transaction.unitValue,
-                totalValue = transaction.amount*transaction.unitValue,
+                totalValue = transaction.amount * transaction.unitValue,
                 isTransactionFetched = true
             )
         }
@@ -114,7 +114,11 @@ class TransactionViewModel @Inject constructor(
                     dateMillis = date
                 )
             }
-            transactionRepository.insert(transaction)
+            if (transactionId == null) {
+                transactionRepository.insert(transaction)
+            } else {
+                transactionRepository.update(transaction)
+            }
         }.onFailure { error ->
             _uiState.update {
                 Log.e("TransactionViewModel", error.message.toString())

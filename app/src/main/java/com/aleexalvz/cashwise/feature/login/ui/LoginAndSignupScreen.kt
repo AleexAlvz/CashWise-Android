@@ -1,5 +1,6 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import com.aleexalvz.cashwise.feature.login.viewmodel.LoginUIState
 import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
 import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpUIState
 import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
+import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
 
 const val LOGIN_SCREEN_NAME = "login"
@@ -80,7 +82,6 @@ fun LoginAndSignupScreen(
     onLoginSuccessful: () -> Unit = {}
 ) {
 
-
     val screenState = remember { mutableStateOf(LOGIN_SCREEN_NAME) }
     val indexSelectedState = remember {
         val index = if (screenState.value == LOGIN_SCREEN_NAME) FirstIndex
@@ -89,7 +90,7 @@ fun LoginAndSignupScreen(
     }
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().background(DarkBackground),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SwitchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,

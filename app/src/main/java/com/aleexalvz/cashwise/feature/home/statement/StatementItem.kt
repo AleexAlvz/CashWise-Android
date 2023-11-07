@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -92,9 +93,12 @@ fun StatementItem(
             ) {
 
                 Text(
-                    text = statement.type.name,
+                    modifier = Modifier.fillMaxSize(0.5f),
+                    text = statement.title,
                     color = Color.White,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(modifier = Modifier.padding(2.dp))
@@ -117,7 +121,9 @@ fun StatementItem(
                 Text(
                     text = statement.totalValue,
                     color = Color.White,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(modifier = Modifier.padding(2.dp))
@@ -140,9 +146,9 @@ fun StatementItemPreview() {
             StatementItem(
                 Statement(
                     id = 0,
-                    title = "Title",
+                    title = "Title sample for preview",
                     category = TransactionCategory.SAVINGS,
-                    totalValue = "R$ 150,00",
+                    totalValue = "R$ 15000,00",
                     type = TransactionType.PROFIT,
                     date = "19/10/2022"
                 )
