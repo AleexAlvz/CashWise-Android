@@ -26,6 +26,11 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        UserManager.loggedUser = null
+    }
+
     private fun onLoginSuccessful() {
         UserManager.loggedUser?.email?.let {
             startActivity(Intent(this, HomeActivity::class.java))

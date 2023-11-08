@@ -2,7 +2,6 @@ package com.aleexalvz.cashwise.feature.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
 import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.helper.AuthHelper
@@ -83,14 +82,14 @@ class LoginViewModel @Inject constructor(
     }
 
     fun doLogin() {
-        if (isValidFields()) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if (isValidFields()) {
                 try {
                     val result = authRepository.doLogin(uiState.value.email, uiState.value.password)
                     UserManager.loggedUser = result
                     verifyRememberUser()
                     updateLoginStateToSuccess()
-                } catch (userNotFoundException: UserNotFoundException) {
+                } catch (e: Exception) {
                     //TODO Return error
                 }
             }

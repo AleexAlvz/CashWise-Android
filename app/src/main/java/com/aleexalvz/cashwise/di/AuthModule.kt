@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.data.repository.AuthRepositoryImpl
+import com.aleexalvz.cashwise.data.source.local.AppDatabase
 import com.aleexalvz.cashwise.data.source.local.dao.UserDao
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,9 @@ import dagger.hilt.components.SingletonComponent
 object AuthModule {
 
     private const val SharedPreferences_Auth_Key = "REMEMBER_ME_LOGIN_KEY"
+
+    @Provides
+    fun providesUserDao(database: AppDatabase): UserDao = database.userDao()
 
     @Provides
     fun providesAuthSharedPreferences(

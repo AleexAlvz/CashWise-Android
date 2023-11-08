@@ -19,13 +19,15 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun doLogin(email: String, password: String): User {
-        try {
-            return getUserByEmail(email).takeIf { it.password == password }
-                ?: throw InvalidUserPasswordException("Wrong Password")
-        } catch (e: InvalidUserPasswordException) {
-            throw e
-        } catch (e: Exception) {
-            throw UserNotFoundException("User not found")
+        return withContext(IO) {
+            try {
+                getUserByEmail(email).takeIf { it.password == password }
+                    ?: throw InvalidUserPasswordException("Wrong Password")
+            } catch (e: InvalidUserPasswordException) {
+                throw e
+            } catch (e: Exception) {
+                throw UserNotFoundException("User not found")
+            }
         }
     }
 
@@ -34,7 +36,7 @@ class AuthRepositoryImpl @Inject constructor(
             try {
                 val localUser = LocalUser(email = email, password = password)
                 userDao.register(localUser)
-                localUser.toUser()
+                userDao.getByEmail(email = email).toUser()
             } catch (error: Exception) {
                 throw SignUpInvalidException("This user data is invalid to sign up")
             }

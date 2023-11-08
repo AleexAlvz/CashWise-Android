@@ -49,11 +49,7 @@ fun navigationBottomBar(navController: NavController) {
                 selected = item.route == backStackEntry.value?.destination?.route,
                 onClick = {
                     navController.navigate(route = item.route) {
-                        popUpTo(HomeRoutes.HOME) {
-                            if (backStackEntry.value?.destination?.route == HomeRoutes.HOME) {
-                                UserManager.loggedUser = null
-                            }
-                        }
+                        popUpTo(HomeRoutes.HOME)
                     }
                 },
                 icon = { Icon(imageVector = item.icon, contentDescription = "${item.name} Icon") },

@@ -9,7 +9,7 @@ import com.aleexalvz.cashwise.data.source.local.model.LocalTransaction
 import com.aleexalvz.cashwise.data.source.local.model.LocalUser
 import com.aleexalvz.cashwise.data.source.local.typeconverter.DateConverter
 
-@Database(entities = [LocalTransaction::class, LocalUser::class], version = 1)
+@Database(entities = [LocalTransaction::class, LocalUser::class], version = 2)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao

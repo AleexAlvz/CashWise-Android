@@ -2,7 +2,6 @@ package com.aleexalvz.cashwise.feature.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aleexalvz.cashwise.data.model.auth.SignUpInvalidException
 import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.helper.AuthHelper
@@ -85,14 +84,14 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun doSignup() {
-        if (isValidFields()) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if (isValidFields()) {
                 try {
                     val result =
                         authRepository.signupUser(uiState.value.email, uiState.value.password)
                     UserManager.loggedUser = result
                     updateSignUpStateToSuccess()
-                } catch (signUpInvalidException: SignUpInvalidException) {
+                } catch (e: Exception) {
                     //TODO return error
                 }
             }

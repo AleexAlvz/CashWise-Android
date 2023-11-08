@@ -9,8 +9,8 @@ data class LocalUser(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val email: String,
     val password: String,
-    val name: String? = null,
-    val phone: String? = null
+    val name: String = "",
+    val phone: String = ""
 )
 
 fun LocalUser.toUser(): User = User(
