@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.withSign
 
 typealias Wallet = List<Pair<TransactionCategory, Double>>
 
@@ -35,19 +34,13 @@ class HomeViewModel @Inject constructor(
 
             val transactions = transactionRepository.getAll()
 
-            val totalBalance: Double = transactions
-                .map { it.totalValue() }
-                .reduce { acc, transactionTotalValue ->
-                    acc + transactionTotalValue
-                }
+            val totalBalance: Double = transactions.totalValue()
 
             val wallet: Wallet = transactions
                 .groupBy { it.category }
-                .mapValues {
-                    it.value.sumOf { transaction ->
-                        transaction.totalValue() //TODO Fix logic to subtract case type be loss
-                    }
-                }.toList()
+                .mapValues { it.value.totalValue() }
+                .toList()
+                .filter { it.second != 0.0 }
 
             _uiState.update {
                 it.copy(

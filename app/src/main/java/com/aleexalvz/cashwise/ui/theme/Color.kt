@@ -28,7 +28,9 @@ val BottomAppBarDarkColor = Color(0xFF211F26)
 val IndicatorItemColor = Color(0xFF119327)
 
 //Pie chart colors
-val RedPieGraph = Color(0xFFD03F1F)
-val PurplePieGraph = Color(0xFF830FDE)
-val GreenPieGraph = Color(0xFF0EA337)
-val OceanBluePieGraph = Color(0xFF137C93)
+val RedPieGraphColor = Color(0xFFD03F1F)
+val PurplePieGraphColor = Color(0xFF830FDE)
+val GreenPieGraphColor = Color(0xFF0EA337)
+val OceanBluePieGraphColor = Color(0xFF137C93)
+val YellowPieGraphColor = Color(0xFFB9B117)
+val OrangePieGraphColor = Color(0xFFFF9800)

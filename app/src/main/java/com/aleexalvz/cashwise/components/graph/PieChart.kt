@@ -1,7 +1,6 @@
 package com.aleexalvz.cashwise.components.graph
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,10 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.tooling.preview.Preview
-import com.aleexalvz.cashwise.ui.theme.GreenPieGraph
-import com.aleexalvz.cashwise.ui.theme.OceanBluePieGraph
-import com.aleexalvz.cashwise.ui.theme.PurplePieGraph
-import com.aleexalvz.cashwise.ui.theme.RedPieGraph
+import com.aleexalvz.cashwise.ui.theme.GreenPieGraphColor
+import com.aleexalvz.cashwise.ui.theme.OceanBluePieGraphColor
+import com.aleexalvz.cashwise.ui.theme.PurplePieGraphColor
+import com.aleexalvz.cashwise.ui.theme.RedPieGraphColor
 
 typealias PieChartItem = Pair<Float, Color>
 
@@ -27,11 +26,9 @@ fun PieChart(
 ) {
     Canvas(
         modifier = modifier
-            .background(Color.White)
     ) {
-        val centerX = size.width / 2f
-        val centerY = size.height / 2f
-        val radius = minOf(centerX, centerY)
+        val center = size.minDimension / 2f
+        val radius = minOf(center, center)
 
         var startAngle = 0f
         val total = data.map { it.first }.sum()
@@ -40,7 +37,7 @@ fun PieChart(
         val path = Path().apply {
             addOval(
                 Rect(
-                    center = Offset(centerX, centerY),
+                    center = Offset(center, center),
                     radius = clippedCircleRadius
                 )
             )
@@ -59,7 +56,7 @@ fun PieChart(
                     startAngle = startAngle,
                     sweepAngle = sweepAngle,
                     useCenter = true,
-                    topLeft = Offset(centerX - radius, centerY - radius),
+                    topLeft = Offset(center - radius, center - radius),
                     size = Size(radius * 2, radius * 2)
                 )
                 startAngle += sweepAngle
@@ -72,10 +69,10 @@ fun PieChart(
 @Composable
 fun PieChartPreview() {
     val data: List<PieChartItem> = listOf(
-        PieChartItem(90f, GreenPieGraph),
-        PieChartItem(80f, OceanBluePieGraph),
-        PieChartItem(120f, RedPieGraph),
-        PieChartItem(70f, PurplePieGraph)
+        PieChartItem(90f, GreenPieGraphColor),
+        PieChartItem(80f, OceanBluePieGraphColor),
+        PieChartItem(120f, RedPieGraphColor),
+        PieChartItem(70f, PurplePieGraphColor)
     )
 
     PieChart(

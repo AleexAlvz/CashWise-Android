@@ -12,3 +12,10 @@ data class Transaction(
 )
 
 fun Transaction.totalValue(): Double = amount * unitValue
+
+fun List<Transaction>.totalValue(): Double = fold(0.0) { accumulator, transaction ->
+    when (transaction.type) {
+        TransactionType.PROFIT -> (accumulator + transaction.totalValue())
+        TransactionType.LOSS -> (accumulator - transaction.totalValue())
+    }
+}
