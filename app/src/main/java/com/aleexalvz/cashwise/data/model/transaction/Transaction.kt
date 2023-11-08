@@ -2,10 +2,11 @@ package com.aleexalvz.cashwise.data.model.transaction
 
 data class Transaction(
     val id: Long,
+    val userID: Long,
     val title: String,
     val category: TransactionCategory,
     val unitValue: Double,
-    val amount: Int,
+    val amount: Long,
     val type: TransactionType,
     val dateMillis: Long
 )

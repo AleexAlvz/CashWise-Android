@@ -15,5 +15,8 @@ object AppModule {
 
     @Provides
     fun providesAppDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "cashwise_local_db").build()
+        Room
+            .databaseBuilder(context, AppDatabase::class.java, "cashwise_local_db")
+            .fallbackToDestructiveMigration()
+            .build()
 }

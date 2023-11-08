@@ -1,6 +1,5 @@
 package com.aleexalvz.cashwise.feature.home.home
 
-import android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +18,10 @@ import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 
 @Composable
 fun HomeScreen() {
+
+    //Preparar lógica no momento de add ou edit transacoes, dentro de um use case. Ao mudar a transacao,
+    // salvar em outra tabela o saldo do usuario atualizado
+    // Na tabela de transacoes, colocar referencia de usuario na tabela tbm, para diferenciar entradas de cada usuario
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,7 +39,7 @@ fun HomeScreen() {
     }
 }
 
-@Preview()
+@Preview
 @Composable
 fun HomeScreenPreview() {
     CashWiseTheme {

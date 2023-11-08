@@ -1,16 +1,16 @@
 package com.aleexalvz.cashwise.data.repository
 
-import com.aleexalvz.cashwise.data.source.local.model.LocalTransaction
+import com.aleexalvz.cashwise.data.model.transaction.Transaction
 
 interface LocalTransactionRepository {
 
-    suspend fun getAll(): List<LocalTransaction>
+    suspend fun getAll(): List<Transaction>
 
-    suspend fun getByID(id: Long): LocalTransaction
+    suspend fun getByID(id: Long): Transaction
 
-    suspend fun insert(transaction: LocalTransaction)
+    suspend fun insert(transaction: Transaction)
 
-    suspend fun delete(transaction: LocalTransaction)
+    suspend fun delete(transaction: Transaction)
 
-    suspend fun update(transaction: LocalTransaction)
+    suspend fun update(transaction: Transaction)
 }

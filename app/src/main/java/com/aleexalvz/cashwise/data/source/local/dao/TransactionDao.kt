@@ -10,8 +10,8 @@ import com.aleexalvz.cashwise.data.source.local.model.LocalTransaction
 @Dao
 interface TransactionDao {
 
-    @Query("SELECT * FROM `LOCALTRANSACTION`")
-    fun getAll(): List<LocalTransaction>
+    @Query("SELECT * FROM `LOCALTRANSACTION` WHERE userID == (:userID)")
+    fun getByUserID(userID: Long): List<LocalTransaction>
 
     @Query("SELECT * FROM `LOCALTRANSACTION` WHERE id == (:id)")
     fun getByID(id: Long): LocalTransaction

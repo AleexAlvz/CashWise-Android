@@ -3,12 +3,14 @@ package com.aleexalvz.cashwise.feature.addedittransaction
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
+import com.aleexalvz.cashwise.data.model.transaction.Transaction
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByName
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByName
 import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
-import com.aleexalvz.cashwise.data.source.local.model.LocalTransaction
+import com.aleexalvz.cashwise.foundation.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -103,9 +105,13 @@ class TransactionViewModel @Inject constructor(
 
     fun addOrEditTransaction(transactionId: Long? = null) = viewModelScope.launch {
         runCatching {
+            val userID = UserManager.loggedUser?.userID
+                ?: throw UserNotFoundException("On trying to get id, user not found. Need be logged!")
+
             val transaction = with(uiState.value) {
-                LocalTransaction(
+                Transaction(
                     id = transactionId ?: 0,
+                    userID = userID,
                     title = title,
                     category = category!!,
                     unitValue = unitValue,

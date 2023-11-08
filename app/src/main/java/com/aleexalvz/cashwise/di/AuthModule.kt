@@ -2,8 +2,9 @@ package com.aleexalvz.cashwise.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.aleexalvz.cashwise.data.mocked.auth.MockedAuthRepository
 import com.aleexalvz.cashwise.data.repository.AuthRepository
+import com.aleexalvz.cashwise.data.repository.AuthRepositoryImpl
+import com.aleexalvz.cashwise.data.source.local.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,9 +25,7 @@ object AuthModule {
 
     @Provides
     fun providesAuthRepository(
-        @ApplicationContext appContext: Context,
+        userDao: UserDao,
         sharedPreferences: SharedPreferences
-    ): AuthRepository = MockedAuthRepository(appContext, sharedPreferences)
-
-
+    ): AuthRepository = AuthRepositoryImpl(userDao, sharedPreferences)
 }
