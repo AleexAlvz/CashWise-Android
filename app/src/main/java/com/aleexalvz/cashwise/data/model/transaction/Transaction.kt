@@ -10,3 +10,5 @@ data class Transaction(
     val type: TransactionType,
     val dateMillis: Long
 )
+
+fun Transaction.totalValue(): Double = amount * unitValue
