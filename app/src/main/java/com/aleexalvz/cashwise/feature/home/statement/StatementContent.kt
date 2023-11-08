@@ -18,13 +18,14 @@ fun StatementContent(
     onClickItem: (Long) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
-        content.forEach {
+        content.forEachIndexed { index, statement ->
             item {
                 StatementItem(
-                    statement = it,
+                    statement = statement,
                     onClickItem = onClickItem
                 )
-                Spacer(modifier = Modifier.padding(8.dp))
+                val spacingValue = if (index == content.lastIndex) 40.dp else 8.dp
+                Spacer(modifier = Modifier.padding(spacingValue))
             }
         }
     }
