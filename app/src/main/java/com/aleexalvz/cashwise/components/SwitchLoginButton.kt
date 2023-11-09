@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -12,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.aleexalvz.cashwise.feature.login.LoginRoutes
 import com.aleexalvz.cashwise.feature.login.ui.LOGIN_SCREEN_NAME
 import com.aleexalvz.cashwise.feature.login.ui.SIGNUP_SCREEN_NAME
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
@@ -26,7 +26,7 @@ const val FirstIndex = 0
 const val SecondIndex = 1
 
 @Composable
-fun switchLoginButton(
+fun SwitchLoginButton(
     firstButtonText: String,
     secondButtonText: String,
     size: Size,
@@ -52,7 +52,7 @@ fun switchLoginButton(
                 .padding(2.dp)
         ) {
             val buttonWidth = (size.first / 2) - 2.dp
-            switchButton(
+            SwitchButton(
                 index = 0,
                 size = (buttonWidth) to (size.second),
                 indexSelected = indexSelected,
@@ -62,7 +62,7 @@ fun switchLoginButton(
                     onClickListener(it)
                 }
             )
-            switchButton(
+            SwitchButton(
                 index = 1,
                 size = (size.first - 2.dp) to (size.second),
                 indexSelected = indexSelected,
@@ -77,7 +77,7 @@ fun switchLoginButton(
 }
 
 @Composable
-fun switchButton(
+fun SwitchButton(
     index: Int,
     size: Size,
     indexSelected: MutableState<Int>,
@@ -117,11 +117,11 @@ fun switchButton(
 
 @Preview
 @Composable
-fun switchLoginButtonPreview() {
+fun SwitchLoginButtonPreview() {
     val indexSelected = remember {
-        mutableStateOf(FirstIndex)
+        mutableIntStateOf(FirstIndex)
     }
-    switchLoginButton(
+    SwitchLoginButton(
         firstButtonText = LOGIN_SCREEN_NAME,
         secondButtonText = SIGNUP_SCREEN_NAME,
         size = 360.dp to 44.dp,

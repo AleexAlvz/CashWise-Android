@@ -1,81 +1,90 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aleexalvz.cashwise.components.gradientButton
-import com.aleexalvz.cashwise.components.outlinedTextFieldWithValidation
-import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
+import com.aleexalvz.cashwise.components.GradientButton
+import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
+import com.aleexalvz.cashwise.components.textfield.PasswordOutlinedTextField
+import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpUIState
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 
 @Composable
-fun signupContent(
+fun SignupContent(
     modifier: Modifier,
-    signUpViewModel: SignUpViewModel,
-    onLoginSuccessful: () -> Unit
+    uiState: SignUpUIState,
+    onLoginSuccessful: () -> Unit = {},
+    updateEmail: (String) -> Unit = {},
+    updatePassword: (String) -> Unit = {},
+    updateConfirmPassword: (String) -> Unit = {},
+    doSignup: () -> Unit = {}
 ) {
 
-    val uiState = signUpViewModel.uiState.collectAsState()
 
-    if (uiState.value.signUpState) onLoginSuccessful()
+    if (uiState.signUpState) onLoginSuccessful()
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        outlinedTextFieldWithValidation(
+        DefaultOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = uiState.value.email,
-            onValueChange = signUpViewModel::updateEmail,
+            text = uiState.email,
+            onValueChange = updateEmail,
             labelText = "Email",
-            leadingIconImageVector = Icons.Default.Email,
-            contentDescription = "Email field",
-            errorMessage = uiState.value.emailError,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "Email icon"
+                )
+            },
+            errorMessage = uiState.emailError,
         )
 
-        outlinedTextFieldWithValidation(
+        PasswordOutlinedTextField(
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth(),
-            text = uiState.value.password,
-            onValueChange = signUpViewModel::updatePassword,
+            text = uiState.password,
+            onValueChange = updatePassword,
             labelText = "Password",
-            leadingIconImageVector = Icons.Default.Lock,
             contentDescription = "Password field",
-            isPassword = true,
-            errorMessage = uiState.value.passwordError,
+            errorMessage = uiState.passwordError,
         )
 
-        outlinedTextFieldWithValidation(
+        PasswordOutlinedTextField(
             modifier = Modifier
-                .padding(top = 12.dp)
+                .padding(top = 8.dp)
                 .fillMaxWidth(),
-            text = uiState.value.confirmPassword,
-            onValueChange = signUpViewModel::updateConfirmPassword,
+            text = uiState.confirmPassword,
+            onValueChange = updateConfirmPassword,
             labelText = "Confirm your password",
-            leadingIconImageVector = Icons.Default.Lock,
             contentDescription = "Password confirmation field",
-            isPassword = true,
-            errorMessage = uiState.value.confirmPasswordError,
+            errorMessage = uiState.confirmPasswordError,
         )
 
         //TODO Add disabled state
-        gradientButton(
+        GradientButton(
             modifier = Modifier
-                .padding(top = 40.dp)
+                .padding(top = 20.dp)
                 .width(310.dp)
                 .height(50.dp),
-            onClickListener = signUpViewModel::signupUser,
+            onClickListener = doSignup,
             text = "Sign Up",
             brush = Brush.verticalGradient(
                 listOf(
@@ -84,4 +93,23 @@ fun signupContent(
             )
         )
     }
+}
+
+@Preview
+@Composable
+fun SignupContentPreview() {
+    SignupContent(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(start = 20.dp, end = 20.dp),
+        uiState = SignUpUIState(
+            email = "sample@sample.com",
+            password = "6516156",
+            confirmPassword = "6516156",
+            emailError = null,
+            passwordError = null,
+            confirmPasswordError = null,
+            signUpState = false
+        )
+    )
 }

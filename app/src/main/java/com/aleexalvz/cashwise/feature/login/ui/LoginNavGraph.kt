@@ -6,13 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.aleexalvz.cashwise.feature.login.LoginRoutes
-import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
-import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
 
 @Composable
 fun LoginNavGraph(
-    loginViewModel: LoginViewModel,
-    signUpViewModel: SignUpViewModel,
     onLoginSuccessful: ()->Unit
 ) {
     val navController: NavHostController = rememberNavController()
@@ -22,9 +18,7 @@ fun LoginNavGraph(
         startDestination = LoginRoutes.LOGIN
     ) {
         composable(route = LoginRoutes.LOGIN) {
-            loginAndSignupScreen(
-                loginViewModel = loginViewModel,
-                signUpViewModel = signUpViewModel,
+            LoginAndSignupScreen(
                 onLoginSuccessful = onLoginSuccessful
             )
         }
