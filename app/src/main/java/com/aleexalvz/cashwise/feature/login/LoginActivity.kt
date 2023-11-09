@@ -33,7 +33,9 @@ class LoginActivity : ComponentActivity() {
 
     private fun onLoginSuccessful() {
         UserManager.loggedUser?.email?.let {
-            startActivity(Intent(this, HomeActivity::class.java))
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
     }
 }
