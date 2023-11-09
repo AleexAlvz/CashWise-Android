@@ -9,7 +9,7 @@ import com.aleexalvz.cashwise.feature.login.LoginRoutes
 
 @Composable
 fun LoginNavGraph(
-    onLoginSuccessful: ()->Unit
+    onLoginSuccessful: () -> Unit
 ) {
     val navController: NavHostController = rememberNavController()
 
