@@ -153,7 +153,7 @@ class TransactionViewModel @Inject constructor(
                 .totalValue()
 
             if (totalValueFromCategory < transaction.totalValue()) {
-                throw TransactionException("You can't loss more that you have on this category")
+                throw TransactionException("You can't loss more that you have on this category") //TODO fix behavior, is emiting on every recomposition the toast on screen
             }
         }
     }
