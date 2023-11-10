@@ -1,5 +1,6 @@
 package com.aleexalvz.cashwise.feature.addedittransaction
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +67,7 @@ fun AddEditTransactionScreen(
         updateAmount = viewModel::updateAmount,
         updateUnitValue = viewModel::updateUnitValue,
         addOrEditTransaction = viewModel::addOrEditTransaction,
+        cleanError = viewModel::cleanError,
         onFinish = onFinish
     )
 }
@@ -81,6 +84,7 @@ fun AddEditTransactionScreen(
     updateAmount: (Long) -> Unit,
     updateUnitValue: (Double) -> Unit,
     addOrEditTransaction: (Long?) -> Unit,
+    cleanError: () -> Unit,
     onFinish: () -> Unit,
     transactionId: Long? = null
 ) {
@@ -90,6 +94,11 @@ fun AddEditTransactionScreen(
     } else {
 
         if (uiState.isSuccessful) onFinish()
+
+        if (uiState.isError) {
+            Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_LONG).show()
+            cleanError
+        }
 
         Column(
             modifier = modifier
@@ -232,6 +241,7 @@ fun AddEditTransactionScreenPreview() {
             updateAmount = {},
             updateUnitValue = {},
             addOrEditTransaction = {},
+            cleanError = {},
             fetchTransactionByID = {},
             onFinish = {}
         )

@@ -1,11 +1,11 @@
 package com.aleexalvz.cashwise.feature.addedittransaction
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
+import com.aleexalvz.cashwise.data.model.transaction.TransactionException
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByName
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByName
@@ -30,6 +30,7 @@ data class AddEditTransactionUIState(
     var totalValue: Double = 0.0,
     var isSuccessful: Boolean = false,
     var isError: Boolean = false,
+    var errorMessage: String = "",
     var isLoading: Boolean = false,
     var isTransactionFetched: Boolean = false
 )
@@ -121,6 +122,9 @@ class TransactionViewModel @Inject constructor(
                     dateMillis = date
                 )
             }
+
+            if (transaction.type == TransactionType.LOSS) verifyIfCanLoss(transaction)
+
             if (transactionId == null) {
                 transactionRepository.insert(transaction)
             } else {
@@ -128,13 +132,35 @@ class TransactionViewModel @Inject constructor(
             }
         }.onFailure { error ->
             _uiState.update {
-                Log.e("TransactionViewModel", error.message.toString())
-                it.copy(isError = true)
+                val message =
+                    (error as? TransactionException)?.message ?: "Unknown error. Please, try again"
+                it.copy(
+                    isError = true,
+                    errorMessage = message
+                )
             }
         }.onSuccess {
             _uiState.update {
                 it.copy(isSuccessful = true)
             }
+        }
+    }
+
+    private suspend fun verifyIfCanLoss(transaction: Transaction) {
+        if (transaction.type == TransactionType.LOSS) {
+            val totalValueFromCategory = transactionRepository.getAll()
+                .filter { it.category == transaction.category }
+                .totalValue()
+
+            if (totalValueFromCategory < transaction.totalValue()) {
+                throw TransactionException("You can't loss more that you have on this category")
+            }
+        }
+    }
+
+    fun cleanError() {
+        _uiState.update {
+            it.copy(isError = false, errorMessage = "")
         }
     }
 }
