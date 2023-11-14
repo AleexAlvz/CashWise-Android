@@ -16,6 +16,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,10 +74,13 @@ fun TransactionScreen(
     onUIAction: (TransactionsUIAction) -> Unit
 ) {
 
-    if (transactionId != null && uiState.isTransactionFetched.not()) {
-        onUIAction(TransactionsUIAction.FetchTransaction(transactionId))
-    } else {
+    LaunchedEffect(key1 = "fetchTransaction") {
+        transactionId?.let { onUIAction(TransactionsUIAction.FetchTransaction(it)) }
+    }
+
+    if (transactionId == null || uiState.isTransactionFetched) {
         if (uiState.isSuccessful) onFinish()
+
 
         if (uiState.isError) {
             Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_LONG).show()
