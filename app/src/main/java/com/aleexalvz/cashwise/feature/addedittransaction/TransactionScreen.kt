@@ -47,7 +47,7 @@ import java.math.RoundingMode
 import java.util.Date
 
 @Composable
-fun AddEditTransactionScreen(
+fun TransactionScreen(
     modifier: Modifier,
     transactionId: Long? = null,
     onFinish: () -> Unit,
@@ -55,49 +55,32 @@ fun AddEditTransactionScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    AddEditTransactionScreen(
+    TransactionScreen(
         modifier = modifier,
-        transactionId = transactionId,
         uiState = uiState,
-        fetchTransactionByID = viewModel::fetchTransactionByID,
-        updateTitle = viewModel::updateTitle,
-        updateCategory = viewModel::updateCategory,
-        updateType = viewModel::updateType,
-        updateDate = viewModel::updateDate,
-        updateAmount = viewModel::updateAmount,
-        updateUnitValue = viewModel::updateUnitValue,
-        addOrEditTransaction = viewModel::addOrEditTransaction,
-        cleanError = viewModel::cleanError,
+        onUIAction = viewModel::onUIAction,
+        transactionId = transactionId,
         onFinish = onFinish
     )
 }
 
 @Composable
-fun AddEditTransactionScreen(
+fun TransactionScreen(
     modifier: Modifier,
-    uiState: AddEditTransactionUIState,
-    fetchTransactionByID: (Long) -> Unit,
-    updateTitle: (String) -> Unit,
-    updateCategory: (String) -> Unit,
-    updateType: (String) -> Unit,
-    updateDate: (Long) -> Unit,
-    updateAmount: (Long) -> Unit,
-    updateUnitValue: (Double) -> Unit,
-    addOrEditTransaction: (Long?) -> Unit,
-    cleanError: () -> Unit,
+    uiState: TransactionUIState,
+    transactionId: Long? = null,
     onFinish: () -> Unit,
-    transactionId: Long? = null
+    onUIAction: (TransactionsUIAction) -> Unit
 ) {
 
     if (transactionId != null && uiState.isTransactionFetched.not()) {
-        fetchTransactionByID(transactionId)
+        onUIAction(TransactionsUIAction.FetchTransaction(transactionId))
     } else {
-
         if (uiState.isSuccessful) onFinish()
 
         if (uiState.isError) {
             Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_LONG).show()
-            cleanError
+            onUIAction(TransactionsUIAction.ClearError)
         }
 
         Column(
@@ -109,7 +92,9 @@ fun AddEditTransactionScreen(
             DefaultOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 text = uiState.title,
-                onValueChange = updateTitle,
+                onValueChange = {
+                    onUIAction(TransactionsUIAction.UpdateTitle(it))
+                },
                 labelText = stringResource(R.string.title)
             )
 
@@ -118,7 +103,9 @@ fun AddEditTransactionScreen(
                 dropDownValues = TransactionCategory.values().map { it.name },
                 text = uiState.category?.name.orEmpty(),
                 labelText = stringResource(R.string.category),
-                onSelectedItem = updateCategory
+                onSelectedItem = {
+                    onUIAction(TransactionsUIAction.UpdateCategory(it))
+                }
             )
 
             Row(
@@ -129,14 +116,18 @@ fun AddEditTransactionScreen(
                     dropDownValues = TransactionType.values().map { it.name },
                     text = uiState.type?.name.orEmpty(),
                     labelText = stringResource(R.string.type),
-                    onSelectedItem = updateType
+                    onSelectedItem = {
+                        onUIAction(TransactionsUIAction.UpdateType(it))
+                    }
                 )
                 Spacer(modifier = Modifier.padding(6.dp))
 
                 TextFieldWithDatePicker(
                     modifier = Modifier.weight(1f),
                     text = uiState.date.toBrazilianDateFormat(),
-                    onSelectedDateMillis = updateDate
+                    onSelectedDateMillis = {
+                        onUIAction(TransactionsUIAction.UpdateDate(it))
+                    }
                 )
             }
 
@@ -149,7 +140,7 @@ fun AddEditTransactionScreen(
                     onValueChange = {
                         it.runCatching {
                             val amount = if (it.isBlank()) 0 else this.toLong()
-                            updateAmount(amount)
+                            onUIAction(TransactionsUIAction.UpdateAmount(amount))
                         }
                     },
                     labelText = stringResource(R.string.amount),
@@ -165,7 +156,7 @@ fun AddEditTransactionScreen(
                         it.runCatching {
                             val unitValue =
                                 this.toBigDecimal().setScale(2, RoundingMode.DOWN).toDouble()
-                            updateUnitValue(unitValue)
+                            onUIAction(TransactionsUIAction.UpdateUnitValue(unitValue))
                         }
                     },
                     labelText = stringResource(R.string.unit_value),
@@ -191,7 +182,7 @@ fun AddEditTransactionScreen(
                     .padding(top = 30.dp, start = 40.dp, end = 40.dp)
                     .width(260.dp)
                     .height(40.dp),
-                onClickListener = { addOrEditTransaction(transactionId) },
+                onClickListener = { onUIAction(TransactionsUIAction.AddEditTransaction(transactionId)) },
                 text = if (transactionId == null) stringResource(R.string.add) else stringResource(R.string.edit),
                 brush = Brush.verticalGradient(
                     listOf(
@@ -223,9 +214,9 @@ fun AddEditTransactionScreen(
 @Composable
 fun AddEditTransactionScreenPreview() {
     CashWiseTheme {
-        AddEditTransactionScreen(
+        TransactionScreen(
             modifier = Modifier.padding(26.dp),
-            uiState = AddEditTransactionUIState(
+            uiState = TransactionUIState(
                 title = stringResource(R.string.sample),
                 category = TransactionCategory.SAVINGS,
                 type = TransactionType.PROFIT,
@@ -234,15 +225,7 @@ fun AddEditTransactionScreenPreview() {
                 unitValue = 15.11,
                 totalValue = 120.88
             ),
-            updateTitle = {},
-            updateType = {},
-            updateCategory = {},
-            updateDate = {},
-            updateAmount = {},
-            updateUnitValue = {},
-            addOrEditTransaction = {},
-            cleanError = {},
-            fetchTransactionByID = {},
+            onUIAction = {},
             onFinish = {}
         )
     }

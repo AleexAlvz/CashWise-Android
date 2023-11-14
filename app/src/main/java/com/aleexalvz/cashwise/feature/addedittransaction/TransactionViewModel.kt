@@ -2,10 +2,8 @@ package com.aleexalvz.cashwise.feature.addedittransaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
-import com.aleexalvz.cashwise.data.model.transaction.TransactionException
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByName
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByName
@@ -20,7 +18,19 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
-data class AddEditTransactionUIState(
+sealed class TransactionsUIAction {
+    data class FetchTransaction(val id: Long) : TransactionsUIAction()
+    data class UpdateTitle(val title: String) : TransactionsUIAction()
+    data class UpdateCategory(val category: String) : TransactionsUIAction()
+    data class UpdateType(val type: String) : TransactionsUIAction()
+    data class UpdateDate(val date: Long) : TransactionsUIAction()
+    data class UpdateAmount(val amount: Long) : TransactionsUIAction()
+    data class UpdateUnitValue(val unitValue: Double) : TransactionsUIAction()
+    data class AddEditTransaction(val transactionID: Long?) : TransactionsUIAction()
+    object ClearError : TransactionsUIAction()
+}
+
+data class TransactionUIState(
     var title: String = "",
     var category: TransactionCategory? = null,
     var type: TransactionType? = null,
@@ -40,40 +50,54 @@ class TransactionViewModel @Inject constructor(
     private val transactionRepository: LocalTransactionRepositoryImpl
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AddEditTransactionUIState())
-    val uiState: StateFlow<AddEditTransactionUIState> = _uiState
+    private val _uiState = MutableStateFlow(TransactionUIState())
+    val uiState: StateFlow<TransactionUIState> = _uiState
 
-    fun updateTitle(title: String) {
+    fun onUIAction(uiEvent: TransactionsUIAction) {
+        when (uiEvent) {
+            is TransactionsUIAction.FetchTransaction -> fetchTransactionByID(uiEvent.id)
+            is TransactionsUIAction.UpdateTitle -> updateTitle(uiEvent.title)
+            is TransactionsUIAction.UpdateCategory -> updateCategory(uiEvent.category)
+            is TransactionsUIAction.UpdateType -> updateType(uiEvent.type)
+            is TransactionsUIAction.UpdateDate -> updateDate(uiEvent.date)
+            is TransactionsUIAction.UpdateAmount -> updateAmount(uiEvent.amount)
+            is TransactionsUIAction.UpdateUnitValue -> updateUnitValue(uiEvent.unitValue)
+            is TransactionsUIAction.AddEditTransaction -> addOrEditTransaction(uiEvent.transactionID)
+            is TransactionsUIAction.ClearError -> clearError()
+        }
+    }
+
+    private fun updateTitle(title: String) {
         _uiState.update {
             it.copy(title = title)
         }
     }
 
-    fun updateCategory(categoryString: String) =
+    private fun updateCategory(categoryString: String) =
         getTransactionCategoryByName(categoryString)?.let { category ->
             _uiState.update { it.copy(category = category) }
         }
 
-    fun updateType(typeString: String) = getTransactionTypeByName(typeString)?.let { type ->
+    private fun updateType(typeString: String) = getTransactionTypeByName(typeString)?.let { type ->
         _uiState.update {
             it.copy(type = type)
         }
     }
 
-    fun updateDate(dateMillis: Long) {
+    private fun updateDate(dateMillis: Long) {
         _uiState.update {
             it.copy(date = dateMillis)
         }
     }
 
-    fun updateAmount(amount: Long) {
+    private fun updateAmount(amount: Long) {
         _uiState.update {
             it.copy(amount = amount)
         }
         updateTotalValue()
     }
 
-    fun updateUnitValue(unitValue: Double) {
+    private fun updateUnitValue(unitValue: Double) {
         _uiState.update {
             it.copy(unitValue = unitValue)
         }
@@ -89,7 +113,7 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun fetchTransactionByID(id: Long) = viewModelScope.launch {
+    private fun fetchTransactionByID(id: Long) = viewModelScope.launch {
         val transaction = transactionRepository.getByID(id)
         _uiState.update {
             it.copy(
@@ -105,38 +129,43 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun addOrEditTransaction(transactionId: Long? = null) = viewModelScope.launch {
+    private suspend fun getTransaction(transactionID: Long? = null): Transaction? {
+        val transaction = with(uiState.value) {
+
+            val userID =
+                UserManager.loggedUser?.userID!! //TODO think a better way to logged user not be null
+
+            Transaction(
+                id = transactionID ?: 0,
+                userID = userID,
+                title = title,
+                category = category!!,
+                unitValue = unitValue,
+                amount = amount,
+                type = type!!,
+                dateMillis = date
+            )
+        }
+        return if (!canBeLoss(transaction)) {
+            //TODO Send toast error "You can't loss more that you have on this category"
+            null
+        } else transaction
+    }
+
+    private fun addOrEditTransaction(transactionId: Long? = null) = viewModelScope.launch {
         runCatching {
-            val userID = UserManager.loggedUser?.userID
-                ?: throw UserNotFoundException("On trying to get id, user not found. Need be logged!")
-
-            val transaction = with(uiState.value) {
-                Transaction(
-                    id = transactionId ?: 0,
-                    userID = userID,
-                    title = title,
-                    category = category!!,
-                    unitValue = unitValue,
-                    amount = amount,
-                    type = type!!,
-                    dateMillis = date
-                )
+            getTransaction(transactionId)?.let { transaction ->
+                if (transactionId == null) {
+                    transactionRepository.insert(transaction)
+                } else {
+                    transactionRepository.update(transaction)
+                }
             }
-
-            if (transaction.type == TransactionType.LOSS) verifyIfCanLoss(transaction)
-
-            if (transactionId == null) {
-                transactionRepository.insert(transaction)
-            } else {
-                transactionRepository.update(transaction)
-            }
-        }.onFailure { error ->
+        }.onFailure {
             _uiState.update {
-                val message =
-                    (error as? TransactionException)?.message ?: "Unknown error. Please, try again"
                 it.copy(
                     isError = true,
-                    errorMessage = message
+                    errorMessage = "Unknown error. Please, try again"
                 )
             }
         }.onSuccess {
@@ -146,19 +175,20 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun verifyIfCanLoss(transaction: Transaction) {
+    private suspend fun canBeLoss(transaction: Transaction): Boolean {
         if (transaction.type == TransactionType.LOSS) {
             val totalValueFromCategory = transactionRepository.getAll()
                 .filter { it.category == transaction.category }
                 .totalValue()
 
             if (totalValueFromCategory < transaction.totalValue()) {
-                throw TransactionException("You can't loss more that you have on this category") //TODO fix behavior, is emiting on every recomposition the toast on screen
+                return false
             }
         }
+        return true
     }
 
-    fun cleanError() {
+    private fun clearError() {
         _uiState.update {
             it.copy(isError = false, errorMessage = "")
         }
