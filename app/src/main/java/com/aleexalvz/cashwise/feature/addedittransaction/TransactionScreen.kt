@@ -23,13 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
@@ -44,6 +47,9 @@ import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 import com.aleexalvz.cashwise.ui.theme.OutlinedGreen
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import java.math.RoundingMode
 import java.util.Date
 
@@ -55,11 +61,13 @@ fun TransactionScreen(
     viewModel: TransactionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiEvent = viewModel.uiEvents
 
     TransactionScreen(
         modifier = modifier,
         uiState = uiState,
         onUIAction = viewModel::onUIAction,
+        uiEvent = uiEvent,
         transactionId = transactionId,
         onFinish = onFinish
     )
@@ -69,24 +77,32 @@ fun TransactionScreen(
 fun TransactionScreen(
     modifier: Modifier,
     uiState: TransactionUIState,
+    uiEvent: SharedFlow<TransactionUIEvent>,
     transactionId: Long? = null,
     onFinish: () -> Unit,
     onUIAction: (TransactionsUIAction) -> Unit
 ) {
+    val context = LocalContext.current
 
-    LaunchedEffect(key1 = "fetchTransaction") {
+    LaunchedEffect(key1 = transactionId) {
         transactionId?.let { onUIAction(TransactionsUIAction.FetchTransaction(it)) }
     }
 
-    if (transactionId == null || uiState.isTransactionFetched) {
-        if (uiState.isSuccessful) onFinish()
+    ObserveAsEvents(flow = uiEvent) { event ->
+        when (event) {
+            is TransactionUIEvent.OnRequestError -> {
+                Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
 
-
-        if (uiState.isError) {
-            Toast.makeText(LocalContext.current, uiState.errorMessage, Toast.LENGTH_LONG).show()
-            onUIAction(TransactionsUIAction.ClearError)
+            is TransactionUIEvent.OnSuccessfulTransaction -> onFinish()
         }
+    }
 
+    if (transactionId != null && !uiState.isTransactionFetched) {
+        onUIAction(TransactionsUIAction.FetchTransaction(transactionId))
+    }
+
+    if (uiState.isLoading.not()) {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -214,6 +230,16 @@ fun TransactionScreen(
     }
 }
 
+@Composable
+private fun <T> ObserveAsEvents(flow: Flow<T>, onEvent: (T) -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(flow, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(onEvent)
+        }
+    }
+}
+
 @Preview
 @Composable
 fun AddEditTransactionScreenPreview() {
@@ -230,6 +256,7 @@ fun AddEditTransactionScreenPreview() {
                 totalValue = 120.88
             ),
             onUIAction = {},
+            uiEvent = MutableSharedFlow(),
             onFinish = {}
         )
     }

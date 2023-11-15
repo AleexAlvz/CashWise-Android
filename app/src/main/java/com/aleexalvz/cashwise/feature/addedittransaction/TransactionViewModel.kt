@@ -10,8 +10,10 @@ import com.aleexalvz.cashwise.data.model.transaction.totalValue
 import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
 import com.aleexalvz.cashwise.foundation.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +26,9 @@ class TransactionViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(TransactionUIState())
     val uiState: StateFlow<TransactionUIState> = _uiState
 
+    private val _uiEvents = MutableSharedFlow<TransactionUIEvent>()
+    val uiEvents = _uiEvents.asSharedFlow()
+
     fun onUIAction(uiEvent: TransactionsUIAction) {
         when (uiEvent) {
             is TransactionsUIAction.FetchTransaction -> fetchTransactionByID(uiEvent.id)
@@ -34,7 +39,6 @@ class TransactionViewModel @Inject constructor(
             is TransactionsUIAction.UpdateAmount -> updateAmount(uiEvent.amount)
             is TransactionsUIAction.UpdateUnitValue -> updateUnitValue(uiEvent.unitValue)
             is TransactionsUIAction.AddEditTransaction -> addOrEditTransaction(uiEvent.transactionID)
-            is TransactionsUIAction.ClearError -> clearError()
         }
     }
 
@@ -118,7 +122,7 @@ class TransactionViewModel @Inject constructor(
             )
         }
         return if (!canBeLoss(transaction)) {
-            //TODO Send toast error "You can't loss more that you have on this category"
+            _uiEvents.emit(TransactionUIEvent.OnRequestError("You can't loss more that you have on this category"))
             null
         } else transaction
     }
@@ -131,18 +135,10 @@ class TransactionViewModel @Inject constructor(
                 } else {
                     transactionRepository.update(transaction)
                 }
+                _uiEvents.emit(TransactionUIEvent.OnSuccessfulTransaction)
             }
         }.onFailure {
-            _uiState.update {
-                it.copy(
-                    isError = true,
-                    errorMessage = "Unknown error. Please, try again"
-                )
-            }
-        }.onSuccess {
-            _uiState.update {
-                it.copy(isSuccessful = true)
-            }
+            _uiEvents.emit(TransactionUIEvent.OnRequestError("Unknown error. Please, try again"))
         }
     }
 
@@ -157,11 +153,5 @@ class TransactionViewModel @Inject constructor(
             }
         }
         return true
-    }
-
-    private fun clearError() {
-        _uiState.update {
-            it.copy(isError = false, errorMessage = "")
-        }
     }
 }

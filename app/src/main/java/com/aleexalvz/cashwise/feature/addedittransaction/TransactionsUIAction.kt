@@ -9,5 +9,4 @@ sealed class TransactionsUIAction {
     data class UpdateAmount(val amount: Long) : TransactionsUIAction()
     data class UpdateUnitValue(val unitValue: Double) : TransactionsUIAction()
     data class AddEditTransaction(val transactionID: Long?) : TransactionsUIAction()
-    object ClearError : TransactionsUIAction()
 }

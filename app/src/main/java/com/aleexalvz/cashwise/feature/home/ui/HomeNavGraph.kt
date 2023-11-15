@@ -73,7 +73,7 @@ fun HomeNavGraph() {
                         Modifier.padding(26.dp),
                         transactionId = id,
                         onFinish = {
-                            navController.navigate(HomeRoutes.STATEMENT)
+                            navController.popBackStack()
                         }
                     )
                 }

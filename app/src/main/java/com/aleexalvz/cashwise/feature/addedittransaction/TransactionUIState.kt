@@ -12,9 +12,6 @@ data class TransactionUIState(
     var amount: Long = 0,
     var unitValue: Double = 0.0,
     var totalValue: Double = 0.0,
-    var isSuccessful: Boolean = false,
-    var isError: Boolean = false,
-    var errorMessage: String = "",
     var isLoading: Boolean = false,
     var isTransactionFetched: Boolean = false
 )
