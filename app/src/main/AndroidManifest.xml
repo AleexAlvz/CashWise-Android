@@ -7,10 +7,11 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:name=".MyApplication"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/cash_wise_app_icon"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CashWise"
+        android:theme="@style/Theme.CashWise.Starting"
         tools:targetApi="34">
 
         <activity
