@@ -104,7 +104,7 @@ fun StatementItem(
                 Spacer(modifier = Modifier.padding(2.dp))
 
                 Text(
-                    text = statement.category.name,
+                    text = statement.category.title,
                     color = GraySecondaryText,
                     fontSize = 14.sp
                 )

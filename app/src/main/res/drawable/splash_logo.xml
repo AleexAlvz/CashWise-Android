@@ -1,0 +1,107 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="50dp"
+    android:height="50dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+    <group
+        android:name="splash_animation_group"
+        android:pivotX="144"
+        android:pivotY="144">
+        <path
+            android:name="splash_bar_1"
+            android:pathData="M126,120h35v168h-35z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endX="143.5"
+                    android:endY="288"
+                    android:startX="143.5"
+                    android:startY="120"
+                    android:type="linear">
+                    <item
+                        android:color="#FF0BAA25"
+                        android:offset="0.74" />
+                    <item
+                        android:color="#004ACD5F"
+                        android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:name="splash_bar_2"
+            android:pathData="M179,64h35v224h-35z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endX="196.5"
+                    android:endY="288"
+                    android:startX="196.5"
+                    android:startY="64"
+                    android:type="linear">
+                    <item
+                        android:color="#FF0BAA25"
+                        android:offset="0.74" />
+                    <item
+                        android:color="#004ACD5F"
+                        android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:name="splash_bar_3"
+            android:pathData="M232,8h35v280h-35z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endX="249.5"
+                    android:endY="288"
+                    android:startX="249.5"
+                    android:startY="8"
+                    android:type="linear">
+                    <item
+                        android:color="#FF0BAA25"
+                        android:offset="0.74" />
+                    <item
+                        android:color="#004ACD5F"
+                        android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:name="splash_bar_4"
+            android:pathData="M20,232h35v56h-35z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endX="37.5"
+                    android:endY="288"
+                    android:startX="37.5"
+                    android:startY="232"
+                    android:type="linear">
+                    <item
+                        android:color="#FF0BAA25"
+                        android:offset="0.74" />
+                    <item
+                        android:color="#004ACD5F"
+                        android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:name="splash_bar_5"
+            android:pathData="M73,176h35v112h-35z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endX="90.5"
+                    android:endY="288"
+                    android:startX="90.5"
+                    android:startY="176"
+                    android:type="linear">
+                    <item
+                        android:color="#FF0BAA25"
+                        android:offset="0.74" />
+                    <item
+                        android:color="#004ACD5F"
+                        android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+    </group>
+</vector>

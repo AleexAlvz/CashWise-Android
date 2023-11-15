@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.aleexalvz.cashwise.feature.home.HomeActivity
 import com.aleexalvz.cashwise.feature.login.ui.LoginNavGraph
 import com.aleexalvz.cashwise.foundation.UserManager
@@ -15,7 +16,7 @@ class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        installSplashScreen()
         setContent {
             CashWiseTheme {
                 LoginNavGraph(

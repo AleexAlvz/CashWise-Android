@@ -1,12 +1,13 @@
 package com.aleexalvz.cashwise.data.model.transaction
 
-enum class TransactionType {
-    PROFIT, LOSS
+enum class TransactionType(val title: String) {
+    PROFIT("Profit"),
+    LOSS("Loss")
 }
 
-fun getTransactionTypeByName(name: String): TransactionType? {
+fun getTransactionTypeByTitle(title: String): TransactionType? {
     TransactionType.values().forEach {
-        if (it.name == name) return it
+        if (it.title == title) return it
     }
     return null
 }

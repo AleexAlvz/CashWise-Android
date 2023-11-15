@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.CashWise" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:background">@color/dark_background</item>
     </style>
@@ -7,6 +8,6 @@
     <style name="Theme.CashWise.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/app_icon_background</item>
         <item name="postSplashScreenTheme">@style/Theme.CashWise</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/animated_logo</item>
     </style>
 </resources>

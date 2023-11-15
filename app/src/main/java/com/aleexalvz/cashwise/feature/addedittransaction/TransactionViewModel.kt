@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
-import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByName
-import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByName
+import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByTitle
+import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByTitle
 import com.aleexalvz.cashwise.data.model.transaction.totalValue
 import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
 import com.aleexalvz.cashwise.foundation.UserManager
@@ -49,11 +49,11 @@ class TransactionViewModel @Inject constructor(
     }
 
     private fun updateCategory(categoryString: String) =
-        getTransactionCategoryByName(categoryString)?.let { category ->
+        getTransactionCategoryByTitle(categoryString)?.let { category ->
             _uiState.update { it.copy(category = category) }
         }
 
-    private fun updateType(typeString: String) = getTransactionTypeByName(typeString)?.let { type ->
+    private fun updateType(typeString: String) = getTransactionTypeByTitle(typeString)?.let { type ->
         _uiState.update {
             it.copy(type = type)
         }
