@@ -3,7 +3,6 @@ package com.aleexalvz.cashwise.feature.addedittransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByName
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByName
@@ -15,35 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
-
-sealed class TransactionsUIAction {
-    data class FetchTransaction(val id: Long) : TransactionsUIAction()
-    data class UpdateTitle(val title: String) : TransactionsUIAction()
-    data class UpdateCategory(val category: String) : TransactionsUIAction()
-    data class UpdateType(val type: String) : TransactionsUIAction()
-    data class UpdateDate(val date: Long) : TransactionsUIAction()
-    data class UpdateAmount(val amount: Long) : TransactionsUIAction()
-    data class UpdateUnitValue(val unitValue: Double) : TransactionsUIAction()
-    data class AddEditTransaction(val transactionID: Long?) : TransactionsUIAction()
-    object ClearError : TransactionsUIAction()
-}
-
-data class TransactionUIState(
-    var title: String = "",
-    var category: TransactionCategory? = null,
-    var type: TransactionType? = null,
-    var date: Long = Date().time,
-    var amount: Long = 0,
-    var unitValue: Double = 0.0,
-    var totalValue: Double = 0.0,
-    var isSuccessful: Boolean = false,
-    var isError: Boolean = false,
-    var errorMessage: String = "",
-    var isLoading: Boolean = false,
-    var isTransactionFetched: Boolean = false
-)
 
 @HiltViewModel
 class TransactionViewModel @Inject constructor(

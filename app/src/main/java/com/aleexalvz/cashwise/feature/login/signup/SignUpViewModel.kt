@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.viewmodel
+package com.aleexalvz.cashwise.feature.login.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,47 +12,35 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val REMEMBER_ME_EMAIL_KEY = "REMEMBER_ME_LOGIN_KEY"
-
-/**
- * Data that represents UI State from Login Screen
- * */
-data class LoginUIState(
-    val email: String = "",
-    val password: String = "",
-    val rememberMe: Boolean = false,
-    val emailError: String? = null,
-    val passwordError: String? = null,
-    val loginState: Boolean = false
-)
-
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+class SignUpViewModel @Inject constructor(
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginUIState())
-    val uiState: StateFlow<LoginUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SignUpUIState())
+    val uiState: StateFlow<SignUpUIState> = _uiState.asStateFlow()
 
-    init {
-        authRepository.verifyRememberUser()?.let {
-            updateEmail(it)
-            _uiState.value = _uiState.value.copy(rememberMe = true)
+    fun onUIAction(uiAction: SignUpUIAction) {
+        when (uiAction) {
+            is SignUpUIAction.UpdateEmail -> updateEmail(uiAction.email)
+            is SignUpUIAction.UpdatePassword -> updateEmail(uiAction.password)
+            is SignUpUIAction.UpdateConfirmPassword -> updateEmail(uiAction.confirmPassword)
         }
     }
 
-    fun updateEmail(email: String) {
+    private fun updateEmail(email: String) {
         _uiState.value = _uiState.value.copy(email = email)
         updateEmailError()
     }
 
-    fun updatePassword(password: String) {
+    private fun updatePassword(password: String) {
         _uiState.value = _uiState.value.copy(password = password)
         updatePasswordError()
     }
 
-    fun updateRememberMeCheckBox(value: Boolean) {
-        _uiState.value = _uiState.value.copy(rememberMe = value)
+    private fun updateConfirmPassword(confirmPassword: String) {
+        _uiState.value = _uiState.value.copy(confirmPassword = confirmPassword)
+        updateConfirmPasswordError()
     }
 
     private fun updateEmailError(error: String? = null) {
@@ -77,46 +65,54 @@ class LoginViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(passwordError = message)
     }
 
-    private fun updateLoginStateToSuccess() {
-        _uiState.value = _uiState.value.copy(loginState = true)
+    private fun updateConfirmPasswordError(error: String? = null) {
+        val message: String? = if (error.isNullOrBlank().not()) {
+            error
+        } else if (uiState.value.confirmPassword.isNotBlank() && uiState.value.password != uiState.value.confirmPassword)
+            "Should be equals your inserted password"
+        else null
+        _uiState.value = _uiState.value.copy(confirmPasswordError = message)
     }
 
-    fun doLogin() {
+    private fun updateSignUpStateToSuccess() {
+        _uiState.value = _uiState.value.copy(signUpState = true)
+    }
+
+    fun doSignup() {
         viewModelScope.launch {
             if (isValidFields()) {
                 try {
-                    val result = authRepository.doLogin(uiState.value.email, uiState.value.password)
+                    val result =
+                        authRepository.signupUser(uiState.value.email, uiState.value.password)
                     UserManager.loggedUser = result
-                    verifyRememberUser()
-                    updateLoginStateToSuccess()
+                    updateSignUpStateToSuccess()
                 } catch (e: Exception) {
-                    //TODO Return error
+                    //TODO return error
                 }
             }
         }
     }
 
-    private fun verifyRememberUser() {
-        if (uiState.value.rememberMe) {
-            authRepository.rememberUser(uiState.value.email)
-        } else {
-            authRepository.forgetUser()
-        }
-    }
-
     private fun isValidFields(): Boolean = with(uiState.value) {
         var hasNoError = this.emailError.isNullOrBlank() &&
-                this.passwordError.isNullOrBlank()
+                this.passwordError.isNullOrBlank() &&
+                this.confirmPasswordError.isNullOrBlank()
 
         if (this.email.isBlank()) {
             hasNoError = false
             updateEmailError("Required field, insert your email")
-        } else updateEmailError()
+        }
 
         if (this.password.isBlank()) {
             hasNoError = false
             updatePasswordError("Required field, insert your password")
-        } else updatePasswordError()
+        }
+
+        if (this.confirmPassword.isBlank()) {
+            hasNoError = false
+            updateConfirmPasswordError("Required field, confirm your password")
+        }
+
         return hasNoError
     }
 }

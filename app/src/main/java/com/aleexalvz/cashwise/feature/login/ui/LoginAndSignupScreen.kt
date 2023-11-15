@@ -30,10 +30,14 @@ import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
 import com.aleexalvz.cashwise.components.SwitchLoginButton
-import com.aleexalvz.cashwise.feature.login.viewmodel.LoginUIState
-import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
-import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpUIState
-import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
+import com.aleexalvz.cashwise.feature.login.login.LoginContent
+import com.aleexalvz.cashwise.feature.login.login.LoginUIAction
+import com.aleexalvz.cashwise.feature.login.login.LoginUIState
+import com.aleexalvz.cashwise.feature.login.login.LoginViewModel
+import com.aleexalvz.cashwise.feature.login.signup.SignUpUIAction
+import com.aleexalvz.cashwise.feature.login.signup.SignUpUIState
+import com.aleexalvz.cashwise.feature.login.signup.SignUpViewModel
+import com.aleexalvz.cashwise.feature.login.signup.SignupContent
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
 
@@ -54,13 +58,9 @@ fun LoginAndSignupScreen(
         modifier = modifier,
         loginUIState = loginUIState,
         signupUIState = signupUIState,
-        loginUpdateEmail = loginViewModel::updateEmail,
-        loginUpdatePassword = loginViewModel::updatePassword,
-        loginUpdateRememberMeCheckBox = loginViewModel::updateRememberMeCheckBox,
+        onLoginUIAction = loginViewModel::onUIAction,
         doLogin = loginViewModel::doLogin,
-        signupUpdateEmail = signUpViewModel::updateEmail,
-        signupUpdatePassword = signUpViewModel::updatePassword,
-        signupUpdateConfirmPassword = signUpViewModel::updateConfirmPassword,
+        onSignUpUIAction = signUpViewModel::onUIAction,
         doSignup = signUpViewModel::doSignup,
         onLoginSuccessful = onLoginSuccessful
     )
@@ -71,13 +71,9 @@ fun LoginAndSignupScreen(
     modifier: Modifier = Modifier,
     loginUIState: LoginUIState,
     signupUIState: SignUpUIState,
-    loginUpdateEmail: (String) -> Unit = {},
-    loginUpdatePassword: (String) -> Unit = {},
-    loginUpdateRememberMeCheckBox: (Boolean) -> Unit = {},
+    onLoginUIAction: (LoginUIAction) -> Unit = {},
     doLogin: () -> Unit = {},
-    signupUpdateEmail: (String) -> Unit = {},
-    signupUpdatePassword: (String) -> Unit = {},
-    signupUpdateConfirmPassword: (String) -> Unit = {},
+    onSignUpUIAction: (SignUpUIAction) -> Unit = {},
     doSignup: () -> Unit = {},
     onLoginSuccessful: () -> Unit = {}
 ) {
@@ -90,7 +86,9 @@ fun LoginAndSignupScreen(
     }
 
     Column(
-        modifier = modifier.fillMaxSize().background(DarkBackground),
+        modifier = modifier
+            .fillMaxSize()
+            .background(DarkBackground),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SwitchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,
@@ -146,9 +144,7 @@ fun LoginAndSignupScreen(
                             modifier = Modifier.padding(26.dp),
                             uiState = loginUIState,
                             onLoginSuccessful = onLoginSuccessful,
-                            updateEmail = loginUpdateEmail,
-                            updatePassword = loginUpdatePassword,
-                            updateRememberMeCheckBox = loginUpdateRememberMeCheckBox,
+                            onUIAction = onLoginUIAction,
                             doLogin = doLogin
                         )
                     } else {
@@ -156,9 +152,7 @@ fun LoginAndSignupScreen(
                             modifier = Modifier.padding(26.dp),
                             uiState = signupUIState,
                             onLoginSuccessful = onLoginSuccessful,
-                            updateEmail = signupUpdateEmail,
-                            updatePassword = signupUpdatePassword,
-                            updateConfirmPassword = signupUpdateConfirmPassword,
+                            onUIAction = onSignUpUIAction,
                             doSignup = doSignup
                         )
                     }

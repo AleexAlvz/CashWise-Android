@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.ui
+package com.aleexalvz.cashwise.feature.login.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,6 @@ import com.aleexalvz.cashwise.components.CheckBox
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
 import com.aleexalvz.cashwise.components.textfield.PasswordOutlinedTextField
-import com.aleexalvz.cashwise.feature.login.viewmodel.LoginUIState
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
@@ -36,9 +35,7 @@ fun LoginContent(
     modifier: Modifier = Modifier,
     uiState: LoginUIState,
     onLoginSuccessful: () -> Unit = {},
-    updateEmail: (String) -> Unit = {},
-    updatePassword: (String) -> Unit = {},
-    updateRememberMeCheckBox: (Boolean) -> Unit = {},
+    onUIAction: (LoginUIAction) -> Unit = {},
     doLogin: () -> Unit = {}
 ) {
 
@@ -52,7 +49,9 @@ fun LoginContent(
         DefaultOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.email,
-            onValueChange = updateEmail,
+            onValueChange = {
+                onUIAction(LoginUIAction.UpdateEmail(it))
+            },
             labelText = "Email",
             leadingIcon = {
                 Icon(
@@ -68,7 +67,7 @@ fun LoginContent(
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
             text = uiState.password,
-            onValueChange = updatePassword,
+            onValueChange = { onUIAction(LoginUIAction.UpdatePassword(it)) },
             labelText = "Password",
             contentDescription = "Password field",
             errorMessage = uiState.passwordError,
@@ -81,7 +80,7 @@ fun LoginContent(
         ) {
             CheckBox(
                 selected = uiState.rememberMe,
-                onStateChanged = updateRememberMeCheckBox,
+                onStateChanged = { onUIAction(LoginUIAction.UpdateRememberMeCheckBox(it)) },
                 text = "Remember me",
             )
         }

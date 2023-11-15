@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.ui
+package com.aleexalvz.cashwise.feature.login.signup
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
 import com.aleexalvz.cashwise.components.textfield.PasswordOutlinedTextField
-import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpUIState
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
@@ -28,12 +27,9 @@ fun SignupContent(
     modifier: Modifier,
     uiState: SignUpUIState,
     onLoginSuccessful: () -> Unit = {},
-    updateEmail: (String) -> Unit = {},
-    updatePassword: (String) -> Unit = {},
-    updateConfirmPassword: (String) -> Unit = {},
+    onUIAction: (SignUpUIAction) -> Unit = {},
     doSignup: () -> Unit = {}
 ) {
-
 
     if (uiState.signUpState) onLoginSuccessful()
 
@@ -45,7 +41,7 @@ fun SignupContent(
         DefaultOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.email,
-            onValueChange = updateEmail,
+            onValueChange = { onUIAction(SignUpUIAction.UpdateEmail(it)) },
             labelText = "Email",
             leadingIcon = {
                 Icon(
@@ -61,7 +57,7 @@ fun SignupContent(
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
             text = uiState.password,
-            onValueChange = updatePassword,
+            onValueChange = { onUIAction(SignUpUIAction.UpdatePassword(it)) },
             labelText = "Password",
             contentDescription = "Password field",
             errorMessage = uiState.passwordError,
@@ -72,7 +68,7 @@ fun SignupContent(
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
             text = uiState.confirmPassword,
-            onValueChange = updateConfirmPassword,
+            onValueChange = { onUIAction(SignUpUIAction.UpdateConfirmPassword(it)) },
             labelText = "Confirm your password",
             contentDescription = "Password confirmation field",
             errorMessage = uiState.confirmPasswordError,
