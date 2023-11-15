@@ -129,7 +129,7 @@ fun HomeScreen(
                                     Text(
                                         modifier = Modifier.padding(start = 9.dp),
                                         maxLines = 1,
-                                        text = category.name,
+                                        text = category.title,
                                         color = Color.White,
                                         fontSize = 14.sp
                                     )

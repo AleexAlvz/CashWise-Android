@@ -120,8 +120,8 @@ fun TransactionScreen(
 
             TextFieldWithDropDown(
                 modifier = Modifier.fillMaxWidth(),
-                dropDownValues = TransactionCategory.values().map { it.name },
-                text = uiState.category?.name.orEmpty(),
+                dropDownValues = TransactionCategory.values().map { it.title },
+                text = uiState.category?.title.orEmpty(),
                 labelText = stringResource(R.string.category),
                 onSelectedItem = {
                     onUIAction(TransactionsUIAction.UpdateCategory(it))
@@ -133,8 +133,8 @@ fun TransactionScreen(
             ) {
                 TextFieldWithDropDown(
                     modifier = Modifier.weight(1f),
-                    dropDownValues = TransactionType.values().map { it.name },
-                    text = uiState.type?.name.orEmpty(),
+                    dropDownValues = TransactionType.values().map { it.title },
+                    text = uiState.type?.title.orEmpty(),
                     labelText = stringResource(R.string.type),
                     onSelectedItem = {
                         onUIAction(TransactionsUIAction.UpdateType(it))

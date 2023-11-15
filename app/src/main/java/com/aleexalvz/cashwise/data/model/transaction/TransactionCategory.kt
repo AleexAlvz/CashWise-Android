@@ -8,13 +8,18 @@ import com.aleexalvz.cashwise.ui.theme.PurplePieGraphColor
 import com.aleexalvz.cashwise.ui.theme.RedPieGraphColor
 import com.aleexalvz.cashwise.ui.theme.YellowPieGraphColor
 
-enum class TransactionCategory {
-    STOCKS, REAL_STATE, FIXED_INCOME, SAVINGS, TREASURE_BONDS, OTHERS
+enum class TransactionCategory(val title: String) {
+    STOCKS("Stocks"),
+    REAL_STATE("Real State"),
+    FIXED_INCOME("Fixed Income"),
+    SAVINGS("Savings"),
+    TREASURE_BONDS("Treasure Bonds"),
+    OTHERS("Others")
 }
 
-fun getTransactionCategoryByName(name: String): TransactionCategory? {
+fun getTransactionCategoryByTitle(title: String): TransactionCategory? {
     TransactionCategory.values().forEach {
-        if (it.name == name) return it
+        if (it.title == title) return it
     }
     return null
 }
