@@ -14,8 +14,17 @@
 <p align="center">Cash Wise is an application that is being made as a study, using the most modern tools for Android development and focusing on a clean, testable and scalable architecture.</p>
 </br>
 </br>
+
+<p align="center">
+  <img src="../assets/splash_screen.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="../assets/login_screen.png">
+  </br>
+  </br>
+  <img src="../assets/home_screen.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="../assets/my_wallet_screen.png">
+</p>
+
+</br>
+</br>
 <p align="center">Important links:
 </br>
 <a href="https://www.figma.com/file/C82fxHrLtihDqZsxEZZbE5/Prot%C3%B3tipo?type=design&node-id=0%3A1&mode=design&t=EvyIXSKo5ASZ93Ez-1">1. Figma Prototype</a>
-
 </p>
