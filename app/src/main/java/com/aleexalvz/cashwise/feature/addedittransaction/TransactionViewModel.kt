@@ -105,26 +105,31 @@ class TransactionViewModel @Inject constructor(
     }
 
     private suspend fun getTransaction(transactionID: Long? = null): Transaction? {
-        val transaction = with(uiState.value) {
-
-            val userID =
-                UserManager.loggedUser?.userID!! //TODO think a better way to logged user not be null
-
-            Transaction(
-                id = transactionID ?: 0,
-                userID = userID,
-                title = title,
-                category = category!!,
-                unitValue = unitValue,
-                amount = amount,
-                type = type!!,
-                dateMillis = date
-            )
+        val state = uiState.value
+        if (state.title.isNotEmpty() && state.unitValue > 0 && state.amount > 0 && state.date > 0) {
+            val transaction =
+                UserManager.loggedUser?.userID?.let { userID ->
+                    uiState.value.category?.let {
+                        uiState.value.type?.let { it1 ->
+                            Transaction(
+                                id = transactionID ?: 0,
+                                userID = userID,
+                                title = uiState.value.title,
+                                category = it,
+                                unitValue = uiState.value.unitValue,
+                                amount = uiState.value.amount,
+                                type = it1,
+                                dateMillis = uiState.value.date
+                            )
+                        }
+                    }
+                }
+            if (transaction != null && canBeLoss(transaction)) {
+                return transaction
+            } else _uiEvents.emit(TransactionUIEvent.OnRequestError("You can't loss more that you have on this category"))
         }
-        return if (!canBeLoss(transaction)) {
-            _uiEvents.emit(TransactionUIEvent.OnRequestError("You can't loss more that you have on this category"))
-            null
-        } else transaction
+
+        return null
     }
 
     private fun addOrEditTransaction(transactionId: Long? = null) = viewModelScope.launch {

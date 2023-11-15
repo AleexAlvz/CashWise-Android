@@ -88,7 +88,7 @@ fun LoginAndSignupScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(DarkBackground),
+            .background(DarkBackground), //TODO remove background setting by default on theme
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SwitchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,

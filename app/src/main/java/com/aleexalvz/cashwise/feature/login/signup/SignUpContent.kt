@@ -74,7 +74,6 @@ fun SignupContent(
             errorMessage = uiState.confirmPasswordError,
         )
 
-        //TODO Add disabled state
         GradientButton(
             modifier = Modifier
                 .padding(top = 20.dp)

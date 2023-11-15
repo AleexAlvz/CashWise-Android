@@ -80,15 +80,11 @@ class SignUpViewModel @Inject constructor(
 
     fun doSignup() {
         viewModelScope.launch {
+            runCatching { }
             if (isValidFields()) {
-                try {
-                    val result =
-                        authRepository.signupUser(uiState.value.email, uiState.value.password)
-                    UserManager.loggedUser = result
-                    updateSignUpStateToSuccess()
-                } catch (e: Exception) {
-                    //TODO return error
-                }
+                val result = authRepository.signupUser(uiState.value.email, uiState.value.password)
+                UserManager.loggedUser = result
+                updateSignUpStateToSuccess()
             }
         }
     }

@@ -77,14 +77,12 @@ class LoginViewModel @Inject constructor(
 
     fun doLogin() {
         viewModelScope.launch {
-            if (isValidFields()) {
-                try {
+            runCatching {
+                if (isValidFields()) {
                     val result = authRepository.doLogin(uiState.value.email, uiState.value.password)
                     UserManager.loggedUser = result
                     verifyRememberUser()
                     updateLoginStateToSuccess()
-                } catch (e: Exception) {
-                    //TODO Return error
                 }
             }
         }
