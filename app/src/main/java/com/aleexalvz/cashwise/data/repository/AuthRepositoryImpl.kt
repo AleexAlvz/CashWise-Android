@@ -8,7 +8,6 @@ import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
 import com.aleexalvz.cashwise.data.source.local.dao.UserDao
 import com.aleexalvz.cashwise.data.source.local.model.LocalUser
 import com.aleexalvz.cashwise.data.source.local.model.toUser
-import com.aleexalvz.cashwise.feature.login.viewmodel.REMEMBER_ME_EMAIL_KEY
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,6 +16,10 @@ class AuthRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val sharedPreferences: SharedPreferences
 ) : AuthRepository {
+
+    companion object {
+        private const val REMEMBER_ME_EMAIL_KEY = "REMEMBER_ME_LOGIN_KEY"
+    }
 
     override suspend fun doLogin(email: String, password: String): User {
         return withContext(IO) {

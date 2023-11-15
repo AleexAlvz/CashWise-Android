@@ -17,18 +17,12 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            // TODO fix background theme color
             CashWiseTheme {
                 LoginNavGraph(
                     onLoginSuccessful = ::onLoginSuccessful
                 )
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        UserManager.loggedUser = null
     }
 
     private fun onLoginSuccessful() {

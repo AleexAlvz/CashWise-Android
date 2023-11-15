@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.aleexalvz.cashwise.feature.addedittransaction.AddEditTransactionArgs
-import com.aleexalvz.cashwise.feature.addedittransaction.AddEditTransactionScreen
+import com.aleexalvz.cashwise.feature.addedittransaction.TransactionScreen
 import com.aleexalvz.cashwise.feature.home.HomeRoutes
 import com.aleexalvz.cashwise.feature.home.calendar.CalendarScreen
 import com.aleexalvz.cashwise.feature.home.home.HomeScreen
@@ -69,16 +69,16 @@ fun HomeNavGraph() {
                 ) { entry ->
                     val id = entry.arguments
                         ?.getLong(AddEditTransactionArgs.transactionIDArg)
-                    AddEditTransactionScreen(
+                    TransactionScreen(
                         Modifier.padding(26.dp),
                         transactionId = id,
                         onFinish = {
-                            navController.navigate(HomeRoutes.STATEMENT)
+                            navController.popBackStack()
                         }
                     )
                 }
                 composable(route = HomeRoutes.ADD_EDIT_TRANSACTION) {
-                    AddEditTransactionScreen(
+                    TransactionScreen(
                         Modifier.padding(26.dp),
                         onFinish = {
                             navController.navigate(HomeRoutes.STATEMENT)

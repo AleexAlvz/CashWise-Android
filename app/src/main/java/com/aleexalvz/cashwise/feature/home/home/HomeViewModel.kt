@@ -40,7 +40,7 @@ class HomeViewModel @Inject constructor(
                 .groupBy { it.category }
                 .mapValues { it.value.totalValue() }
                 .toList()
-                .filter { it.second != 0.0 }
+                .filter { it.second > 0.0 }
 
             _uiState.update {
                 it.copy(

@@ -1,5 +1,6 @@
 package com.aleexalvz.cashwise.feature.addedittransaction
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,18 +16,23 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
@@ -41,56 +47,62 @@ import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 import com.aleexalvz.cashwise.ui.theme.OutlinedGreen
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import java.math.RoundingMode
 import java.util.Date
 
 @Composable
-fun AddEditTransactionScreen(
+fun TransactionScreen(
     modifier: Modifier,
     transactionId: Long? = null,
     onFinish: () -> Unit,
     viewModel: TransactionViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiEvent = viewModel.uiEvents
 
-    AddEditTransactionScreen(
+    TransactionScreen(
         modifier = modifier,
-        transactionId = transactionId,
         uiState = uiState,
-        fetchTransactionByID = viewModel::fetchTransactionByID,
-        updateTitle = viewModel::updateTitle,
-        updateCategory = viewModel::updateCategory,
-        updateType = viewModel::updateType,
-        updateDate = viewModel::updateDate,
-        updateAmount = viewModel::updateAmount,
-        updateUnitValue = viewModel::updateUnitValue,
-        addOrEditTransaction = viewModel::addOrEditTransaction,
+        onUIAction = viewModel::onUIAction,
+        uiEvent = uiEvent,
+        transactionId = transactionId,
         onFinish = onFinish
     )
 }
 
 @Composable
-fun AddEditTransactionScreen(
+fun TransactionScreen(
     modifier: Modifier,
-    uiState: AddEditTransactionUIState,
-    fetchTransactionByID: (Long) -> Unit,
-    updateTitle: (String) -> Unit,
-    updateCategory: (String) -> Unit,
-    updateType: (String) -> Unit,
-    updateDate: (Long) -> Unit,
-    updateAmount: (Long) -> Unit,
-    updateUnitValue: (Double) -> Unit,
-    addOrEditTransaction: (Long?) -> Unit,
+    uiState: TransactionUIState,
+    uiEvent: SharedFlow<TransactionUIEvent>,
+    transactionId: Long? = null,
     onFinish: () -> Unit,
-    transactionId: Long? = null
+    onUIAction: (TransactionsUIAction) -> Unit
 ) {
+    val context = LocalContext.current
 
-    if (transactionId != null && uiState.isTransactionFetched.not()) {
-        fetchTransactionByID(transactionId)
-    } else {
+    LaunchedEffect(key1 = transactionId) {
+        transactionId?.let { onUIAction(TransactionsUIAction.FetchTransaction(it)) }
+    }
 
-        if (uiState.isSuccessful) onFinish()
+    ObserveAsEvents(flow = uiEvent) { event ->
+        when (event) {
+            is TransactionUIEvent.OnRequestError -> {
+                Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+            }
 
+            is TransactionUIEvent.OnSuccessfulTransaction -> onFinish()
+        }
+    }
+
+    if (transactionId != null && !uiState.isTransactionFetched) {
+        onUIAction(TransactionsUIAction.FetchTransaction(transactionId))
+    }
+
+    if (uiState.isLoading.not()) {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -100,7 +112,9 @@ fun AddEditTransactionScreen(
             DefaultOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 text = uiState.title,
-                onValueChange = updateTitle,
+                onValueChange = {
+                    onUIAction(TransactionsUIAction.UpdateTitle(it))
+                },
                 labelText = stringResource(R.string.title)
             )
 
@@ -109,7 +123,9 @@ fun AddEditTransactionScreen(
                 dropDownValues = TransactionCategory.values().map { it.name },
                 text = uiState.category?.name.orEmpty(),
                 labelText = stringResource(R.string.category),
-                onSelectedItem = updateCategory
+                onSelectedItem = {
+                    onUIAction(TransactionsUIAction.UpdateCategory(it))
+                }
             )
 
             Row(
@@ -120,14 +136,18 @@ fun AddEditTransactionScreen(
                     dropDownValues = TransactionType.values().map { it.name },
                     text = uiState.type?.name.orEmpty(),
                     labelText = stringResource(R.string.type),
-                    onSelectedItem = updateType
+                    onSelectedItem = {
+                        onUIAction(TransactionsUIAction.UpdateType(it))
+                    }
                 )
                 Spacer(modifier = Modifier.padding(6.dp))
 
                 TextFieldWithDatePicker(
                     modifier = Modifier.weight(1f),
                     text = uiState.date.toBrazilianDateFormat(),
-                    onSelectedDateMillis = updateDate
+                    onSelectedDateMillis = {
+                        onUIAction(TransactionsUIAction.UpdateDate(it))
+                    }
                 )
             }
 
@@ -140,7 +160,7 @@ fun AddEditTransactionScreen(
                     onValueChange = {
                         it.runCatching {
                             val amount = if (it.isBlank()) 0 else this.toLong()
-                            updateAmount(amount)
+                            onUIAction(TransactionsUIAction.UpdateAmount(amount))
                         }
                     },
                     labelText = stringResource(R.string.amount),
@@ -156,7 +176,7 @@ fun AddEditTransactionScreen(
                         it.runCatching {
                             val unitValue =
                                 this.toBigDecimal().setScale(2, RoundingMode.DOWN).toDouble()
-                            updateUnitValue(unitValue)
+                            onUIAction(TransactionsUIAction.UpdateUnitValue(unitValue))
                         }
                     },
                     labelText = stringResource(R.string.unit_value),
@@ -182,7 +202,7 @@ fun AddEditTransactionScreen(
                     .padding(top = 30.dp, start = 40.dp, end = 40.dp)
                     .width(260.dp)
                     .height(40.dp),
-                onClickListener = { addOrEditTransaction(transactionId) },
+                onClickListener = { onUIAction(TransactionsUIAction.AddEditTransaction(transactionId)) },
                 text = if (transactionId == null) stringResource(R.string.add) else stringResource(R.string.edit),
                 brush = Brush.verticalGradient(
                     listOf(
@@ -210,13 +230,23 @@ fun AddEditTransactionScreen(
     }
 }
 
+@Composable
+private fun <T> ObserveAsEvents(flow: Flow<T>, onEvent: (T) -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(flow, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(onEvent)
+        }
+    }
+}
+
 @Preview
 @Composable
 fun AddEditTransactionScreenPreview() {
     CashWiseTheme {
-        AddEditTransactionScreen(
+        TransactionScreen(
             modifier = Modifier.padding(26.dp),
-            uiState = AddEditTransactionUIState(
+            uiState = TransactionUIState(
                 title = stringResource(R.string.sample),
                 category = TransactionCategory.SAVINGS,
                 type = TransactionType.PROFIT,
@@ -225,14 +255,8 @@ fun AddEditTransactionScreenPreview() {
                 unitValue = 15.11,
                 totalValue = 120.88
             ),
-            updateTitle = {},
-            updateType = {},
-            updateCategory = {},
-            updateDate = {},
-            updateAmount = {},
-            updateUnitValue = {},
-            addOrEditTransaction = {},
-            fetchTransactionByID = {},
+            onUIAction = {},
+            uiEvent = MutableSharedFlow(),
             onFinish = {}
         )
     }
