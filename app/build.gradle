@@ -5,6 +5,15 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
+tasks.withType(Test) {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed"
+        showStandardStreams true
+    }
+}
+
 android {
     namespace 'com.aleexalvz.cashwise'
     compileSdk 34
@@ -79,7 +88,8 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     //Tests
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
 
     //Android Tests
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -6,5 +6,5 @@ fun Double.toCurrencyString(): String {
     val format = NumberFormat.getCurrencyInstance()
     format.maximumFractionDigits = 2
     format.minimumFractionDigits = 2
-    return format.format(this)
+    return format.format(this).replace(' ', ' ')
 }
