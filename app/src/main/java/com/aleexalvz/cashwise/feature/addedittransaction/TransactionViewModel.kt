@@ -7,7 +7,7 @@ import com.aleexalvz.cashwise.data.model.transaction.TransactionType
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionCategoryByName
 import com.aleexalvz.cashwise.data.model.transaction.getTransactionTypeByName
 import com.aleexalvz.cashwise.data.model.transaction.totalValue
-import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
+import com.aleexalvz.cashwise.data.source.local.repository.LocalTransactionRepositoryImpl
 import com.aleexalvz.cashwise.foundation.UserManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

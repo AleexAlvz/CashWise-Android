@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.totalValue
-import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
+import com.aleexalvz.cashwise.data.source.local.repository.LocalTransactionRepositoryImpl
 import com.aleexalvz.cashwise.helper.toCurrencyString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

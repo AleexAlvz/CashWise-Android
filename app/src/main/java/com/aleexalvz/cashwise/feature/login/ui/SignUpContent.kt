@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.signup
+package com.aleexalvz.cashwise.feature.login.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
 import com.aleexalvz.cashwise.components.textfield.PasswordOutlinedTextField
+import com.aleexalvz.cashwise.feature.login.data.SignUpUIAction
+import com.aleexalvz.cashwise.feature.login.data.SignUpUIState
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
@@ -26,12 +28,9 @@ import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 fun SignupContent(
     modifier: Modifier,
     uiState: SignUpUIState,
-    onLoginSuccessful: () -> Unit = {},
     onUIAction: (SignUpUIAction) -> Unit = {},
     doSignup: () -> Unit = {}
 ) {
-
-    if (uiState.signUpState) onLoginSuccessful()
 
     Column(
         modifier = modifier,
@@ -104,7 +103,6 @@ fun SignupContentPreview() {
             emailError = null,
             passwordError = null,
             confirmPasswordError = null,
-            signUpState = false
         )
     )
 }

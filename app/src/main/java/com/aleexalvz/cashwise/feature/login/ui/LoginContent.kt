@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.login
+package com.aleexalvz.cashwise.feature.login.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +25,8 @@ import com.aleexalvz.cashwise.components.CheckBox
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
 import com.aleexalvz.cashwise.components.textfield.PasswordOutlinedTextField
+import com.aleexalvz.cashwise.feature.login.data.LoginUIAction
+import com.aleexalvz.cashwise.feature.login.data.LoginUIState
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
@@ -34,12 +36,9 @@ import com.aleexalvz.cashwise.ui.theme.Green
 fun LoginContent(
     modifier: Modifier = Modifier,
     uiState: LoginUIState,
-    onLoginSuccessful: () -> Unit = {},
     onUIAction: (LoginUIAction) -> Unit = {},
     doLogin: () -> Unit = {}
 ) {
-
-    if (uiState.loginState) onLoginSuccessful()
 
     Column(
         modifier = modifier,
@@ -131,7 +130,6 @@ fun LoginContentPreview() {
             rememberMe = true,
             emailError = null,
             passwordError = null,
-            loginState = false
         )
     )
 }

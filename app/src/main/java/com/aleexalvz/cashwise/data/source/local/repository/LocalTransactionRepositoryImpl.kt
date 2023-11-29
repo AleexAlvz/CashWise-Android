@@ -1,7 +1,8 @@
-package com.aleexalvz.cashwise.data.repository
+package com.aleexalvz.cashwise.data.source.local.repository
 
 import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
+import com.aleexalvz.cashwise.data.repository.TransactionRepository
 import com.aleexalvz.cashwise.data.source.local.dao.TransactionDao
 import com.aleexalvz.cashwise.data.source.local.model.toLocalTransaction
 import com.aleexalvz.cashwise.data.source.local.model.toTransaction
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 class LocalTransactionRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao
-) : LocalTransactionRepository {
+) : TransactionRepository {
     override suspend fun getAll(): List<Transaction> {
         return withContext(Dispatchers.IO) {
             val userID = UserManager.loggedUser?.userID

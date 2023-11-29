@@ -1,5 +1,6 @@
 package com.aleexalvz.cashwise.feature.login.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,16 +32,18 @@ import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.FirstIndex
 import com.aleexalvz.cashwise.components.SecondIndex
 import com.aleexalvz.cashwise.components.SwitchLoginButton
-import com.aleexalvz.cashwise.feature.login.login.LoginContent
-import com.aleexalvz.cashwise.feature.login.login.LoginUIAction
-import com.aleexalvz.cashwise.feature.login.login.LoginUIState
-import com.aleexalvz.cashwise.feature.login.login.LoginViewModel
-import com.aleexalvz.cashwise.feature.login.signup.SignUpUIAction
-import com.aleexalvz.cashwise.feature.login.signup.SignUpUIState
-import com.aleexalvz.cashwise.feature.login.signup.SignUpViewModel
-import com.aleexalvz.cashwise.feature.login.signup.SignupContent
+import com.aleexalvz.cashwise.feature.login.data.AuthState
+import com.aleexalvz.cashwise.feature.login.data.LoginUIAction
+import com.aleexalvz.cashwise.feature.login.data.LoginUIState
+import com.aleexalvz.cashwise.feature.login.data.SignUpUIAction
+import com.aleexalvz.cashwise.feature.login.data.SignUpUIState
+import com.aleexalvz.cashwise.feature.login.viewmodel.LoginViewModel
+import com.aleexalvz.cashwise.feature.login.viewmodel.SignUpViewModel
+import com.aleexalvz.cashwise.helper.ObserveAsEvents
 import com.aleexalvz.cashwise.ui.theme.DarkBackground
 import com.aleexalvz.cashwise.ui.theme.GrayDefault
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 const val LOGIN_SCREEN_NAME = "login"
 const val SIGNUP_SCREEN_NAME = "signup"
@@ -60,8 +64,10 @@ fun LoginAndSignupScreen(
         signupUIState = signupUIState,
         onLoginUIAction = loginViewModel::onUIAction,
         doLogin = loginViewModel::doLogin,
+        loginUIEvent = loginViewModel.uiEvents,
         onSignUpUIAction = signUpViewModel::onUIAction,
         doSignup = signUpViewModel::doSignup,
+        signupUIEvent = signUpViewModel.uiEvents,
         onLoginSuccessful = onLoginSuccessful
     )
 }
@@ -73,17 +79,35 @@ fun LoginAndSignupScreen(
     signupUIState: SignUpUIState,
     onLoginUIAction: (LoginUIAction) -> Unit = {},
     doLogin: () -> Unit = {},
+    loginUIEvent: SharedFlow<AuthState>,
     onSignUpUIAction: (SignUpUIAction) -> Unit = {},
     doSignup: () -> Unit = {},
+    signupUIEvent: SharedFlow<AuthState>,
     onLoginSuccessful: () -> Unit = {}
 ) {
+    val context = LocalContext.current
 
     val screenState = remember { mutableStateOf(LOGIN_SCREEN_NAME) }
+
     val indexSelectedState = remember {
         val index = if (screenState.value == LOGIN_SCREEN_NAME) FirstIndex
         else SecondIndex
         mutableIntStateOf(index)
     }
+
+    fun handleEvents(authState: AuthState) {
+        when (authState) {
+            is AuthState.OnSuccess -> onLoginSuccessful()
+
+            is AuthState.OnFailure -> {
+                Toast.makeText(context, authState.throwable.message, Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
+    ObserveAsEvents(flow = signupUIEvent, onEvent = ::handleEvents)
+    ObserveAsEvents(flow = loginUIEvent, onEvent = ::handleEvents)
 
     Column(
         modifier = modifier
@@ -143,7 +167,6 @@ fun LoginAndSignupScreen(
                         LoginContent(
                             modifier = Modifier.padding(26.dp),
                             uiState = loginUIState,
-                            onLoginSuccessful = onLoginSuccessful,
                             onUIAction = onLoginUIAction,
                             doLogin = doLogin
                         )
@@ -151,7 +174,6 @@ fun LoginAndSignupScreen(
                         SignupContent(
                             modifier = Modifier.padding(26.dp),
                             uiState = signupUIState,
-                            onLoginSuccessful = onLoginSuccessful,
                             onUIAction = onSignUpUIAction,
                             doSignup = doSignup
                         )
@@ -173,8 +195,8 @@ fun LoginAndSignupScreenPreview() {
             rememberMe = true,
             emailError = null,
             passwordError = null,
-            loginState = false
         ),
+        loginUIEvent = MutableSharedFlow(),
         signupUIState = SignUpUIState(
             email = "sample@sample.com",
             password = "6516156",
@@ -182,7 +204,7 @@ fun LoginAndSignupScreenPreview() {
             emailError = null,
             passwordError = null,
             confirmPasswordError = null,
-            signUpState = false
-        )
+        ),
+        signupUIEvent = MutableSharedFlow()
     )
 }

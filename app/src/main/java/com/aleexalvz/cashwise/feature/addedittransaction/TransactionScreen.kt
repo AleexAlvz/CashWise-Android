@@ -23,16 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import com.aleexalvz.cashwise.R
 import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
@@ -40,6 +37,7 @@ import com.aleexalvz.cashwise.components.textfield.TextFieldWithDatePicker
 import com.aleexalvz.cashwise.components.textfield.TextFieldWithDropDown
 import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
 import com.aleexalvz.cashwise.data.model.transaction.TransactionType
+import com.aleexalvz.cashwise.helper.ObserveAsEvents
 import com.aleexalvz.cashwise.helper.toBrazilianDateFormat
 import com.aleexalvz.cashwise.helper.toCurrencyString
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
@@ -47,7 +45,6 @@ import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton2
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton3
 import com.aleexalvz.cashwise.ui.theme.OutlinedGreen
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import java.math.RoundingMode
@@ -226,16 +223,6 @@ fun TransactionScreen(
                     color = Color.White
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun <T> ObserveAsEvents(flow: Flow<T>, onEvent: (T) -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(flow, lifecycleOwner) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect(onEvent)
         }
     }
 }

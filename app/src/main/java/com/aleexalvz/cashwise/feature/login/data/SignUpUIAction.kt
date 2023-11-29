@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.signup
+package com.aleexalvz.cashwise.feature.login.data
 
 sealed class SignUpUIAction {
     data class UpdateEmail(val email: String): SignUpUIAction()

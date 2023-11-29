@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.signup
+package com.aleexalvz.cashwise.feature.login.data
 
 /**
  * Data that represents UI State from SignUp Screen
@@ -10,5 +10,4 @@ data class SignUpUIState(
     val emailError: String? = null,
     val passwordError: String? = null,
     val confirmPasswordError: String? = null,
-    val signUpState: Boolean = false
 )

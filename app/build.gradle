@@ -38,11 +38,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         compose true
@@ -90,6 +90,9 @@ dependencies {
     //Tests
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+    testImplementation "io.mockk:mockk:1.13.8"
+    testImplementation "io.mockk:mockk-android:1.13.8"
+    testImplementation "io.mockk:mockk-agent:1.13.8"
 
     //Android Tests
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

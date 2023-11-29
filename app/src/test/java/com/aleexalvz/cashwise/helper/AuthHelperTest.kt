@@ -55,7 +55,7 @@ class AuthHelperTest {
     @Test
     fun `when pass invalid password string then return false`() {
         listOf(
-            "Short1",    // Doesn't have at least 6 chars
+            "Sho15",    // Doesn't have at least 6 chars
             "NoNumber",  // Doesn't have at least 1 number
             " WithSpace", // Has whitespaces
             " 123 456 ",  // Has whitespaces

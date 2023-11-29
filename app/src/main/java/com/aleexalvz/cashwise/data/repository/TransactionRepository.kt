@@ -2,7 +2,7 @@ package com.aleexalvz.cashwise.data.repository
 
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
 
-interface LocalTransactionRepository {
+interface TransactionRepository {
 
     suspend fun getAll(): List<Transaction>
 

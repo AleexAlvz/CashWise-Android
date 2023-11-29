@@ -3,7 +3,7 @@ package com.aleexalvz.cashwise.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.aleexalvz.cashwise.data.repository.AuthRepository
-import com.aleexalvz.cashwise.data.repository.AuthRepositoryImpl
+import com.aleexalvz.cashwise.data.source.local.repository.LocalAuthRepositoryImpl
 import com.aleexalvz.cashwise.data.source.local.AppDatabase
 import com.aleexalvz.cashwise.data.source.local.dao.UserDao
 import dagger.Module
@@ -31,5 +31,5 @@ object AuthModule {
     fun providesAuthRepository(
         userDao: UserDao,
         sharedPreferences: SharedPreferences
-    ): AuthRepository = AuthRepositoryImpl(userDao, sharedPreferences)
+    ): AuthRepository = LocalAuthRepositoryImpl(userDao, sharedPreferences)
 }

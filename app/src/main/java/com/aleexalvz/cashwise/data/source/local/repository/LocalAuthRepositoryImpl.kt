@@ -1,10 +1,11 @@
-package com.aleexalvz.cashwise.data.repository
+package com.aleexalvz.cashwise.data.source.local.repository
 
 import android.content.SharedPreferences
 import com.aleexalvz.cashwise.data.model.auth.InvalidUserPasswordException
 import com.aleexalvz.cashwise.data.model.auth.SignUpInvalidException
 import com.aleexalvz.cashwise.data.model.auth.User
 import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
+import com.aleexalvz.cashwise.data.repository.AuthRepository
 import com.aleexalvz.cashwise.data.source.local.dao.UserDao
 import com.aleexalvz.cashwise.data.source.local.model.LocalUser
 import com.aleexalvz.cashwise.data.source.local.model.toUser
@@ -12,7 +13,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(
+class LocalAuthRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val sharedPreferences: SharedPreferences
 ) : AuthRepository {
@@ -21,34 +22,27 @@ class AuthRepositoryImpl @Inject constructor(
         private const val REMEMBER_ME_EMAIL_KEY = "REMEMBER_ME_LOGIN_KEY"
     }
 
-    override suspend fun doLogin(email: String, password: String): User {
-        return withContext(IO) {
-            try {
-                getUserByEmail(email).takeIf { it.password == password }
-                    ?: throw InvalidUserPasswordException("Wrong Password")
-            } catch (e: InvalidUserPasswordException) {
-                throw e
-            } catch (e: Exception) {
-                throw UserNotFoundException("User not found")
-            }
+    override suspend fun doLogin(email: String, password: String): Result<User> = runCatching {
+        withContext(IO) {
+            val user: User = getUserByEmail(email)
+                ?: throw UserNotFoundException("User not found")
+            return@withContext user.takeIf { it.password == password }
+                ?: throw InvalidUserPasswordException("Wrong Password")
         }
     }
 
-    override suspend fun signupUser(email: String, password: String): User {
-        return withContext(IO) {
-            try {
-                val localUser = LocalUser(email = email, password = password)
-                userDao.register(localUser)
-                userDao.getByEmail(email = email).toUser()
-            } catch (error: Exception) {
-                throw SignUpInvalidException("This user data is invalid to sign up")
-            }
+    override suspend fun signupUser(email: String, password: String): Result<User> = runCatching {
+        withContext(IO) {
+            val localUser = LocalUser(email = email, password = password)
+            userDao.register(localUser)
+            return@withContext userDao.getByEmail(email = email)?.toUser()
+                ?: throw SignUpInvalidException("This user data is invalid to sign up")
         }
     }
 
-    private suspend fun getUserByEmail(email: String): User {
+    private suspend fun getUserByEmail(email: String): User? {
         return withContext(IO) {
-            userDao.getByEmail(email).toUser()
+            userDao.getByEmail(email)?.toUser()
         }
     }
 
