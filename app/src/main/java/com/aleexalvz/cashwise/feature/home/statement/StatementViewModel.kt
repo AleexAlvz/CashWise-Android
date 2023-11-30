@@ -28,9 +28,11 @@ class StatementViewModel @Inject constructor(
 
     fun fetchContent() {
         viewModelScope.launch {
-            val content = transactionRepository.getAll().map { it.toStatement() }.sortedByDescending { it.date }
-            _uiState.update {
-                it.copy(content = content)
+            transactionRepository.getAll().onSuccess { transactions ->
+                val content = transactions.map { it.toStatement() }.sortedByDescending { it.date }
+                _uiState.update {
+                    it.copy(content = content)
+                }
             }
         }
     }

@@ -89,41 +89,43 @@ class TransactionViewModel @Inject constructor(
     }
 
     private fun fetchTransactionByID(id: Long) = viewModelScope.launch {
-        val transaction = transactionRepository.getByID(id)
-        _uiState.update {
-            it.copy(
-                title = transaction.title,
-                category = transaction.category,
-                type = transaction.type,
-                date = transaction.dateMillis,
-                amount = transaction.amount,
-                unitValue = transaction.unitValue,
-                totalValue = transaction.totalValue(),
-                isTransactionFetched = true
-            )
-        }
+        transactionRepository.getByID(id).onSuccess { transaction ->
+                _uiState.update {
+                    it.copy(
+                        title = transaction.title,
+                        category = transaction.category,
+                        type = transaction.type,
+                        date = transaction.dateMillis,
+                        amount = transaction.amount,
+                        unitValue = transaction.unitValue,
+                        totalValue = transaction.totalValue(),
+                        isTransactionFetched = true
+                    )
+                }
+            }.onFailure {
+                _uiEvents.emit(TransactionUIEvent.OnRequestError("Unknown error. Please, try again"))
+            }
     }
 
     private suspend fun getTransaction(transactionID: Long? = null): Transaction? {
         val state = uiState.value
         if (state.title.isNotEmpty() && state.unitValue > 0 && state.amount > 0 && state.date > 0) {
-            val transaction =
-                UserManager.loggedUser?.userID?.let { userID ->
-                    uiState.value.category?.let {
-                        uiState.value.type?.let { it1 ->
-                            Transaction(
-                                id = transactionID ?: 0,
-                                userID = userID,
-                                title = uiState.value.title,
-                                category = it,
-                                unitValue = uiState.value.unitValue,
-                                amount = uiState.value.amount,
-                                type = it1,
-                                dateMillis = uiState.value.date
-                            )
-                        }
+            val transaction = UserManager.loggedUser?.userID?.let { userID ->
+                uiState.value.category?.let {
+                    uiState.value.type?.let { it1 ->
+                        Transaction(
+                            id = transactionID ?: 0,
+                            userID = userID,
+                            title = uiState.value.title,
+                            category = it,
+                            unitValue = uiState.value.unitValue,
+                            amount = uiState.value.amount,
+                            type = it1,
+                            dateMillis = uiState.value.date
+                        )
                     }
                 }
+            }
             if (transaction != null && canBeLoss(transaction)) {
                 return transaction
             } else _uiEvents.emit(TransactionUIEvent.OnRequestError("You can't loss more that you have on this category"))
@@ -149,12 +151,13 @@ class TransactionViewModel @Inject constructor(
 
     private suspend fun canBeLoss(transaction: Transaction): Boolean {
         if (transaction.type == TransactionType.LOSS) {
-            val totalValueFromCategory = transactionRepository.getAll()
-                .filter { it.category == transaction.category }
-                .totalValue()
+            transactionRepository.getAll().getOrNull()?.let { transactions ->
+                val totalValueFromCategory =
+                    transactions.filter { it.category == transaction.category }.totalValue()
 
-            if (totalValueFromCategory < transaction.totalValue()) {
-                return false
+                if (totalValueFromCategory < transaction.totalValue()) {
+                    return false
+                }
             }
         }
         return true

@@ -32,22 +32,22 @@ class HomeViewModel @Inject constructor(
     fun fetchScreenData() {
         viewModelScope.launch {
 
-            val transactions = transactionRepository.getAll()
+            transactionRepository.getAll().onSuccess { transactions ->
+                val totalBalance: Double = transactions.totalValue()
 
-            val totalBalance: Double = transactions.totalValue()
+                val wallet: Wallet = transactions
+                    .groupBy { it.category }
+                    .mapValues { it.value.totalValue() }
+                    .toList()
+                    .filter { it.second > 0.0 }
 
-            val wallet: Wallet = transactions
-                .groupBy { it.category }
-                .mapValues { it.value.totalValue() }
-                .toList()
-                .filter { it.second > 0.0 }
-
-            _uiState.update {
-                it.copy(
-                    totalBalance = totalBalance.toCurrencyString(),
-                    wallet = wallet,
-                    isFetchedData = true
-                )
+                _uiState.update {
+                    it.copy(
+                        totalBalance = totalBalance.toCurrencyString(),
+                        wallet = wallet,
+                        isFetchedData = true
+                    )
+                }
             }
         }
     }
