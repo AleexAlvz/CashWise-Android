@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
 }
 
 tasks.withType(Test) {
@@ -48,7 +49,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion '1.5.3'
     }
     packagingOptions {
         resources {
@@ -66,7 +67,7 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.8.0'
 
     //Compose
-    implementation 'androidx.compose.material3:material3:1.2.0-alpha10'
+    implementation 'androidx.compose.material3:material3:1.2.0-alpha11'
     implementation "androidx.navigation:navigation-compose:2.7.4"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
@@ -77,15 +78,15 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 
     //Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.44.2")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+    kapt("androidx.hilt:hilt-compiler:1.1.0")
 
     //Room Database
-    def room_version = "2.5.2"
+    def room_version = "2.6.0"
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     //Tests
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'

@@ -19,15 +19,18 @@ class LocalAuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     companion object {
-        private const val REMEMBER_ME_EMAIL_KEY = "REMEMBER_ME_LOGIN_KEY"
+        const val REMEMBER_ME_EMAIL_KEY = "REMEMBER_ME_LOGIN_KEY"
+        const val USER_NOT_FOUND = "User not found"
+        const val WRONG_PASSWORD = "Wrong Password"
+        const val UNDEFINED_ERROR = "Oops, an error occurred. Try later!"
     }
 
     override suspend fun doLogin(email: String, password: String): Result<User> = runCatching {
         withContext(IO) {
-            val user: User = getUserByEmail(email)
-                ?: throw UserNotFoundException("User not found")
+            val user: User = userDao.getByEmail(email)?.toUser()
+                ?: throw UserNotFoundException(USER_NOT_FOUND)
             return@withContext user.takeIf { it.password == password }
-                ?: throw InvalidUserPasswordException("Wrong Password")
+                ?: throw InvalidUserPasswordException(WRONG_PASSWORD)
         }
     }
 
@@ -36,13 +39,7 @@ class LocalAuthRepositoryImpl @Inject constructor(
             val localUser = LocalUser(email = email, password = password)
             userDao.register(localUser)
             return@withContext userDao.getByEmail(email = email)?.toUser()
-                ?: throw SignUpInvalidException("This user data is invalid to sign up")
-        }
-    }
-
-    private suspend fun getUserByEmail(email: String): User? {
-        return withContext(IO) {
-            userDao.getByEmail(email)?.toUser()
+                ?: throw SignUpInvalidException(UNDEFINED_ERROR)
         }
     }
 
