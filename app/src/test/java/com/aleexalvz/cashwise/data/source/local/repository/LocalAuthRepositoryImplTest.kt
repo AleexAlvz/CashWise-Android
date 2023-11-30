@@ -9,7 +9,9 @@ import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 class LocalAuthRepositoryImplTest {
@@ -37,7 +39,7 @@ class LocalAuthRepositoryImplTest {
 
         //Assert
         val errorMessage = result.exceptionOrNull()?.message.toString()
-        Assertions.assertEquals(LocalAuthRepositoryImpl.USER_NOT_FOUND, errorMessage)
+        assertEquals(LocalAuthRepositoryImpl.USER_NOT_FOUND, errorMessage)
     }
 
     @Test
@@ -55,7 +57,7 @@ class LocalAuthRepositoryImplTest {
 
         //Assert
         val errorMessage = result.exceptionOrNull()?.message.toString()
-        Assertions.assertEquals(LocalAuthRepositoryImpl.WRONG_PASSWORD, errorMessage)
+        assertEquals(LocalAuthRepositoryImpl.WRONG_PASSWORD, errorMessage)
     }
 
     @Test
@@ -68,6 +70,37 @@ class LocalAuthRepositoryImplTest {
 
         //Assert
         val user = result.getOrNull()
-        Assertions.assertNotNull(user)
+        assertNotNull(user)
+    }
+
+    @Test
+    fun `when signupUser success then returns user`() = runBlocking {
+        //Arrange
+        every { userDao.register(any()) } returns Unit
+        every { userDao.getByEmail(email) } returns LocalUser(email = email, password = password)
+
+        //Act
+        val result = localAuthRepositoryImpl.signupUser(email, password)
+
+        //Assert
+        val user = result.getOrNull()
+        assertNotNull(user)
+    }
+
+    @Test
+    fun `when signupUser fails then throws an exception`() = runBlocking {
+        //Arrange
+        every { userDao.register(any()) } throws Exception()
+        every { userDao.getByEmail(email) } returns LocalUser(email = email, password = password)
+
+        //Act
+        val result = localAuthRepositoryImpl.signupUser(email, password)
+
+        //Assert
+        val user = result.getOrNull()
+        val error = result.exceptionOrNull()
+
+        assertNull(user)
+        assertNotNull(error)
     }
 }
