@@ -11,7 +11,7 @@ class DateConverterTest {
     @Test
     fun `test DateConverter methods`() {
         ///Arrange
-        hashMapOf<Long, Date>(
+        hashMapOf(
             1638224400000L to Date(1638224400000L),
             1638224400L to Date(1638224400L),
             38224400000L to Date(38224400000L),
