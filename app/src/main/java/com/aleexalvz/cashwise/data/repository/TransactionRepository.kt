@@ -2,11 +2,11 @@ package com.aleexalvz.cashwise.data.repository
 
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
 
-interface LocalTransactionRepository {
+interface TransactionRepository {
 
-    suspend fun getAll(): List<Transaction>
+    suspend fun getAll(): Result<List<Transaction>>
 
-    suspend fun getByID(id: Long): Transaction
+    suspend fun getByID(id: Long): Result<Transaction>
 
     suspend fun insert(transaction: Transaction)
 

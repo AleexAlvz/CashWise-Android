@@ -1,13 +1,18 @@
-package com.aleexalvz.cashwise.feature.login.login
+package com.aleexalvz.cashwise.feature.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.repository.AuthRepository
+import com.aleexalvz.cashwise.feature.login.data.AuthState
+import com.aleexalvz.cashwise.feature.login.data.LoginUIAction
+import com.aleexalvz.cashwise.feature.login.data.LoginUIState
 import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.helper.AuthHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +24,9 @@ class LoginViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(LoginUIState())
     val uiState: StateFlow<LoginUIState> = _uiState.asStateFlow()
+
+    private val _uiEvents = MutableSharedFlow<AuthState>()
+    val uiEvents = _uiEvents.asSharedFlow()
 
     init {
         authRepository.verifyRememberUser()?.let {
@@ -71,22 +79,20 @@ class LoginViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(passwordError = message)
     }
 
-    private fun updateLoginStateToSuccess() {
-        _uiState.value = _uiState.value.copy(loginState = true)
-    }
-
-    fun doLogin() {
-        viewModelScope.launch {
-            runCatching {
-                if (isValidFields()) {
-                    val result = authRepository.doLogin(uiState.value.email, uiState.value.password)
-                    UserManager.loggedUser = result
+    fun doLogin() = viewModelScope.launch {
+        if (isValidFields()) {
+            authRepository.doLogin(uiState.value.email, uiState.value.password)
+                .onSuccess { user ->
+                    UserManager.loggedUser = user
                     verifyRememberUser()
-                    updateLoginStateToSuccess()
+                    _uiEvents.emit(AuthState.OnSuccess(user))
                 }
-            }
+                .onFailure { throwable ->
+                    _uiEvents.emit(AuthState.OnFailure(throwable))
+                }
         }
     }
+
 
     private fun verifyRememberUser() {
         if (uiState.value.rememberMe) {

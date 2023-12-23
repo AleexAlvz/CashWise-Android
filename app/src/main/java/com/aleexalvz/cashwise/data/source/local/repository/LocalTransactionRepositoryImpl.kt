@@ -1,7 +1,8 @@
-package com.aleexalvz.cashwise.data.repository
+package com.aleexalvz.cashwise.data.source.local.repository
 
 import com.aleexalvz.cashwise.data.model.auth.UserNotFoundException
 import com.aleexalvz.cashwise.data.model.transaction.Transaction
+import com.aleexalvz.cashwise.data.repository.TransactionRepository
 import com.aleexalvz.cashwise.data.source.local.dao.TransactionDao
 import com.aleexalvz.cashwise.data.source.local.model.toLocalTransaction
 import com.aleexalvz.cashwise.data.source.local.model.toTransaction
@@ -12,17 +13,23 @@ import javax.inject.Inject
 
 class LocalTransactionRepositoryImpl @Inject constructor(
     private val transactionDao: TransactionDao
-) : LocalTransactionRepository {
-    override suspend fun getAll(): List<Transaction> {
-        return withContext(Dispatchers.IO) {
+) : TransactionRepository {
+
+    companion object {
+        const val USER_NOT_FOUND_ERROR = "On trying to get id, user not found. Need be logged!"
+    }
+
+    override suspend fun getAll(): Result<List<Transaction>> = runCatching {
+        withContext(Dispatchers.IO) {
             val userID = UserManager.loggedUser?.userID
-                ?: throw UserNotFoundException("On trying to get id, user not found. Need be logged!")
-            transactionDao.getByUserID(userID).map { it.toTransaction() }
+                ?: throw UserNotFoundException(USER_NOT_FOUND_ERROR)
+
+            return@withContext transactionDao.getByUserID(userID).map { it.toTransaction() }
         }
     }
 
-    override suspend fun getByID(id: Long): Transaction {
-        return withContext(Dispatchers.IO) {
+    override suspend fun getByID(id: Long): Result<Transaction> = runCatching {
+        withContext(Dispatchers.IO) {
             transactionDao.getByID(id).toTransaction()
         }
     }

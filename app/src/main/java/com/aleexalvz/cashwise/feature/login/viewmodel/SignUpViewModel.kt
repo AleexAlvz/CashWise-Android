@@ -1,13 +1,18 @@
-package com.aleexalvz.cashwise.feature.login.signup
+package com.aleexalvz.cashwise.feature.login.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.repository.AuthRepository
+import com.aleexalvz.cashwise.feature.login.data.AuthState
+import com.aleexalvz.cashwise.feature.login.data.SignUpUIAction
+import com.aleexalvz.cashwise.feature.login.data.SignUpUIState
 import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.helper.AuthHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,11 +25,14 @@ class SignUpViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SignUpUIState())
     val uiState: StateFlow<SignUpUIState> = _uiState.asStateFlow()
 
+    private val _uiEvents = MutableSharedFlow<AuthState>()
+    val uiEvents = _uiEvents.asSharedFlow()
+
     fun onUIAction(uiAction: SignUpUIAction) {
         when (uiAction) {
             is SignUpUIAction.UpdateEmail -> updateEmail(uiAction.email)
-            is SignUpUIAction.UpdatePassword -> updateEmail(uiAction.password)
-            is SignUpUIAction.UpdateConfirmPassword -> updateEmail(uiAction.confirmPassword)
+            is SignUpUIAction.UpdatePassword -> updatePassword(uiAction.password)
+            is SignUpUIAction.UpdateConfirmPassword -> updateConfirmPassword(uiAction.confirmPassword)
         }
     }
 
@@ -74,20 +82,18 @@ class SignUpViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(confirmPasswordError = message)
     }
 
-    private fun updateSignUpStateToSuccess() {
-        _uiState.value = _uiState.value.copy(signUpState = true)
-    }
-
-    fun doSignup() {
-        viewModelScope.launch {
-            runCatching { }
-            if (isValidFields()) {
-                val result = authRepository.signupUser(uiState.value.email, uiState.value.password)
-                UserManager.loggedUser = result
-                updateSignUpStateToSuccess()
-            }
+    fun doSignup() = viewModelScope.launch {
+        if (isValidFields()) {
+            authRepository.signupUser(uiState.value.email, uiState.value.password)
+                .onSuccess { user ->
+                    UserManager.loggedUser = user
+                    _uiEvents.emit(AuthState.OnSuccess(user))
+                }.onFailure { throwable ->
+                    _uiEvents.emit(AuthState.OnFailure(throwable))
+                }
         }
     }
+
 
     private fun isValidFields(): Boolean = with(uiState.value) {
         var hasNoError = this.emailError.isNullOrBlank() &&

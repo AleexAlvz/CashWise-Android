@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.login.login
+package com.aleexalvz.cashwise.feature.login.data
 
 /**
  * Data that represents UI State from Login Screen
@@ -9,5 +9,4 @@ data class LoginUIState(
     val rememberMe: Boolean = false,
     val emailError: String? = null,
     val passwordError: String? = null,
-    val loginState: Boolean = false
 )

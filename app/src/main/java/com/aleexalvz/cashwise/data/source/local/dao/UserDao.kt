@@ -10,7 +10,7 @@ import com.aleexalvz.cashwise.data.source.local.model.LocalUser
 @Dao
 interface UserDao {
     @Query("SELECT * FROM `LOCALUSER` WHERE email == (:email)")
-    fun getByEmail(email: String): LocalUser
+    fun getByEmail(email: String): LocalUser?
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun register(user: LocalUser)
