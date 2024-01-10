@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.addedittransaction
+package com.aleexalvz.cashwise.feature.investmentsform
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -38,8 +38,8 @@ import com.aleexalvz.cashwise.components.GradientButton
 import com.aleexalvz.cashwise.components.textfield.DefaultOutlinedTextField
 import com.aleexalvz.cashwise.components.textfield.TextFieldWithDatePicker
 import com.aleexalvz.cashwise.components.textfield.TextFieldWithDropDown
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
-import com.aleexalvz.cashwise.data.model.transaction.TransactionType
+import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
+import com.aleexalvz.cashwise.data.model.investment.InvestmentType
 import com.aleexalvz.cashwise.helper.toBrazilianDateFormat
 import com.aleexalvz.cashwise.helper.toCurrencyString
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
@@ -54,52 +54,52 @@ import java.math.RoundingMode
 import java.util.Date
 
 @Composable
-fun TransactionScreen(
+fun InvestmentsFormScreen(
     modifier: Modifier,
-    transactionId: Long? = null,
+    investmentId: Long? = null,
     onFinish: () -> Unit,
-    viewModel: TransactionViewModel = hiltViewModel()
+    viewModel: InvestmentsFormViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEvent = viewModel.uiEvents
 
-    TransactionScreen(
+    InvestmentsFormScreen(
         modifier = modifier,
         uiState = uiState,
         onUIAction = viewModel::onUIAction,
         uiEvent = uiEvent,
-        transactionId = transactionId,
+        investmentId = investmentId,
         onFinish = onFinish
     )
 }
 
 @Composable
-fun TransactionScreen(
+fun InvestmentsFormScreen(
     modifier: Modifier,
-    uiState: TransactionUIState,
-    uiEvent: SharedFlow<TransactionUIEvent>,
-    transactionId: Long? = null,
+    uiState: InvestmentsFormUIState,
+    uiEvent: SharedFlow<InvestmentsFormUIEvent>,
+    investmentId: Long? = null,
     onFinish: () -> Unit,
-    onUIAction: (TransactionsUIAction) -> Unit
+    onUIAction: (InvestmentsFormUIAction) -> Unit
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = transactionId) {
-        transactionId?.let { onUIAction(TransactionsUIAction.FetchTransaction(it)) }
+    LaunchedEffect(key1 = investmentId) {
+        investmentId?.let { onUIAction(InvestmentsFormUIAction.FetchInvestment(it)) }
     }
 
     ObserveAsEvents(flow = uiEvent) { event ->
         when (event) {
-            is TransactionUIEvent.OnRequestError -> {
+            is InvestmentsFormUIEvent.OnRequestError -> {
                 Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
             }
 
-            is TransactionUIEvent.OnSuccessfulTransaction -> onFinish()
+            is InvestmentsFormUIEvent.OnSuccessfulInvestmentsForm -> onFinish()
         }
     }
 
-    if (transactionId != null && !uiState.isTransactionFetched) {
-        onUIAction(TransactionsUIAction.FetchTransaction(transactionId))
+    if (investmentId != null && !uiState.isInvestmentFetched) {
+        onUIAction(InvestmentsFormUIAction.FetchInvestment(investmentId))
     }
 
     if (uiState.isLoading.not()) {
@@ -113,18 +113,18 @@ fun TransactionScreen(
                 modifier = Modifier.fillMaxWidth(),
                 text = uiState.title,
                 onValueChange = {
-                    onUIAction(TransactionsUIAction.UpdateTitle(it))
+                    onUIAction(InvestmentsFormUIAction.UpdateTitle(it))
                 },
                 labelText = stringResource(R.string.title)
             )
 
             TextFieldWithDropDown(
                 modifier = Modifier.fillMaxWidth(),
-                dropDownValues = TransactionCategory.values().map { it.title },
+                dropDownValues = InvestmentCategory.values().map { it.title },
                 text = uiState.category?.title.orEmpty(),
                 labelText = stringResource(R.string.category),
                 onSelectedItem = {
-                    onUIAction(TransactionsUIAction.UpdateCategory(it))
+                    onUIAction(InvestmentsFormUIAction.UpdateCategory(it))
                 }
             )
 
@@ -133,11 +133,11 @@ fun TransactionScreen(
             ) {
                 TextFieldWithDropDown(
                     modifier = Modifier.weight(1f),
-                    dropDownValues = TransactionType.values().map { it.title },
+                    dropDownValues = InvestmentType.values().map { it.title },
                     text = uiState.type?.title.orEmpty(),
                     labelText = stringResource(R.string.type),
                     onSelectedItem = {
-                        onUIAction(TransactionsUIAction.UpdateType(it))
+                        onUIAction(InvestmentsFormUIAction.UpdateType(it))
                     }
                 )
                 Spacer(modifier = Modifier.padding(6.dp))
@@ -146,7 +146,7 @@ fun TransactionScreen(
                     modifier = Modifier.weight(1f),
                     text = uiState.date.toBrazilianDateFormat(),
                     onSelectedDateMillis = {
-                        onUIAction(TransactionsUIAction.UpdateDate(it))
+                        onUIAction(InvestmentsFormUIAction.UpdateDate(it))
                     }
                 )
             }
@@ -160,7 +160,7 @@ fun TransactionScreen(
                     onValueChange = {
                         it.runCatching {
                             val amount = if (it.isBlank()) 0 else this.toLong()
-                            onUIAction(TransactionsUIAction.UpdateAmount(amount))
+                            onUIAction(InvestmentsFormUIAction.UpdateAmount(amount))
                         }
                     },
                     labelText = stringResource(R.string.amount),
@@ -176,7 +176,7 @@ fun TransactionScreen(
                         it.runCatching {
                             val unitValue =
                                 this.toBigDecimal().setScale(2, RoundingMode.DOWN).toDouble()
-                            onUIAction(TransactionsUIAction.UpdateUnitValue(unitValue))
+                            onUIAction(InvestmentsFormUIAction.UpdateUnitValue(unitValue))
                         }
                     },
                     labelText = stringResource(R.string.unit_value),
@@ -202,8 +202,8 @@ fun TransactionScreen(
                     .padding(top = 30.dp, start = 40.dp, end = 40.dp)
                     .width(260.dp)
                     .height(40.dp),
-                onClickListener = { onUIAction(TransactionsUIAction.AddEditTransaction(transactionId)) },
-                text = if (transactionId == null) stringResource(R.string.add) else stringResource(R.string.edit),
+                onClickListener = { onUIAction(InvestmentsFormUIAction.SendInvestment(investmentId)) },
+                text = if (investmentId == null) stringResource(R.string.add) else stringResource(R.string.edit),
                 brush = Brush.verticalGradient(
                     listOf(
                         GradGreenButton1, GradGreenButton2, GradGreenButton3
@@ -242,14 +242,14 @@ private fun <T> ObserveAsEvents(flow: Flow<T>, onEvent: (T) -> Unit) {
 
 @Preview
 @Composable
-fun AddEditTransactionScreenPreview() {
+fun InvestmentsFormPreview() {
     CashWiseTheme {
-        TransactionScreen(
+        InvestmentsFormScreen(
             modifier = Modifier.padding(26.dp),
-            uiState = TransactionUIState(
+            uiState = InvestmentsFormUIState(
                 title = stringResource(R.string.sample),
-                category = TransactionCategory.SAVINGS,
-                type = TransactionType.PROFIT,
+                category = InvestmentCategory.SAVINGS,
+                type = InvestmentType.PROFIT,
                 date = Date().time,
                 amount = 8L,
                 unitValue = 15.11,

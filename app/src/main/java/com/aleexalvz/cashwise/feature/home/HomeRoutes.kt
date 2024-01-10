@@ -4,5 +4,5 @@ object HomeRoutes {
     const val HOME = "home"
     const val STATEMENT = "statement"
     const val CALENDAR = "calendar"
-    const val ADD_EDIT_TRANSACTION = "addedittransaction"
+    const val INVESTMENT_FORM = "investments_form"
 }

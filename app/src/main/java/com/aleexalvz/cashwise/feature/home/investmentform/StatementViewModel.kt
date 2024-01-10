@@ -1,10 +1,10 @@
-package com.aleexalvz.cashwise.feature.home.statement
+package com.aleexalvz.cashwise.feature.home.investmentform
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleexalvz.cashwise.data.model.statement.Statement
 import com.aleexalvz.cashwise.data.model.statement.toStatement
-import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
+import com.aleexalvz.cashwise.data.repository.LocalInvestmentRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ data class StatementUIState(
 
 @HiltViewModel
 class StatementViewModel @Inject constructor(
-    private val transactionRepository: LocalTransactionRepositoryImpl
+    private val investmentRepository: LocalInvestmentRepositoryImpl
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(StatementUIState())
@@ -28,7 +28,7 @@ class StatementViewModel @Inject constructor(
 
     fun fetchContent() {
         viewModelScope.launch {
-            val content = transactionRepository.getAll().map { it.toStatement() }.sortedByDescending { it.date }
+            val content = investmentRepository.getAll().map { it.toStatement() }.sortedByDescending { it.date }
             _uiState.update {
                 it.copy(content = content)
             }

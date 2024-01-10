@@ -4,15 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.aleexalvz.cashwise.components.graph.PieChart
 import com.aleexalvz.cashwise.components.graph.PieChartItem
-import com.aleexalvz.cashwise.data.model.transaction.color
+import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
+import com.aleexalvz.cashwise.data.model.investment.color
+
+typealias Investments = List<Pair<InvestmentCategory, Double>>
 
 @Composable
-fun WalletPieChart(
+fun InvestmentsPieChart(
     modifier: Modifier = Modifier,
-    wallet: Wallet
+    investments: Investments
 ) {
 
-    val pieChartData: List<PieChartItem> = wallet.map { it.second.toFloat() to it.first.color() }
+    val pieChartData: List<PieChartItem> = investments.map { it.second.toFloat() to it.first.color() }
 
     PieChart(modifier = modifier, data = pieChartData)
 }

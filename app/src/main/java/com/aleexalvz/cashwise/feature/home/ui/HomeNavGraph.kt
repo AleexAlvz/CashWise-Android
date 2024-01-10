@@ -16,12 +16,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.aleexalvz.cashwise.feature.addedittransaction.AddEditTransactionArgs
-import com.aleexalvz.cashwise.feature.addedittransaction.TransactionScreen
+import com.aleexalvz.cashwise.feature.investmentsform.InvestmentsFormArgs
+import com.aleexalvz.cashwise.feature.investmentsform.InvestmentsFormScreen
 import com.aleexalvz.cashwise.feature.home.HomeRoutes
 import com.aleexalvz.cashwise.feature.home.calendar.CalendarScreen
 import com.aleexalvz.cashwise.feature.home.home.HomeScreen
-import com.aleexalvz.cashwise.feature.home.statement.StatementScreen
+import com.aleexalvz.cashwise.feature.home.investmentform.StatementScreen
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 
 @Composable
@@ -51,34 +51,34 @@ fun HomeNavGraph() {
                 }
                 composable(route = HomeRoutes.STATEMENT) {
                     StatementScreen(
-                        onAddTransaction = {
-                            navController.navigate(HomeRoutes.ADD_EDIT_TRANSACTION)
+                        onAddInvestment = {
+                            navController.navigate(HomeRoutes.INVESTMENT_FORM)
                         },
-                        onEditTransaction = { transactionId ->
+                        onEditInvestment = { investmentId ->
                             navController.navigate(
-                                route = "${HomeRoutes.ADD_EDIT_TRANSACTION}/$transactionId"
+                                route = "${HomeRoutes.INVESTMENT_FORM}/$investmentId"
                             )
                         }
                     )
                 }
                 composable(
-                    route = "${HomeRoutes.ADD_EDIT_TRANSACTION}/{${AddEditTransactionArgs.transactionIDArg}}",
-                    arguments = listOf(navArgument(AddEditTransactionArgs.transactionIDArg) {
+                    route = "${HomeRoutes.INVESTMENT_FORM}/{${InvestmentsFormArgs.investmentIDArg}}",
+                    arguments = listOf(navArgument(InvestmentsFormArgs.investmentIDArg) {
                         type = NavType.LongType
                     })
                 ) { entry ->
                     val id = entry.arguments
-                        ?.getLong(AddEditTransactionArgs.transactionIDArg)
-                    TransactionScreen(
+                        ?.getLong(InvestmentsFormArgs.investmentIDArg)
+                    InvestmentsFormScreen(
                         Modifier.padding(26.dp),
-                        transactionId = id,
+                        investmentId = id,
                         onFinish = {
                             navController.popBackStack()
                         }
                     )
                 }
-                composable(route = HomeRoutes.ADD_EDIT_TRANSACTION) {
-                    TransactionScreen(
+                composable(route = HomeRoutes.INVESTMENT_FORM) {
+                    InvestmentsFormScreen(
                         Modifier.padding(26.dp),
                         onFinish = {
                             navController.navigate(HomeRoutes.STATEMENT)
@@ -99,13 +99,13 @@ private fun getTitleByDestination(navController: NavController): String =
     when (navController.currentDestination?.route) {
         HomeRoutes.STATEMENT -> "Statement"
         HomeRoutes.CALENDAR -> "Calendar"
-        HomeRoutes.ADD_EDIT_TRANSACTION -> {
-            if (navController.currentBackStackEntry?.arguments?.getString(AddEditTransactionArgs.transactionIDArg)
+        HomeRoutes.INVESTMENT_FORM -> {
+            if (navController.currentBackStackEntry?.arguments?.getString(InvestmentsFormArgs.investmentIDArg)
                     .isNullOrBlank()
             ) {
-                "Add transaction"
+                "Add investment"
             } else {
-                "Edit transaction"
+                "Edit investment"
             }
         }
 

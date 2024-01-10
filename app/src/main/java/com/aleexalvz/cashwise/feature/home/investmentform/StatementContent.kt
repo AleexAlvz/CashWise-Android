@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home.statement
+package com.aleexalvz.cashwise.feature.home.investmentform
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aleexalvz.cashwise.data.model.statement.Statement
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
-import com.aleexalvz.cashwise.data.model.transaction.TransactionType
+import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
+import com.aleexalvz.cashwise.data.model.investment.InvestmentType
 
 @Composable
 fun StatementContent(
@@ -40,9 +40,9 @@ fun StatementContentPreview() {
                 Statement(
                     id = 0,
                     title = "Title",
-                    category = TransactionCategory.SAVINGS,
+                    category = InvestmentCategory.SAVINGS,
                     totalValue = "R$ 100,00",
-                    type = TransactionType.PROFIT,
+                    type = InvestmentType.PROFIT,
                     date = "19/10/2022"
                 )
             )

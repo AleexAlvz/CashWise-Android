@@ -16,5 +16,5 @@
     <string name="category">Category</string>
     <string name="title">Title</string>
     <string name="balance">Balance</string>
-    <string name="my_wallet">My wallet</string>
+    <string name="my_investments">My investments</string>
 </resources>

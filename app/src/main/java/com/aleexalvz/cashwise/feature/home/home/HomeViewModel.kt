@@ -2,9 +2,9 @@ package com.aleexalvz.cashwise.feature.home.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
-import com.aleexalvz.cashwise.data.model.transaction.totalValue
-import com.aleexalvz.cashwise.data.repository.LocalTransactionRepositoryImpl
+import com.aleexalvz.cashwise.data.model.investment.Investment
+import com.aleexalvz.cashwise.data.model.investment.totalValue
+import com.aleexalvz.cashwise.data.repository.LocalInvestmentRepositoryImpl
 import com.aleexalvz.cashwise.helper.toCurrencyString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,17 +13,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-typealias Wallet = List<Pair<TransactionCategory, Double>>
-
 data class HomeUIState(
     val totalBalance: String = "",
-    val wallet: Wallet = listOf(),
+    val investments: Investments = listOf(),
     val isFetchedData: Boolean = false
 )
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val transactionRepository: LocalTransactionRepositoryImpl
+    private val investmentsRepository: LocalInvestmentRepositoryImpl
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUIState())
@@ -32,23 +30,23 @@ class HomeViewModel @Inject constructor(
     fun fetchScreenData() {
         viewModelScope.launch {
 
-            val transactions = transactionRepository.getAll()
+            val investmentList = investmentsRepository.getAll()
 
-            val totalBalance: Double = transactions.totalValue()
-
-            val wallet: Wallet = transactions
-                .groupBy { it.category }
-                .mapValues { it.value.totalValue() }
-                .toList()
-                .filter { it.second > 0.0 }
+            val totalBalance: Double = investmentList.totalValue()
 
             _uiState.update {
                 it.copy(
                     totalBalance = totalBalance.toCurrencyString(),
-                    wallet = wallet,
+                    investments = investmentList.toInvestments(),
                     isFetchedData = true
                 )
             }
         }
     }
 }
+
+fun List<Investment>.toInvestments() = this
+    .groupBy { it.category }
+    .mapValues { it.value.totalValue() }
+    .toList()
+    .filter { it.second > 0.0 }

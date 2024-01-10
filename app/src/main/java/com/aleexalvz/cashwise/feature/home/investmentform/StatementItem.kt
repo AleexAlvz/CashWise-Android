@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home.statement
+package com.aleexalvz.cashwise.feature.home.investmentform
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.data.model.statement.Statement
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
-import com.aleexalvz.cashwise.data.model.transaction.TransactionType
+import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
+import com.aleexalvz.cashwise.data.model.investment.InvestmentType
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 import com.aleexalvz.cashwise.ui.theme.DarkBlueBackground
 import com.aleexalvz.cashwise.ui.theme.GrayLight
@@ -70,8 +70,8 @@ fun StatementItem(
                 colors = CardDefaults.cardColors(containerColor = DarkBlueBackground)
             ) {
                 val (icon, color) = when (statement.type) {
-                    TransactionType.PROFIT -> Pair(Icons.AutoMirrored.Filled.TrendingUp, Green)
-                    TransactionType.LOSS -> Pair(Icons.AutoMirrored.Filled.TrendingDown, Red)
+                    InvestmentType.PROFIT -> Pair(Icons.AutoMirrored.Filled.TrendingUp, Green)
+                    InvestmentType.LOSS -> Pair(Icons.AutoMirrored.Filled.TrendingDown, Red)
                 }
 
                 Icon(
@@ -147,9 +147,9 @@ fun StatementItemPreview() {
                 Statement(
                     id = 0,
                     title = "Title sample for preview",
-                    category = TransactionCategory.SAVINGS,
+                    category = InvestmentCategory.SAVINGS,
                     totalValue = "R$ 15000,00",
-                    type = TransactionType.PROFIT,
+                    type = InvestmentType.PROFIT,
                     date = "19/10/2022"
                 )
             ) {}

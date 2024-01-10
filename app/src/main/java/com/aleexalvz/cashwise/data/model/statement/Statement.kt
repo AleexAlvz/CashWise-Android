@@ -1,22 +1,22 @@
 package com.aleexalvz.cashwise.data.model.statement
 
-import com.aleexalvz.cashwise.data.model.transaction.Transaction
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
-import com.aleexalvz.cashwise.data.model.transaction.TransactionType
-import com.aleexalvz.cashwise.data.model.transaction.totalValue
+import com.aleexalvz.cashwise.data.model.investment.Investment
+import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
+import com.aleexalvz.cashwise.data.model.investment.InvestmentType
+import com.aleexalvz.cashwise.data.model.investment.totalValue
 import com.aleexalvz.cashwise.helper.toBrazilianDateFormat
 import com.aleexalvz.cashwise.helper.toCurrencyString
 
 data class Statement(
     val id: Long,
     val title: String,
-    val category: TransactionCategory,
+    val category: InvestmentCategory,
     val totalValue: String,
-    val type: TransactionType,
+    val type: InvestmentType,
     val date: String
 )
 
-fun Transaction.toStatement(): Statement = Statement(
+fun Investment.toStatement(): Statement = Statement(
     id = id,
     title = title,
     category = category,

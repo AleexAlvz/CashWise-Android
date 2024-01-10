@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home.statement
+package com.aleexalvz.cashwise.feature.home.investmentform
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,23 +20,23 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aleexalvz.cashwise.data.model.statement.Statement
-import com.aleexalvz.cashwise.data.model.transaction.TransactionCategory
-import com.aleexalvz.cashwise.data.model.transaction.TransactionType
+import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
+import com.aleexalvz.cashwise.data.model.investment.InvestmentType
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
 fun StatementScreen(
-    onAddTransaction: () -> Unit,
-    onEditTransaction: (Long) -> Unit,
+    onAddInvestment: () -> Unit,
+    onEditInvestment: (Long) -> Unit,
     viewModel: StatementViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     StatementScreen(
-        onAddTransaction = onAddTransaction,
-        onEditTransaction = onEditTransaction,
+        onAddInvestment = onAddInvestment,
+        onEditInvestment = onEditInvestment,
         fetchContent = viewModel::fetchContent,
         uiState = uiState
     )
@@ -44,8 +44,8 @@ fun StatementScreen(
 
 @Composable
 fun StatementScreen(
-    onAddTransaction: () -> Unit,
-    onEditTransaction: (Long) -> Unit,
+    onAddInvestment: () -> Unit,
+    onEditInvestment: (Long) -> Unit,
     fetchContent: () -> Unit,
     uiState: StatementUIState
 ) {
@@ -55,7 +55,7 @@ fun StatementScreen(
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { onAddTransaction() },
+                onClick = { onAddInvestment() },
                 containerColor = Green,
                 contentColor = Color.White,
             ) {
@@ -63,7 +63,7 @@ fun StatementScreen(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add icon"
                 )
-                Text(text = "New transaction")
+                Text(text = "New registration")
             }
         },
         floatingActionButtonPosition = FabPosition.End
@@ -77,7 +77,7 @@ fun StatementScreen(
             StatementContent(
                 modifier = Modifier.padding(20.dp),
                 content = uiState.content,
-                onClickItem = onEditTransaction
+                onClickItem = onEditInvestment
             )
         }
     }
@@ -93,9 +93,9 @@ fun StatementScreenPreview() {
                     Statement(
                         id = 0,
                         title = "Title",
-                        category = TransactionCategory.SAVINGS,
+                        category = InvestmentCategory.SAVINGS,
                         totalValue = "R$ 100,00",
-                        type = TransactionType.PROFIT,
+                        type = InvestmentType.PROFIT,
                         date = "19/10/2022"
                     )
                 )
@@ -103,8 +103,8 @@ fun StatementScreenPreview() {
         }
 
         StatementScreen(
-            onAddTransaction = {},
-            onEditTransaction = {},
+            onAddInvestment = {},
+            onEditInvestment = {},
             fetchContent = {},
             uiState = StatementUIState(content = sampleData)
         )
