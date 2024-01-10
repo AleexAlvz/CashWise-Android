@@ -10,9 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.components.defaultTextFieldColor
@@ -33,6 +32,7 @@ fun DefaultOutlinedTextField(
     OutlinedTextField(
         modifier = modifier.wrapContentHeight(),
         value = text,
+        textStyle = TextStyle(fontSize = 14.sp),
         trailingIcon = {
             trailingIcon ?: errorMessage?.let {
                 Icon(imageVector = Icons.Filled.Warning, "Error icon")
@@ -44,7 +44,7 @@ fun DefaultOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = errorMessage,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.error
                 )
             }
@@ -56,7 +56,7 @@ fun DefaultOutlinedTextField(
         label = {
             Text(
                 text = labelText,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
             )
         },
         leadingIcon = leadingIcon,

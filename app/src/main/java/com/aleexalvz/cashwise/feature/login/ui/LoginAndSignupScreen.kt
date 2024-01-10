@@ -91,7 +91,8 @@ fun LoginAndSignupScreen(
             .background(DarkBackground), //TODO remove background setting by default on theme
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SwitchLoginButton(firstButtonText = LOGIN_SCREEN_NAME,
+        SwitchLoginButton(
+            firstButtonText = LOGIN_SCREEN_NAME,
             secondButtonText = SIGNUP_SCREEN_NAME,
             size = (320.dp to 44.dp),
             modifier = Modifier.padding(top = 32.dp),
@@ -109,13 +110,13 @@ fun LoginAndSignupScreen(
         Text(
             modifier = Modifier.padding(top = 64.dp),
             text = text,
-            fontSize = 36.sp,
+            fontSize = 30.sp,
             color = Color.White
         )
         Text(
             modifier = Modifier.padding(top = 16.dp),
             text = message,
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             color = Color.White
         )
 

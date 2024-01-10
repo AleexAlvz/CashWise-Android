@@ -33,7 +33,7 @@ fun GradientButton(
         ),
         contentPadding = PaddingValues(),
         onClick = { onClickListener() },
-        shape = RoundedCornerShape(200.dp),
+        shape = RoundedCornerShape(12.dp),
     ) {
         Box(
             modifier = Modifier
