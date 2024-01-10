@@ -83,7 +83,8 @@ fun LoginContent(
             )
 
             Text(
-                modifier = Modifier.padding(top = 2.dp)
+                modifier = Modifier
+                    .padding(top = 2.dp)
                     .clickable {
                         //Click to recovery password
                     },

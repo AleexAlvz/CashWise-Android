@@ -23,8 +23,8 @@ class SignUpViewModel @Inject constructor(
     fun onUIAction(uiAction: SignUpUIAction) {
         when (uiAction) {
             is SignUpUIAction.UpdateEmail -> updateEmail(uiAction.email)
-            is SignUpUIAction.UpdatePassword -> updateEmail(uiAction.password)
-            is SignUpUIAction.UpdateConfirmPassword -> updateEmail(uiAction.confirmPassword)
+            is SignUpUIAction.UpdatePassword -> updatePassword(uiAction.password)
+            is SignUpUIAction.UpdateConfirmPassword -> updateConfirmPassword(uiAction.confirmPassword)
         }
     }
 
