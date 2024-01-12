@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home.investmentform
+package com.aleexalvz.cashwise.feature.investments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,19 +12,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class StatementUIState(
-    val content: List<Statement> = listOf(),
-    var isLoading: Boolean = false,
-    var isError: Boolean = false
-)
-
 @HiltViewModel
-class StatementViewModel @Inject constructor(
+class InvestmentsViewModel @Inject constructor(
     private val investmentRepository: LocalInvestmentRepositoryImpl
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(StatementUIState())
-    val uiState: StateFlow<StatementUIState> = _uiState
+    private val _uiState = MutableStateFlow(InvestmentsUIState())
+    val uiState: StateFlow<InvestmentsUIState> = _uiState
 
     fun fetchContent() {
         viewModelScope.launch {

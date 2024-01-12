@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home.investmentform
+package com.aleexalvz.cashwise.feature.investments
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,15 +26,15 @@ import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 import com.aleexalvz.cashwise.ui.theme.Green
 
 @Composable
-fun StatementScreen(
+fun InvestmentsScreen(
     onAddInvestment: () -> Unit,
     onEditInvestment: (Long) -> Unit,
-    viewModel: StatementViewModel = hiltViewModel()
+    viewModel: InvestmentsViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    StatementScreen(
+    InvestmentsScreen(
         onAddInvestment = onAddInvestment,
         onEditInvestment = onEditInvestment,
         fetchContent = viewModel::fetchContent,
@@ -43,11 +43,11 @@ fun StatementScreen(
 }
 
 @Composable
-fun StatementScreen(
+fun InvestmentsScreen(
     onAddInvestment: () -> Unit,
     onEditInvestment: (Long) -> Unit,
     fetchContent: () -> Unit,
-    uiState: StatementUIState
+    uiState: InvestmentsUIState
 ) {
 
     if (uiState.content.isEmpty()) fetchContent()
@@ -74,7 +74,7 @@ fun StatementScreen(
                 .padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
-            StatementContent(
+            InvestmentsContent(
                 modifier = Modifier.padding(20.dp),
                 content = uiState.content,
                 onClickItem = onEditInvestment
@@ -85,7 +85,7 @@ fun StatementScreen(
 
 @Preview()
 @Composable
-fun StatementScreenPreview() {
+fun InvestmentsScreenPreview() {
     CashWiseTheme {
         val sampleData: List<Statement> = mutableListOf<Statement>().apply {
             repeat(4) {
@@ -102,11 +102,11 @@ fun StatementScreenPreview() {
             }
         }
 
-        StatementScreen(
+        InvestmentsScreen(
             onAddInvestment = {},
             onEditInvestment = {},
             fetchContent = {},
-            uiState = StatementUIState(content = sampleData)
+            uiState = InvestmentsUIState(content = sampleData)
         )
     }
 }

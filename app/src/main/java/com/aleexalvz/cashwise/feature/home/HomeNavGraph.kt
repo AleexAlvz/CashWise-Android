@@ -1,9 +1,10 @@
-package com.aleexalvz.cashwise.feature.home.ui
+package com.aleexalvz.cashwise.feature.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,12 +17,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.aleexalvz.cashwise.components.topappbar.TopAppBar
+import com.aleexalvz.cashwise.components.topappbar.TopAppBarUIState
+import com.aleexalvz.cashwise.feature.home.home.HomeScreen
+import com.aleexalvz.cashwise.feature.home.ui.navigationBottomBar
+import com.aleexalvz.cashwise.feature.investments.InvestmentsScreen
 import com.aleexalvz.cashwise.feature.investmentsform.InvestmentsFormArgs
 import com.aleexalvz.cashwise.feature.investmentsform.InvestmentsFormScreen
-import com.aleexalvz.cashwise.feature.home.HomeRoutes
-import com.aleexalvz.cashwise.feature.home.calendar.CalendarScreen
-import com.aleexalvz.cashwise.feature.home.home.HomeScreen
-import com.aleexalvz.cashwise.feature.home.investmentform.StatementScreen
+import com.aleexalvz.cashwise.feature.menu.MenuScreen
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 
 @Composable
@@ -29,14 +32,19 @@ fun HomeNavGraph() {
 
     val navController: NavHostController = rememberNavController()
 
-    val topBarTitleState =
-        remember { mutableStateOf(getTitleByDestination(navController = navController)) }
-    navController.addOnDestinationChangedListener { _, _, _ ->
-        topBarTitleState.value = getTitleByDestination(navController)
+    val topAppBarUiState = remember {
+        mutableStateOf(TopAppBarUIState())
     }
 
     Scaffold(
-        topBar = { TopAppBar(topBarTitleState) },
+        topBar = {
+            TopAppBar(
+                uiState = topAppBarUiState.value,
+                onBackPressed = { navController.popBackStack() },
+                onProfilePressed = {}
+
+            )
+        },
         bottomBar = { navigationBottomBar(navController) }
     ) { paddingValues ->
         Box(
@@ -47,10 +55,18 @@ fun HomeNavGraph() {
                 startDestination = HomeRoutes.HOME
             ) {
                 composable(route = HomeRoutes.HOME) {
+
+                    topAppBarUiState.value = TopAppBarUIState()
                     HomeScreen()
                 }
-                composable(route = HomeRoutes.STATEMENT) {
-                    StatementScreen(
+
+                composable(route = HomeRoutes.INVESTMENTS) {
+
+                    topAppBarUiState.value = TopAppBarUIState(
+                        title = HomeRoutes.INVESTMENTS,
+                        isProfileIconEnabled = true
+                    )
+                    InvestmentsScreen(
                         onAddInvestment = {
                             navController.navigate(HomeRoutes.INVESTMENT_FORM)
                         },
@@ -61,14 +77,22 @@ fun HomeNavGraph() {
                         }
                     )
                 }
+
                 composable(
                     route = "${HomeRoutes.INVESTMENT_FORM}/{${InvestmentsFormArgs.investmentIDArg}}",
                     arguments = listOf(navArgument(InvestmentsFormArgs.investmentIDArg) {
                         type = NavType.LongType
                     })
                 ) { entry ->
+
+                    topAppBarUiState.value = TopAppBarUIState(
+                        title = "edit investment",
+                        isBackButtonEnabled = true
+                    )
+
                     val id = entry.arguments
                         ?.getLong(InvestmentsFormArgs.investmentIDArg)
+
                     InvestmentsFormScreen(
                         Modifier.padding(26.dp),
                         investmentId = id,
@@ -77,40 +101,36 @@ fun HomeNavGraph() {
                         }
                     )
                 }
+
                 composable(route = HomeRoutes.INVESTMENT_FORM) {
+
+                    topAppBarUiState.value = TopAppBarUIState(
+                        title = "add investment",
+                        isBackButtonEnabled = true
+                    )
+
                     InvestmentsFormScreen(
                         Modifier.padding(26.dp),
                         onFinish = {
-                            navController.navigate(HomeRoutes.STATEMENT)
+                            navController.navigate(HomeRoutes.INVESTMENTS)
                         }
                     )
                 }
+
                 composable(
-                    route = HomeRoutes.CALENDAR
+                    route = HomeRoutes.MENU
                 ) {
-                    CalendarScreen()
+                    topAppBarUiState.value = TopAppBarUIState(
+                        title = HomeRoutes.MENU,
+                        isProfileIconEnabled = true
+                    )
+
+                    MenuScreen()
                 }
             }
         }
     }
 }
-
-private fun getTitleByDestination(navController: NavController): String =
-    when (navController.currentDestination?.route) {
-        HomeRoutes.STATEMENT -> "Statement"
-        HomeRoutes.CALENDAR -> "Calendar"
-        HomeRoutes.INVESTMENT_FORM -> {
-            if (navController.currentBackStackEntry?.arguments?.getString(InvestmentsFormArgs.investmentIDArg)
-                    .isNullOrBlank()
-            ) {
-                "Add investment"
-            } else {
-                "Edit investment"
-            }
-        }
-
-        else -> "Cash Wise"
-    }
 
 @Preview
 @Composable

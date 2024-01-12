@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home.investmentform
+package com.aleexalvz.cashwise.feature.investments
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -12,7 +12,7 @@ import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
 import com.aleexalvz.cashwise.data.model.investment.InvestmentType
 
 @Composable
-fun StatementContent(
+fun InvestmentsContent(
     modifier: Modifier,
     content: List<Statement>,
     onClickItem: (Long) -> Unit
@@ -20,7 +20,7 @@ fun StatementContent(
     LazyColumn(modifier = modifier) {
         content.forEachIndexed { index, statement ->
             item {
-                StatementItem(
+                InvestmentsItem(
                     statement = statement,
                     onClickItem = onClickItem
                 )
@@ -33,7 +33,7 @@ fun StatementContent(
 
 @Preview(showBackground = true)
 @Composable
-fun StatementContentPreview() {
+fun InvestmentsContentPreview() {
     val sampleData: List<Statement> = mutableListOf<Statement>().apply {
         repeat(4) {
             add(
@@ -49,7 +49,7 @@ fun StatementContentPreview() {
         }
     }
 
-    StatementContent(
+    InvestmentsContent(
         Modifier.padding(20.dp),
         sampleData
     ) {}

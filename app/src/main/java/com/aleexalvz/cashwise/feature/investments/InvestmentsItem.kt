@@ -1,4 +1,4 @@
-package com.aleexalvz.cashwise.feature.home.investmentform
+package com.aleexalvz.cashwise.feature.investments
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +42,7 @@ import com.aleexalvz.cashwise.ui.theme.Red
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatementItem(
+fun InvestmentsItem(
     statement: Statement,
     onClickItem: (Long) -> Unit
 ) {
@@ -140,10 +140,10 @@ fun StatementItem(
 
 @Preview(showBackground = true)
 @Composable
-fun StatementItemPreview() {
+fun InvestmentsItemPreview() {
     CashWiseTheme {
         Column(Modifier.background(Color.DarkGray)) {
-            StatementItem(
+            InvestmentsItem(
                 Statement(
                     id = 0,
                     title = "Title sample for preview",
