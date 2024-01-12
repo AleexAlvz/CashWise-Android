@@ -56,7 +56,7 @@ fun HomeNavGraph() {
             ) {
                 composable(route = HomeRoutes.HOME) {
 
-                    topAppBarUiState.value = TopAppBarUIState()
+                    topAppBarUiState.value = TopAppBarUIState(isProfileIconEnabled = true)
                     HomeScreen()
                 }
 
@@ -64,7 +64,7 @@ fun HomeNavGraph() {
 
                     topAppBarUiState.value = TopAppBarUIState(
                         title = HomeRoutes.INVESTMENTS,
-                        isProfileIconEnabled = true
+                        isBackButtonEnabled = true
                     )
                     InvestmentsScreen(
                         onAddInvestment = {
@@ -122,7 +122,7 @@ fun HomeNavGraph() {
                 ) {
                     topAppBarUiState.value = TopAppBarUIState(
                         title = HomeRoutes.MENU,
-                        isProfileIconEnabled = true
+                        isBackButtonEnabled = true
                     )
 
                     MenuScreen()
