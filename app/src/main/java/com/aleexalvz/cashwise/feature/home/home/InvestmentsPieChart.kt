@@ -7,7 +7,7 @@ import com.aleexalvz.cashwise.components.graph.PieChartItem
 import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
 import com.aleexalvz.cashwise.data.model.investment.color
 
-typealias Investments = List<Pair<InvestmentCategory, Double>>
+typealias Investments = List<Pair<InvestmentCategory, Long>>
 
 @Composable
 fun InvestmentsPieChart(

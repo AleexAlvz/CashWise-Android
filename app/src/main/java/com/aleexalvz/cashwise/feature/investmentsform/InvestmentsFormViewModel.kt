@@ -72,7 +72,7 @@ class InvestmentsFormViewModel @Inject constructor(
         updateTotalValue()
     }
 
-    private fun updateUnitValue(unitValue: Double) {
+    private fun updateUnitValue(unitValue: Long) {
         _uiState.update {
             it.copy(unitValue = unitValue)
         }

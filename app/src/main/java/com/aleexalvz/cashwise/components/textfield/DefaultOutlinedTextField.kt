@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
@@ -25,6 +26,7 @@ fun DefaultOutlinedTextField(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     errorMessage: String? = null,
+    prefix: String? = null,
     readOnly: Boolean? = false,
     keyboardType: KeyboardType = KeyboardType.Text
 ) {
@@ -38,9 +40,18 @@ fun DefaultOutlinedTextField(
                 Icon(imageVector = Icons.Filled.Warning, "Error icon")
             }
         },
+        prefix = {
+            prefix?.let {
+                Text(
+                    text = it,
+                    color = Color.White,
+                    fontSize = 14.sp,
+                )
+            }
+        },
         isError = (errorMessage != null),
         supportingText = {
-            if (errorMessage != null) {
+            errorMessage?.let {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = errorMessage,

@@ -18,8 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +43,9 @@ import com.aleexalvz.cashwise.components.textfield.TextFieldWithDatePicker
 import com.aleexalvz.cashwise.components.textfield.TextFieldWithDropDown
 import com.aleexalvz.cashwise.data.model.investment.InvestmentCategory
 import com.aleexalvz.cashwise.data.model.investment.InvestmentType
+import com.aleexalvz.cashwise.helper.getCurrencySymbol
 import com.aleexalvz.cashwise.helper.toBrazilianDateFormat
+import com.aleexalvz.cashwise.helper.toCurrencyLong
 import com.aleexalvz.cashwise.helper.toCurrencyString
 import com.aleexalvz.cashwise.ui.theme.CashWiseTheme
 import com.aleexalvz.cashwise.ui.theme.GradGreenButton1
@@ -50,7 +55,6 @@ import com.aleexalvz.cashwise.ui.theme.OutlinedGreen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import java.math.RoundingMode
 import java.util.Date
 
 @Composable
@@ -171,16 +175,17 @@ fun InvestmentsFormScreen(
 
                 DefaultOutlinedTextField(
                     modifier = Modifier.weight(2f),
-                    text = uiState.unitValue.toString(),
+                    text = uiState.unitValue.toCurrencyString(),
                     onValueChange = {
                         it.runCatching {
-                            val unitValue =
-                                this.toBigDecimal().setScale(2, RoundingMode.DOWN).toDouble()
-                            onUIAction(InvestmentsFormUIAction.UpdateUnitValue(unitValue))
+                            onUIAction(
+                                InvestmentsFormUIAction.UpdateUnitValue(this.toCurrencyLong())
+                            )
                         }
                     },
+                    prefix = getCurrencySymbol(),
                     labelText = stringResource(R.string.unit_value),
-                    keyboardType = KeyboardType.Decimal
+                    keyboardType = KeyboardType.Number
                 )
             }
 
@@ -252,8 +257,8 @@ fun InvestmentsFormPreview() {
                 type = InvestmentType.PROFIT,
                 date = Date().time,
                 amount = 8L,
-                unitValue = 15.11,
-                totalValue = 120.88
+                unitValue = 1511,
+                totalValue = 12088
             ),
             onUIAction = {},
             uiEvent = MutableSharedFlow(),

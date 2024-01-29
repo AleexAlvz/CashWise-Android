@@ -85,10 +85,10 @@ fun HomeScreenPreview() {
     CashWiseTheme {
         HomeScreen(uiState = HomeUIState(
             totalBalance = "R$ 12.000,57", investments = listOf(
-                InvestmentCategory.SAVINGS to 3000.00,
-                InvestmentCategory.REAL_STATE to 2000.00,
-                InvestmentCategory.STOCKS to 6000.00,
-                InvestmentCategory.OTHERS to 1000.57,
+                InvestmentCategory.SAVINGS to 300000,
+                InvestmentCategory.REAL_STATE to 200000,
+                InvestmentCategory.STOCKS to 600000,
+                InvestmentCategory.OTHERS to 100057,
             ), isFetchedData = true
         ), fetchScreenData = {})
     }

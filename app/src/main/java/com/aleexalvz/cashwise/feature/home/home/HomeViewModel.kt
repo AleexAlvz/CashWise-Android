@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
 
             val investmentList = investmentsRepository.getAll()
 
-            val totalBalance: Double = investmentList.totalValue()
+            val totalBalance: Long = investmentList.totalValue()
 
             _uiState.update {
                 it.copy(
@@ -49,4 +49,4 @@ fun List<Investment>.toInvestments() = this
     .groupBy { it.category }
     .mapValues { it.value.totalValue() }
     .toList()
-    .filter { it.second > 0.0 }
+    .filter { it.second > 0 }

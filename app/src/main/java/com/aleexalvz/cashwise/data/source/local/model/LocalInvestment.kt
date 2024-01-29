@@ -13,7 +13,7 @@ data class LocalInvestment(
     val userID: Long,
     val title: String,
     val category: InvestmentCategory,
-    val unitValue: Double,
+    val unitValue: Long,
     val amount: Long,
     val type: InvestmentType,
     val dateMillis: Long

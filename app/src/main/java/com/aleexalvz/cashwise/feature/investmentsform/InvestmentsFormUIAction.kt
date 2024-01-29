@@ -7,6 +7,6 @@ sealed class InvestmentsFormUIAction {
     data class UpdateType(val type: String) : InvestmentsFormUIAction()
     data class UpdateDate(val date: Long) : InvestmentsFormUIAction()
     data class UpdateAmount(val amount: Long) : InvestmentsFormUIAction()
-    data class UpdateUnitValue(val unitValue: Double) : InvestmentsFormUIAction()
+    data class UpdateUnitValue(val unitValue: Long) : InvestmentsFormUIAction()
     data class SendInvestment(val investmentID: Long?) : InvestmentsFormUIAction()
 }

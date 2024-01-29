@@ -10,8 +10,8 @@ data class InvestmentsFormUIState(
     var type: InvestmentType? = null,
     var date: Long = Date().time,
     var amount: Long = 0,
-    var unitValue: Double = 0.0,
-    var totalValue: Double = 0.0,
+    var unitValue: Long = 0L,
+    var totalValue: Long = 0L,
     var isLoading: Boolean = false,
     var isInvestmentFetched: Boolean = false
 )
