@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
@@ -37,6 +38,7 @@ fun PasswordOutlinedTextField(
     OutlinedTextField(
         modifier = modifier.wrapContentHeight(),
         value = text,
+        textStyle = TextStyle(fontSize = 14.sp),
         visualTransformation = visualTransformation,
         trailingIcon = {
             IconButton(onClick = { passwordHidden.value = !passwordHidden.value }) {
@@ -56,7 +58,7 @@ fun PasswordOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = errorMessage,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.error
                 )
             }
@@ -66,7 +68,7 @@ fun PasswordOutlinedTextField(
         label = {
             Text(
                 text = labelText,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
             )
         },
         leadingIcon = {

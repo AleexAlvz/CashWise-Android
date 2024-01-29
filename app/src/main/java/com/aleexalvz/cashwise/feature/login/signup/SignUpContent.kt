@@ -76,9 +76,9 @@ fun SignupContent(
 
         GradientButton(
             modifier = Modifier
-                .padding(top = 20.dp)
-                .width(310.dp)
-                .height(50.dp),
+                .fillMaxWidth()
+                .height(60.dp)
+                .padding(top = 24.dp),
             onClickListener = doSignup,
             text = "Sign Up",
             brush = Brush.verticalGradient(

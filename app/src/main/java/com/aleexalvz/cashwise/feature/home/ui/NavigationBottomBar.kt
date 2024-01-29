@@ -3,6 +3,7 @@ package com.aleexalvz.cashwise.feature.home.ui
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Note
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -15,7 +16,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.aleexalvz.cashwise.feature.home.HomeRoutes
-import com.aleexalvz.cashwise.foundation.UserManager
 import com.aleexalvz.cashwise.ui.theme.BottomAppBarDarkColor
 import com.aleexalvz.cashwise.ui.theme.IndicatorItemColor
 
@@ -26,9 +26,9 @@ data class BottomNavItem(
 )
 
 private fun getBottomNavItems(): List<BottomNavItem> = listOf(
-    BottomNavItem("Home", HomeRoutes.HOME, Icons.Filled.Home),
-    BottomNavItem("Statement", HomeRoutes.STATEMENT, Icons.Filled.Note),
-    BottomNavItem("Calendar", HomeRoutes.CALENDAR, Icons.Filled.CalendarMonth)
+    BottomNavItem(HomeRoutes.HOME, HomeRoutes.HOME, Icons.Filled.Home),
+    BottomNavItem(HomeRoutes.INVESTMENTS, HomeRoutes.INVESTMENTS, Icons.Filled.Note),
+    BottomNavItem(HomeRoutes.MENU, HomeRoutes.MENU, Icons.Filled.Menu)
 )
 
 @Composable

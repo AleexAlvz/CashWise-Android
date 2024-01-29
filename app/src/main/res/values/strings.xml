@@ -3,7 +3,7 @@
     <string name="login_screen_title">Welcome back!</string>
     <string name="login_screen_message">Enter your details to login</string>
     <string name="singup_screen_title">New here?</string>
-    <string name="signup_screen_message">Create your account to enjoy more</string>
+    <string name="signup_screen_message">Create your account to enjoy</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="pt_br">pt-br</string>
@@ -16,5 +16,5 @@
     <string name="category">Category</string>
     <string name="title">Title</string>
     <string name="balance">Balance</string>
-    <string name="my_wallet">My wallet</string>
+    <string name="my_investments">My investments</string>
 </resources>

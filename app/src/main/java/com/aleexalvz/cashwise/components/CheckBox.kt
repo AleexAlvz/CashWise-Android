@@ -1,18 +1,24 @@
 package com.aleexalvz.cashwise.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aleexalvz.cashwise.ui.theme.GraySuperLight
@@ -21,11 +27,14 @@ import com.aleexalvz.cashwise.ui.theme.Green
 @Composable
 fun CheckBox(
     modifier: Modifier = Modifier,
+    horizontalAlignment: Arrangement.Horizontal = Arrangement.Center,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     selected: Boolean,
     onStateChanged: (Boolean) -> Unit,
-    text: String? = null
+    text: String? = null,
+    textSize: TextUnit = 14.sp
 ) {
-    val state = mutableStateOf(selected)
+    val state = rememberSaveable { mutableStateOf(selected) }
 
     Row(
         modifier = modifier
@@ -37,7 +46,8 @@ fun CheckBox(
                 },
                 role = Role.Checkbox
             ),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = verticalAlignment,
+        horizontalArrangement = horizontalAlignment
     ) {
         val checkBoxColors = CheckboxDefaults.colors(
             checkedColor = GraySuperLight,
@@ -46,18 +56,19 @@ fun CheckBox(
         )
 
         Checkbox(
+            modifier = Modifier.size(20.dp),
             checked = state.value,
             onCheckedChange = {
                 state.value = !state.value
                 onStateChanged(state.value)
             },
-            colors = checkBoxColors
+            colors = checkBoxColors,
         )
         text?.let {
             Text(
                 modifier = Modifier.padding(start = 4.dp),
                 text = text,
-                fontSize = 20.sp,
+                fontSize = textSize,
                 color = Color.White,
                 textAlign = TextAlign.Center
 
@@ -65,3 +76,14 @@ fun CheckBox(
         }
     }
 }
+
+@Preview
+@Composable
+private fun CheckBoxPreview() {
+    CheckBox(
+        selected = true,
+        onStateChanged = {},
+        text = "Check box text"
+    )
+}
+

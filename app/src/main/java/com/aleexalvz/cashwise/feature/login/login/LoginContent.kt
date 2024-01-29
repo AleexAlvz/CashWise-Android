@@ -4,11 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -72,24 +70,37 @@ fun LoginContent(
             contentDescription = "Password field",
             errorMessage = uiState.passwordError,
         )
+
         Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp, top = 4.dp),
-            horizontalArrangement = Arrangement.Start
+            modifier = Modifier.fillMaxWidth()
         ) {
             CheckBox(
+                modifier = Modifier.weight(1f),
                 selected = uiState.rememberMe,
                 onStateChanged = { onUIAction(LoginUIAction.UpdateRememberMeCheckBox(it)) },
                 text = "Remember me",
+                horizontalAlignment = Arrangement.Start
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(top = 2.dp)
+                    .clickable {
+                        //Click to recovery password
+                    },
+                text = "Forgot your password?",
+                fontSize = 14.sp,
+                color = Green
             )
         }
 
+
+
         GradientButton(
             modifier = Modifier
-                .padding(top = 20.dp)
-                .width(310.dp)
-                .height(50.dp),
+                .fillMaxWidth()
+                .height(60.dp)
+                .padding(top = 24.dp),
             onClickListener = doLogin,
             text = "Login",
             brush = Brush.verticalGradient(
@@ -98,23 +109,6 @@ fun LoginContent(
                 )
             )
         )
-
-        Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(top = 32.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                modifier = Modifier
-                    .clickable {
-                        //Click to recovery password
-                    },
-                text = "Forgot your password?",
-                fontSize = 16.sp,
-                color = Green
-            )
-        }
     }
 }
 
